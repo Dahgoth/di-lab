@@ -1,4 +1,4 @@
-# Technical Context: Next.js Starter Template
+# Technical Context: DI-Lab (Diablo Immortal Legendary Gems Optimizer)
 
 ## Technology Stack
 
@@ -9,6 +9,10 @@
 | TypeScript   | 5.9.x   | Type-safe JavaScript            |
 | Tailwind CSS | 4.x     | Utility-first CSS               |
 | Bun          | Latest  | Package manager & runtime       |
+| Drizzle ORM  | Latest  | Database ORM                    |
+| SQLite       | N/A     | Database (via better-sqlite3)   |
+| NextAuth     | 5.x     | Authentication                  |
+| Zod          | 4.x     | Schema validation               |
 
 ## Development Environment
 
@@ -57,9 +61,15 @@ bun typecheck      # Run TypeScript type checking
 
 ```json
 {
-  "next": "^16.1.3", // Framework
-  "react": "^19.2.3", // UI library
-  "react-dom": "^19.2.3" // React DOM
+  "next": "^16.1.3",
+  "react": "^19.2.3",
+  "react-dom": "^19.2.3",
+  "next-auth": "^5.0.0-beta.30",
+  "@auth/drizzle-adapter": "^1.11.1",
+  "drizzle-orm": "^0.45.1",
+  "better-sqlite3": "^12.6.2",
+  "lucide-react": "^0.564.0",
+  "zod": "^4.3.6"
 }
 ```
 
@@ -71,8 +81,10 @@ bun typecheck      # Run TypeScript type checking
   "@types/node": "^24.10.2",
   "@types/react": "^19.2.7",
   "@types/react-dom": "^19.2.3",
+  "@types/better-sqlite3": "^7.6.13",
   "@tailwindcss/postcss": "^4.1.17",
   "tailwindcss": "^4.1.17",
+  "drizzle-kit": "^0.31.9",
   "eslint": "^9.39.1",
   "eslint-config-next": "^16.0.0"
 }
@@ -104,8 +116,8 @@ bun typecheck      # Run TypeScript type checking
 ### Starting Point
 
 - Minimal structure - expand as needed
-- No database by default (use recipe to add)
-- No authentication by default (add when needed)
+- Database setup ready (Drizzle + SQLite)
+- Auth dependencies added (next-auth)
 
 ### Browser Support
 
@@ -138,6 +150,36 @@ bun typecheck      # Run TypeScript type checking
 
 ### Environment Variables
 
-- None required for base template
-- Add as needed for features
-- Use `.env.local` for local development
+Required for production:
+- `BATTLENET_CLIENT_ID` - Battle.net OAuth client ID
+- `BATTLENET_CLIENT_SECRET` - Battle.net OAuth secret
+- `NEXTAUTH_SECRET` - NextAuth encryption key
+- `NEXTAUTH_URL` - Production URL
+
+## External API Integration
+
+### Battle.net OAuth
+- **Endpoint**: `https://oauth.battle.net`
+- **Scope**: `openid profile`
+- **Callback**: `/api/auth/callback/battlenet`
+
+### Diablo.tv
+- **Purpose**: Fetch DI days and event data
+- **Status**: TBD - needs investigation
+
+### DiabloImmortalRedeem.com
+- **Purpose**: Character verification via mock redemption
+- **Method**: POST to redemption endpoint
+- **Expected**: Error codes indicate character status
+
+## Security Considerations
+
+### Authentication
+- Battle.net OAuth for user identity
+- Character verification required for sync features
+- Session management via NextAuth
+
+### Data Protection
+- No sensitive game data stored
+- Character IDs linked to Battle.net accounts
+- User builds stored locally in SQLite
