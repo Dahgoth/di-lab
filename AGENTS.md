@@ -1,22 +1,33 @@
-## Optional Feature Guides
+# AGENTS.md
 
-When users request features beyond the base template, check for available recipes in `.kilocode/recipes/`.
+This file provides guidance to agents when working with code in this repository.
 
-### Available Recipes
+## Critical Rules
 
-| Recipe       | File                                | When to Use                                           |
-| ------------ | ----------------------------------- | ----------------------------------------------------- |
-| Add Database | `.kilocode/recipes/add-database.md` | When user needs data persistence (users, posts, etc.) |
+- **Package manager**: Use `bun` (not npm/yarn)
+- **Never run** `next dev` or `bun dev` - the sandbox handles this automatically
+- **Commit workflow**: `bun typecheck && bun lint && git add -A && git commit -m "descriptive message" && git push`
 
-### How to Use Recipes
+## Commands
 
-1. Read the recipe file when the user requests the feature
-2. Follow the step-by-step instructions
-3. Update the memory bank after implementing the feature
+| Command | Purpose |
+|---------|---------|
+| `bun install` | Install dependencies |
+| `bun build` | Build production app |
+| `bun lint` | Check code quality |
+| `bun typecheck` | Type checking |
 
-## Memory Bank Maintenance
+## Non-Obvious Project Details
 
-After completing the user's request, update the relevant memory bank files:
+- **Tailwind CSS 4**: Uses `@tailwindcss/postcss` plugin (CSS-first configuration, no `tailwind.config.js`)
+- **Path alias**: `@/*` maps to `./src/*`
+- **No tests configured** - add test framework if needed
 
-- `.kilocode/rules/memory-bank/context.md` - Current state and recent changes
-- Other memory bank files as needed when architecture, tech stack, or project goals change
+## Feature Recipes
+
+When adding features, check `.kilocode/recipes/`:
+- **Add Database**: `.kilocode/recipes/add-database.md` (Drizzle + SQLite)
+
+## Memory Bank
+
+Update `.kilocode/rules/memory-bank/context.md` after completing significant changes.
