@@ -102,8 +102,21 @@ specs/
 
 ### Branch Naming Convention
 
-- `feature/<identifier>-<###>-<name>` for features
-- `fix/<identifier>-<###>-<name>` for bugs
+Configured in `.specify/config.yaml` with template-based naming:
+
+```yaml
+naming:
+  branch_format: "{type}/{ticket}-{seq}-{kebab}"
+  folder_format: "specs/{branch}"
+```
+
+**Tokens:** `{type}`, `{ticket}`, `{seq}`, `{kebab}`, `{date}`, `{branch}`
+
+**Examples:**
+| Description | Branch | Folder |
+|-------------|--------|--------|
+| "Add user auth" | `feature/PROJ-001-user-auth` | `specs/feature/PROJ-001-user-auth/` |
+| "Fix login bug" | `fix/PROJ-002-login-bug` | `specs/fix/PROJ-002-login-bug/` |
 
 ### Tech Stack
 
@@ -125,6 +138,7 @@ specs/
 
 | Date       | Changes                                                                |
 | ---------- | ---------------------------------------------------------------------- |
+| 2026-02-14 | Implemented template-based naming system with configurable formats     |
 | 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done       |
 | 2026-02-14 | Updated Husky hooks to use bun commands                                |
 | 2026-02-14 | Added release-please workflow documentation to commit.md               |
