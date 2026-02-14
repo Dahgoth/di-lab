@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.0...di-lab-v0.2.1) (2026-02-14)
+
+
+### Bug Fixes
+
+* **config:** remove optimizer ui spec from main ([f5e642b](https://github.com/Dahgoth/di-lab/commit/f5e642b6e514d2255d60a2de774acd17e5a22fce))
+
 ## [0.2.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.1.0...di-lab-v0.2.0) (2026-02-14)
 
 
