@@ -38,8 +38,8 @@ The application analyzes your current gem build, considers available resources (
 
 ### Prerequisites
 
-- Node.js 20+ or Bun runtime
-- npm or Bun package manager
+- Bun runtime (recommended) or Node.js 20+
+- Bun is used as the primary package manager
 
 ### Installation
 
@@ -49,20 +49,20 @@ git clone https://github.com/dahgoth/di-lab.git
 cd di-lab
 
 # Install dependencies
-npm install
+bun install
 ```
 
 ### Usage
 
 ```bash
 # Start development server
-npm run dev
+bun dev
 
 # Build for production
-npm run build
+bun build
 
 # Start production server
-npm start
+bun start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -95,7 +95,7 @@ Before each commit, the following checks run automatically:
 
 If checks fail:
 
-1. Run `npm run lint -- --fix` to auto-fix formatting issues
+1. Run `bun lint --fix` to auto-fix formatting issues
 2. Fix type errors manually
 3. Rewrite commit message following conventional format
 
