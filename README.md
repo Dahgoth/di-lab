@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/dahgoth/di-lab/workflows/CI/badge.svg)](https://github.com/dahgoth/di-lab/actions)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL%203.0+-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Version](https://img.shields.io/github/v/release/dahgoth/di-lab?include_prereleases)](https://github.com/dahgoth/di-lab/releases)
+[![Version](https://img.shields.io/github/v/release/dahgoth/di-lab?filter=di-lab-*)](https://github.com/dahgoth/di-lab/releases)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
