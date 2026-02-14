@@ -12,27 +12,27 @@ type(scope): description
 
 ### Required Format
 
-| Component | Rules |
-|-----------|-------|
-| **type** | Required. One of: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build`, `revert` |
-| **scope** | Optional. Matches spec directory name (e.g., `optimize`, `gems`, `auth`) |
-| **description** | Required. Starts with lowercase, max 72 characters, no trailing period |
+| Component       | Rules                                                                                                          |
+| --------------- | -------------------------------------------------------------------------------------------------------------- |
+| **type**        | Required. One of: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build`, `revert` |
+| **scope**       | Optional. Matches spec directory name (e.g., `optimize`, `gems`, `auth`)                                       |
+| **description** | Required. Starts with lowercase, max 72 characters, no trailing period                                         |
 
 ### Valid Types
 
-| Type | When to Use | Changelog Section |
-|------|-------------|-------------------|
-| `feat` | New feature | Added |
-| `fix` | Bug fix | Fixed |
-| `docs` | Documentation only | - |
-| `style` | Code style (formatting, whitespace) | - |
-| `refactor` | Code refactoring | Changed |
-| `test` | Adding/updating tests | - |
-| `chore` | Maintenance tasks | - |
-| `perf` | Performance improvement | Changed |
-| `ci` | CI/CD changes | - |
-| `build` | Build system changes | - |
-| `revert` | Revert previous commit | - |
+| Type       | When to Use                         | Changelog Section |
+| ---------- | ----------------------------------- | ----------------- |
+| `feat`     | New feature                         | Added             |
+| `fix`      | Bug fix                             | Fixed             |
+| `docs`     | Documentation only                  | -                 |
+| `style`    | Code style (formatting, whitespace) | -                 |
+| `refactor` | Code refactoring                    | Changed           |
+| `test`     | Adding/updating tests               | -                 |
+| `chore`    | Maintenance tasks                   | -                 |
+| `perf`     | Performance improvement             | Changed           |
+| `ci`       | CI/CD changes                       | -                 |
+| `build`    | Build system changes                | -                 |
+| `revert`   | Revert previous commit              | -                 |
 
 ### Commit Message Examples
 
@@ -72,6 +72,7 @@ Error: ESLint found problems in your code
 ```
 
 **Resolution**:
+
 1. Run `bun lint --fix` to auto-fix formatting issues
 2. Manually fix remaining errors
 3. Stage the fixes: `git add -A`
@@ -84,6 +85,7 @@ Error: Type 'X' is not assignable to type 'Y'
 ```
 
 **Resolution**:
+
 1. Review the type error in the output
 2. Fix type mismatches in the affected files
 3. Verify fix with `bun typecheck`
@@ -251,14 +253,84 @@ flowchart TD
 
 Your commit type determines changelog placement:
 
-| Commit Type | Changelog Section |
-|-------------|-------------------|
-| `feat` | **Added** - New features |
-| `fix` | **Fixed** - Bug fixes |
-| `refactor`, `perf` | **Changed** - Improvements |
-| `deprecate` | **Deprecated** - Features being removed |
-| `remove` | **Removed** - Deleted features |
-| `security` | **Security** - Security fixes |
+| Commit Type        | Changelog Section                       |
+| ------------------ | --------------------------------------- |
+| `feat`             | **Added** - New features                |
+| `fix`              | **Fixed** - Bug fixes                   |
+| `refactor`, `perf` | **Changed** - Improvements              |
+| `deprecate`        | **Deprecated** - Features being removed |
+| `remove`           | **Removed** - Deleted features          |
+| `security`         | **Security** - Security fixes           |
+
+---
+
+## Release-Please Workflow
+
+This project uses **release-please-action** for automated changelog and release management.
+
+### How It Works
+
+1. **Push to main**: When commits are pushed to `main`, release-please creates/updates a Release PR
+2. **Review Release PR**: The Release PR contains:
+   - CHANGELOG.md updates organized by commit type
+   - package.json version bump
+   - Release notes summary
+3. **Merge Release PR**: When merged:
+   - GitHub release is created
+   - Version tag is created (e.g., `v0.1.0`)
+   - CHANGELOG.md is committed to main
+
+### Version Bump Logic
+
+| Commit Type                    | Version Bump          |
+| ------------------------------ | --------------------- |
+| `feat:`                        | MINOR (0.1.0 → 0.2.0) |
+| `fix:`                         | PATCH (0.1.0 → 0.1.1) |
+| `feat!:` or `BREAKING CHANGE:` | MAJOR (0.1.0 → 1.0.0) |
+
+### Release PR Handling
+
+When a Release PR is created:
+
+1. **Review the changelog**: Verify commit grouping is correct
+2. **Check version bump**: Ensure version increment matches breaking changes
+3. **Merge when ready**: Merging triggers the release
+
+### Example Release PR
+
+```markdown
+## 0.2.0 (2026-02-15)
+
+### Added
+
+- feat: add gem selector component (#42)
+- feat: implement greedy optimization algorithm (#44)
+
+### Fixed
+
+- fix: resolve resonance calculation error (#43)
+
+### Changed
+
+- refactor: simplify auth flow (#45)
+```
+
+### Release PR Conflicts
+
+If the Release PR has conflicts:
+
+1. **Update main branch** with latest changes
+2. **Close the Release PR** - release-please will recreate it
+3. **Or manually resolve** conflicts in CHANGELOG.md
+
+### Multiple Releases
+
+If you need to release multiple times:
+
+1. Merge feature PRs to main
+2. Wait for release-please to update the Release PR
+3. Review and merge the Release PR
+4. Repeat for next release
 
 ---
 
@@ -267,5 +339,6 @@ Your commit type determines changelog placement:
 If you encounter issues not covered here:
 
 1. Check `.kilocode/rules/memory-bank/` for project-specific context
-2. Review `specs/000-workflow-foundation/` for workflow documentation
+2. Review `specs/001-workflow-foundation/` for workflow documentation
 3. Run `bun lint` and `bun typecheck` separately for detailed error output
+4. Check GitHub Actions tab for release-please workflow errors

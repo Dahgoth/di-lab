@@ -1,46 +1,47 @@
 # DI-Lab
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/dahgoth/di-lab/ci.yml?branch=main)](https://github.com/dahgoth/di-lab/actions)
-[![License](https://img.shields.io/badge/License-AGPL%203.0%20or%20later-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)](CHANGELOG.md)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
+[![Build Status](https://github.com/dahgoth/di-lab/workflows/CI/badge.svg)](https://github.com/dahgoth/di-lab/actions)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL%203.0+-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![Version](https://img.shields.io/github/v/release/dahgoth/di-lab?include_prereleases)](https://github.com/dahgoth/di-lab/releases)
 
-A web application for optimizing legendary gems in Diablo Immortal, similar to World of Warcraft tools like Raidbots and Ask Mr. Robot.
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+
+[![SemVer](https://img.shields.io/badge/SemVer-2.0.0-green)](https://semver.org/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Keep a Changelog](https://img.shields.io/badge/Keep%20a%20Changelog-1.0.0-orange)](https://keepachangelog.com)
+[![Husky](https://img.shields.io/badge/Husky-9.x-purple?logo=git)](https://typicode.github.io/husky/)
+[![commitlint](https://img.shields.io/badge/commitlint-19.x-red)](https://commitlint.js.org/)
 
 ## Description
 
-DI-Lab helps Diablo Immortal players optimize their legendary gem builds by analyzing available resources and recommending the most efficient upgrade paths. Players face complex decisions when upgrading legendary gems - resources like platinum and Telluric Pearls are scarce, and suboptimal choices can significantly set back progress.
+DI-Lab is a web application for optimizing legendary gems in Diablo Immortal. Similar to World of Warcraft tools like Raidbots and Ask Mr. Robot, DI-Lab helps players make data-driven decisions about gem upgrades to maximize their character's power.
 
-Unlike World of Warcraft, which has dedicated optimization tools, Diablo Immortal lacks a specialized gem optimization solution. DI-Lab fills this gap by providing data-driven recommendations based on current gem stats, upgrade costs, and resource constraints.
+The application analyzes your current gem build, considers available resources (platinum, Telluric Pearls, etc.), and provides prioritized upgrade recommendations based on power gain per resource cost.
 
 ## Features
 
-- **Gem Selection**: Select legendary gems from a comprehensive database, specifying quality (1-5★) and rank (1-10)
-- **Resource Management**: Track available resources including platinum, Telluric Pearls, and other upgrade materials
-- **Optimization Engine**: Algorithm that recommends the best gem upgrades within your resource constraints
-- **DI Days Integration**: Incorporate current events and bonuses from diablo.tv
-- **Battle.net Integration**: OAuth authentication with character verification (Planned)
-- **Screenshot OCR**: Automatic gem detection from inventory screenshots (Planned)
-- **Build Management**: Save, share, and compare builds (Planned)
+- **Gem Inventory**: Upload screenshots or manually select legendary gems from a comprehensive database
+- **Resource Management**: Input available resources to get realistic upgrade recommendations
+- **Optimization Engine**: Algorithm that factors in resources, current build, and goals to recommend best upgrades
+- **DI Days Integration**: Current events and bonuses from diablo.tv
+- **Character Sync**: Battle.net OAuth with character verification (planned)
+- **Build Management**: Save, share, and compare builds (planned)
+
+### Tiers
+
+- **Free Tier**: Basic optimization, manual gem entry, limited selections
+- **Paid Tier 1**: Advanced algorithms, screenshot OCR, build saving/sharing
+- **Paid Tier 2**: Battle.net character sync, historical tracking, API access
 
 ## Quick Start
 
-1. Visit DI-Lab
-2. Select your legendary gems from the categorized list
-3. Specify quality (1-5★) and rank (1-10) for each gem
-4. Enter your available resources
-5. Click "Optimize" to receive prioritized upgrade recommendations
-6. Follow the recommendations in-game
-
-## Installation
-
 ### Prerequisites
 
-- [Bun](https://bun.sh/) installed
-- Node.js 20+ (for compatibility)
+- Node.js 20+ or Bun runtime
+- npm or Bun package manager
 
-### Setup
+### Installation
 
 ```bash
 # Clone the repository
@@ -48,67 +49,81 @@ git clone https://github.com/dahgoth/di-lab.git
 cd di-lab
 
 # Install dependencies
-bun install
-
-# Start development server
-bun dev
+npm install
 ```
 
-The application will be available at `http://localhost:3000`.
+### Usage
 
-## Usage
+```bash
+# Start development server
+npm run dev
 
-### Basic Optimization
+# Build for production
+npm run build
 
-1. Navigate to the Optimize page
-2. Select gems from your inventory
-3. Enter your current resources
-4. Click "Optimize" to see recommendations
+# Start production server
+npm start
+```
 
-### With Battle.net Account (Planned)
-
-1. Sign in with Battle.net OAuth
-2. Enter your character ID for verification
-3. Sync your gem inventory automatically
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Contributing
 
-We welcome contributions! Please follow these guidelines:
+We welcome contributions! Please follow our commit workflow:
 
-1. Fork the repository
-2. Create a feature branch: `feature/<identifier>-<###>-<name>`
-3. Make your changes following our [coding standards](AGENTS.md)
-4. Ensure all commits follow [Conventional Commits](https://www.conventionalcommits.org/)
-5. Submit a pull request
+### Commit Workflow
 
-### Development Commands
+This project uses **Conventional Commits** with automated validation:
 
 ```bash
-bun install      # Install dependencies
-bun build        # Build production app
-bun lint         # Check code quality
-bun typecheck    # Type checking
+# Type must be one of: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+# Scope is optional but recommended for spec-specific changes
+
+# Examples:
+git commit -m "feat: add gem selector component"
+git commit -m "fix(optimize): resolve resonance calculation error"
+git commit -m "docs: update installation instructions"
 ```
 
-### Project Structure
+### Pre-commit Checks
 
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout + metadata
-│   ├── page.tsx            # Home page
-│   ├── api/                # API routes
-│   ├── optimize/           # Optimization page
-│   └── builds/             # Saved builds page
-├── components/             # React components
-├── lib/                    # Utilities and libraries
-└── types/                  # TypeScript definitions
-```
+Before each commit, the following checks run automatically:
+
+1. **ESLint** - Code quality and formatting
+2. **TypeScript** - Type checking
+3. **commitlint** - Commit message format validation
+
+If checks fail:
+
+1. Run `npm run lint -- --fix` to auto-fix formatting issues
+2. Fix type errors manually
+3. Rewrite commit message following conventional format
+
+### Pull Requests
+
+1. Create a feature branch from `main`
+2. Make your changes following conventional commits
+3. Create a PR using our template
+4. Ensure all CI checks pass
+5. Wait for review
+
+### Release Process
+
+This project uses **release-please-action** for automated releases:
+
+1. Commits to `main` trigger a Release PR
+2. Review and merge the Release PR
+3. GitHub Release is created automatically
+4. Version in package.json is bumped automatically
+
+See our [contributing guidelines](CONTRIBUTING.md) for more details.
 
 ## License
 
 This project is licensed under the GNU Affero General Public License v3.0 or later - see the [LICENSE](LICENSE) file for details.
 
----
+## Acknowledgments
 
-Built with ❤️ for Diablo Immortal players
+- Inspired by [Raidbots](https://www.raidbots.com/simbot) and [Ask Mr. Robot](https://www.askmrrobot.com/)
+- Data sourced from [diablo.tv](https://diablo.tv/)
+- Character verification via [diabloimmortalredeem.com](https://diabloimmortalredeem.com/)
