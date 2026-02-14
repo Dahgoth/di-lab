@@ -12,5 +12,6 @@
     { "type": "perf", "section": "Changed", "hidden": false }
   ],
   "bump-minor-pre-major": true,
-  "include-v-in-tag": true
+  "include-v-in-tag": true,
+  "initial-version": "0.1.0"
 }
