@@ -1,6 +1,6 @@
 # Feature Specification: Workflow Foundation
 
-**Feature Branch**: `feature/000-workflow-foundation`  
+**Feature Branch**: `feature/001-workflow-foundation`  
 **Created**: 2026-02-13  
 **Status**: Draft  
 **Input**: Meta-workflow infrastructure that must exist before any application code
@@ -36,7 +36,7 @@ GitHub Issue Hierarchy:
 ├── scripts/
 │   └── bash/                  # Automation scripts
 ├── specs/
-│   ├── 000-workflow-foundation/
+│   ├── 001-workflow-foundation/
 │   │   ├── spec.md              # Master specification
 │   │   ├── plan.md              # Implementation phases
 │   │   ├── tasks.md             # Syncs to child issues
@@ -59,6 +59,17 @@ GitHub Issue Hierarchy:
 | Identifier | Optional Linear/task tracker ID | `PROJ`, `DI` |
 
 Mapping: `.specify/specs/001-gem-optimizer/` → `feature/<id>-001-gem-optimizer`
+
+---
+
+## Clarifications
+
+### Session 2026-02-14
+
+- Q: For the README.md badges, which set of badges should be included? → A: Full set: Build Status, License (AGPL-2.0), Version, TypeScript, Next.js
+- Q: For the CHANGELOG.md initial version, what should the starting version be? → A: 0.1.0 (Initial development, standard SemVer)
+- Q: For the README.md content sections, which structure should be used? → A: Full: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
+- Q: For the LICENSE file, which AGPL version should be used? → A: AGPL-3.0-or-later (Allows future versions)
 
 ---
 
@@ -176,6 +187,54 @@ As a reviewer, I want PRs to include a checklist referencing specs and changelog
 
 ---
 
+### User Story 8 - README.md (Priority: P1)
+
+As a new visitor, I want a comprehensive README.md with project description and badges so that I can quickly understand the project's purpose and status.
+
+**Why this priority**: README.md is the entry point for all visitors and potential contributors, essential for project visibility and adoption.
+
+**Independent Test**: View README.md on GitHub, verify badges render correctly and content matches memory bank documentation.
+
+**Acceptance Scenarios**:
+
+1. **Given** README.md exists, **When** visitor views it on GitHub, **Then** badges display: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js
+2. **Given** README.md exists, **When** visitor reads the description, **Then** content accurately reflects the project purpose from memory bank brief.md
+3. **Given** README.md exists, **When** visitor reviews sections, **Then** all required sections are present: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
+
+---
+
+### User Story 9 - LICENSE (Priority: P1)
+
+As a potential contributor, I want a clear LICENSE file so that I understand my rights and obligations when using or contributing to the project.
+
+**Why this priority**: Legal clarity is essential for open-source projects to encourage adoption and contributions.
+
+**Independent Test**: View LICENSE file, verify it contains AGPL-3.0-or-later license text.
+
+**Acceptance Scenarios**:
+
+1. **Given** LICENSE file exists, **When** visitor views it, **Then** it contains the full AGPL-3.0-or-later license text
+2. **Given** LICENSE file exists, **When** automated license check runs, **Then** license is correctly identified as AGPL-3.0-or-later
+3. **Given** LICENSE file exists, **When** contributor forks the repository, **Then** license terms are clear and enforceable
+
+---
+
+### User Story 10 - CHANGELOG.md (Priority: P1)
+
+As a user or developer, I want an initial CHANGELOG.md with version 0.1.0 so that there's a baseline for tracking future changes.
+
+**Why this priority**: CHANGELOG.md provides a historical record that supports the automated changelog workflow defined in User Story 2.
+
+**Independent Test**: View CHANGELOG.md, verify it follows Keep a Changelog format with initial version 0.1.0.
+
+**Acceptance Scenarios**:
+
+1. **Given** CHANGELOG.md exists, **When** visitor views it, **Then** it follows Keep a Changelog format
+2. **Given** CHANGELOG.md exists, **When** visitor checks the version, **Then** initial version is 0.1.0 (SemVer initial development)
+3. **Given** CHANGELOG.md exists, **When** automated changelog workflow runs, **Then** new entries are appended correctly
+
+---
+
 ## Requirements
 
 ### Functional Requirements
@@ -237,6 +296,19 @@ As a reviewer, I want PRs to include a checklist referencing specs and changelog
 - **FR-029**: Template MUST include spec-task sync status checkbox
 - **FR-030**: Template MUST include required review checklist
 
+#### Project Documentation
+
+- **FR-031**: System MUST provide `README.md` at project root
+- **FR-032**: README.md MUST include badges: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js
+- **FR-033**: README.md MUST include sections: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
+- **FR-034**: README.md description MUST reflect project purpose from `.kilocode/rules/memory-bank/brief.md`
+- **FR-035**: README.md features MUST reflect product context from `.kilocode/rules/memory-bank/product.md`
+- **FR-036**: System MUST provide `LICENSE` file at project root
+- **FR-037**: LICENSE MUST contain AGPL-3.0-or-later license text
+- **FR-038**: System MUST provide `CHANGELOG.md` at project root
+- **FR-039**: CHANGELOG.md MUST follow Keep a Changelog format
+- **FR-040**: CHANGELOG.md MUST start with initial version 0.1.0 (SemVer initial development phase)
+
 ---
 
 ## Key Entities
@@ -276,8 +348,8 @@ Represents the link between issues/tasks and specs:
 
 ```typescript
 interface SpecReference {
-  specId: string;  // e.g., "000-workflow-foundation"
-  specPath: string;  // e.g., ".specify/specs/000-workflow-foundation/"
+  specId: string;  // e.g., "001-workflow-foundation"
+  specPath: string;  // e.g., ".specify/specs/001-workflow-foundation/"
   taskId?: string;  // e.g., "T001" if linked to specific task
   issueUrl?: string;  // GitHub issue URL for bidirectional sync
 }
@@ -350,6 +422,9 @@ If `gh` CLI is unavailable or fails, use the GitHub MCP server tools as a fallba
 - **SC-005**: Agent autonomously resolves commit failures in 95% of cases
 - **SC-006**: All issues created from templates contain required frontmatter fields
 - **SC-007**: All PRs include completed spec reference checklist
+- **SC-008**: README.md displays all required badges correctly on GitHub
+- **SC-009**: LICENSE file is correctly identified as AGPL-3.0-or-later by automated tools
+- **SC-010**: CHANGELOG.md follows Keep a Changelog format with initial version 0.1.0
 
 ---
 
@@ -405,4 +480,4 @@ module.exports = {
 
 ---
 
-**Version**: 1.2.0 | **Last Updated**: 2026-02-14
+**Version**: 1.3.0 | **Last Updated**: 2026-02-14
