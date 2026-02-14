@@ -4,7 +4,7 @@
 
 **Project Status**: 🔧 Spec-Kit Aligned - Documentation Updated
 
-The project has been migrated to the `.specify/` folder structure aligned with GitHub Spec Kit. The constitution now incorporates SDD principles, the specs README includes enhanced quality commands, and the workflow foundation spec has correct paths.
+The project has been migrated to the Spec-Kit folder structure aligned with GitHub Spec Kit. The constitution now incorporates SDD principles, the specs README includes enhanced quality commands, and the workflow foundation spec has correct paths.
 
 ## Recently Completed
 
@@ -22,15 +22,15 @@ The project has been migrated to the `.specify/` folder structure aligned with G
 - [x] **Agent Commit Instructions** - .kilocode/rules/commit.md with failure scenarios
 - [x] **Specs README** - Documentation for spec-driven workflow
 - [x] **Spec-Kit Alignment** - Constitution updated with SDD principles
-- [x] **Path Migration** - All paths updated to `.specify/specs/`
+- [x] **Path Migration** - Specs moved to `specs/` at project root
 
 ## Current Structure
 
 | File/Directory | Purpose | Status |
 |----------------|---------|--------|
 | `.specify/memory/constitution.md` | Foundational principles (v2.0.0) | ✅ Updated |
-| `.specify/specs/000-workflow-foundation/` | Workflow foundation spec | ✅ Complete |
-| `.specify/specs/README.md` | SDD workflow documentation | ✅ Complete |
+| `specs/001-workflow-foundation/` | Workflow foundation spec | ✅ Complete |
+| `specs/README.md` | SDD workflow documentation | ✅ Complete |
 | `.github/ISSUE_TEMPLATE/` | Issue templates | ✅ Complete |
 | `.github/pull_request_template.md` | PR template | ✅ Complete |
 | `.kilocode/rules/commit.md` | Agent commit instructions | ✅ Complete |
@@ -70,13 +70,14 @@ The project has been migrated to the `.specify/` folder structure aligned with G
 │   └── constitution.md        # Foundational principles
 ├── scripts/
 │   └── bash/                  # Automation scripts
-├── specs/
-│   ├── 000-workflow-foundation/
-│   │   └── spec.md              # Master specification
-│   ├── 001-gem-optimizer/
-│   │   └── ...
-│   └── README.md
-└── templates/                    # Document templates
+└── templates/                 # Document templates
+
+specs/
+├── 001-workflow-foundation/
+│   └── spec.md              # Master specification
+├── 002-gem-optimizer/
+│   └── ...
+└── README.md
 ```
 
 ### Branch Naming Convention
@@ -102,7 +103,7 @@ The project has been migrated to the `.specify/` folder structure aligned with G
 
 | Date | Changes |
 |------|---------|
-| 2026-02-14 | Aligned documentation with Spec-Kit process and `.specify/` paths |
+| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix |
 | 2026-02-14 | Updated constitution to v2.0.0 with SDD principles |
 | 2026-02-14 | Added enhanced quality commands to specs README |
 | 2026-02-13 | Created workflow foundation specification (000-workflow-foundation) |
@@ -132,11 +133,11 @@ The project has been migrated to the `.specify/` folder structure aligned with G
 
 | Component | File | Purpose |
 |-----------|------|---------|
-| Spec | `.specify/specs/000-workflow-foundation/spec.md` | 7 user stories, 30 functional requirements |
+| Spec | `specs/001-workflow-foundation/spec.md` | 7 user stories, 30 functional requirements |
 | Issue Templates | `.github/ISSUE_TEMPLATE/` | Bug, feature, task templates |
 | PR Template | `.github/pull_request_template.md` | Spec reference checklist |
 | Commit Rules | `.kilocode/rules/commit.md` | Agent failure recovery |
-| Spec README | `.specify/specs/README.md` | SDD workflow documentation |
+| Spec README | `specs/README.md` | SDD workflow documentation |
 | Constitution | `.specify/memory/constitution.md` | SDD principles + human checkpoints |
 
 ## Gem Optimizer (001) Summary
@@ -154,5 +155,5 @@ The project has been migrated to the `.specify/` folder structure aligned with G
 - **Commit Workflow**: `bun typecheck && bun lint && git add -A && git commit -m "type: description" && git push`
 - **Pre-commit Hooks**: lint, typecheck
 - **Commit Format**: `type(scope): description` (lowercase, max 72 chars)
-- **Spec Directory**: `.specify/specs/`
+- **Spec Directory**: `specs/`
 - **Constitution Version**: 2.0.0

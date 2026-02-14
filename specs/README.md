@@ -38,13 +38,14 @@ This directory contains all feature specifications for DI-Lab, following the Spe
 │   └── constitution.md        # Foundational principles
 ├── scripts/
 │   └── bash/                  # Automation scripts
-├── specs/
-│   ├── 000-workflow-foundation/   # Meta-workflow infrastructure
-│   │   └── spec.md               # Master specification
-│   ├── 001-gem-optimizer/        # Gem optimization feature
-│   │   └── ...
-│   └── README.md                 # This file
-└── templates/                    # Document templates
+└── templates/                 # Document templates
+
+specs/
+├── 001-workflow-foundation/   # Meta-workflow infrastructure
+│   └── spec.md               # Master specification
+├── 002-gem-optimizer/        # Gem optimization feature
+│   └── ...
+└── README.md                 # This file
 ```
 
 ---
@@ -93,7 +94,7 @@ These optional commands provide additional quality assurance:
 
 ### Phase 1: Specification Creation
 
-**Agent Action**: Create specification document at `.specify/specs/<###>-<feature-name>/spec.md`
+**Agent Action**: Create specification document at `specs/<###>-<feature-name>/spec.md`
 
 **Agent MUST Include**:
 - User stories with acceptance criteria
@@ -139,7 +140,7 @@ Agent proceeds ONLY after approval
 
 ### Phase 3: Planning
 
-**Agent Action**: Create implementation plan at `.specify/specs/<###>-<feature-name>/plan.md`
+**Agent Action**: Create implementation plan at `specs/<###>-<feature-name>/plan.md`
 
 **Agent MUST Include**:
 - Technical context and constraints
@@ -184,7 +185,7 @@ Agent proceeds ONLY after approval
 
 ### Phase 5: Task Decomposition
 
-**Agent Action**: Generate actionable tasks at `.specify/specs/<###>-<feature-name>/tasks.md`
+**Agent Action**: Generate actionable tasks at `specs/<###>-<feature-name>/tasks.md`
 
 **Agent MUST Include**:
 - Task IDs (T001, T002, etc.)

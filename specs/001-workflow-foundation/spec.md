@@ -35,19 +35,20 @@ GitHub Issue Hierarchy:
 │   └── constitution.md        # Foundational principles
 ├── scripts/
 │   └── bash/                  # Automation scripts
-├── specs/
-│   ├── 001-workflow-foundation/
-│   │   ├── spec.md              # Master specification
-│   │   ├── plan.md              # Implementation phases
-│   │   ├── tasks.md             # Syncs to child issues
-│   │   ├── research.md          # Decisions/research
-│   │   ├── data-model.md        # Data structures
-│   │   ├── quickstart.md        # Developer guide
-│   │   └── contracts/           # API/type contracts
-│   ├── 001-gem-optimizer/
-│   │   └── ...
-│   └── README.md
-└── templates/                    # Document templates
+└── templates/                 # Document templates
+
+specs/
+├── 001-workflow-foundation/
+│   ├── spec.md              # Master specification
+│   ├── plan.md              # Implementation phases
+│   ├── tasks.md             # Syncs to child issues
+│   ├── research.md          # Decisions/research
+│   ├── data-model.md        # Data structures
+│   ├── quickstart.md        # Developer guide
+│   └── contracts/           # API/type contracts
+├── 002-gem-optimizer/
+│   └── ...
+└── README.md
 ```
 
 ### Branch Naming Convention
@@ -58,7 +59,7 @@ GitHub Issue Hierarchy:
 | Fix | `fix/<identifier>-<###>-<name>` | `fix/PROJ-001-login-error` |
 | Identifier | Optional Linear/task tracker ID | `PROJ`, `DI` |
 
-Mapping: `.specify/specs/001-gem-optimizer/` → `feature/<id>-001-gem-optimizer`
+Mapping: `specs/001-gem-optimizer/` → `feature/<id>-001-gem-optimizer`
 
 ---
 
@@ -70,6 +71,10 @@ Mapping: `.specify/specs/001-gem-optimizer/` → `feature/<id>-001-gem-optimizer
 - Q: For the CHANGELOG.md initial version, what should the starting version be? → A: 0.1.0 (Initial development, standard SemVer)
 - Q: For the README.md content sections, which structure should be used? → A: Full: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
 - Q: For the LICENSE file, which AGPL version should be used? → A: AGPL-3.0-or-later (Allows future versions)
+- Q: How should the changelog automation be triggered? → A: GitHub Actions workflow triggered on PR merge (push to main)
+- Q: What should happen if a hook exceeds execution timeout? → A: Fail with timeout error (commit blocked, developer notified)
+- Q: What is the maximum acceptable execution time for pre-commit hooks? → A: 30 seconds
+- Q: Should the README.md include badges for workflow tools (SemVer, Conventional Commits, Keep a Changelog, Husky, commitlint)? → A: Yes, include all workflow tool badges in addition to existing badges
 
 ---
 
@@ -197,7 +202,7 @@ As a new visitor, I want a comprehensive README.md with project description and 
 
 **Acceptance Scenarios**:
 
-1. **Given** README.md exists, **When** visitor views it on GitHub, **Then** badges display: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js
+1. **Given** README.md exists, **When** visitor views it on GitHub, **Then** badges display: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js, SemVer, Conventional Commits, Keep a Changelog, Husky, commitlint
 2. **Given** README.md exists, **When** visitor reads the description, **Then** content accurately reflects the project purpose from memory bank brief.md
 3. **Given** README.md exists, **When** visitor reviews sections, **Then** all required sections are present: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
 
@@ -250,6 +255,7 @@ As a user or developer, I want an initial CHANGELOG.md with version 0.1.0 so tha
 #### Changelog Management
 
 - **FR-006**: System MUST maintain CHANGELOG.md with sections: Added, Changed, Deprecated, Removed, Fixed, Security
+- **FR-006a**: System MUST use GitHub Actions workflow triggered on PR merge (push to main) for automated changelog updates
 - **FR-007**: System MUST map commit types to changelog sections:
   - `feat` → Added
   - `fix` → Fixed
@@ -273,6 +279,8 @@ As a user or developer, I want an initial CHANGELOG.md with version 0.1.0 so tha
 - **FR-015**: System MUST run `bun typecheck` in pre-commit hook
 - **FR-016**: System MUST run commitlint in commit-msg hook
 - **FR-017**: System MUST block commits on hook failure with actionable error message
+- **FR-017a**: System MUST fail with timeout error if hook exceeds 60 seconds, blocking commit and notifying developer
+- **FR-017b**: System MUST complete pre-commit hooks (lint + typecheck) within 30 seconds under normal conditions
 
 #### Agent Instructions
 
@@ -299,7 +307,7 @@ As a user or developer, I want an initial CHANGELOG.md with version 0.1.0 so tha
 #### Project Documentation
 
 - **FR-031**: System MUST provide `README.md` at project root
-- **FR-032**: README.md MUST include badges: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js
+- **FR-032**: README.md MUST include badges: Build Status, License (AGPL-3.0-or-later), Version, TypeScript, Next.js, SemVer, Conventional Commits, Keep a Changelog, Husky, commitlint
 - **FR-033**: README.md MUST include sections: Badges, Description, Features, Quick Start, Installation, Usage, Contributing, License
 - **FR-034**: README.md description MUST reflect project purpose from `.kilocode/rules/memory-bank/brief.md`
 - **FR-035**: README.md features MUST reflect product context from `.kilocode/rules/memory-bank/product.md`
@@ -349,7 +357,7 @@ Represents the link between issues/tasks and specs:
 ```typescript
 interface SpecReference {
   specId: string;  // e.g., "001-workflow-foundation"
-  specPath: string;  // e.g., ".specify/specs/001-workflow-foundation/"
+  specPath: string;  // e.g., "specs/001-workflow-foundation/"
   taskId?: string;  // e.g., "T001" if linked to specific task
   issueUrl?: string;  // GitHub issue URL for bidirectional sync
 }
@@ -422,7 +430,7 @@ If `gh` CLI is unavailable or fails, use the GitHub MCP server tools as a fallba
 - **SC-005**: Agent autonomously resolves commit failures in 95% of cases
 - **SC-006**: All issues created from templates contain required frontmatter fields
 - **SC-007**: All PRs include completed spec reference checklist
-- **SC-008**: README.md displays all required badges correctly on GitHub
+- **SC-008**: README.md displays all required badges correctly on GitHub (Build Status, License, Version, TypeScript, Next.js, SemVer, Conventional Commits, Keep a Changelog, Husky, commitlint)
 - **SC-009**: LICENSE file is correctly identified as AGPL-3.0-or-later by automated tools
 - **SC-010**: CHANGELOG.md follows Keep a Changelog format with initial version 0.1.0
 
@@ -441,7 +449,7 @@ module.exports = {
       'test', 'chore', 'perf', 'ci', 'build', 'revert'
     ]],
     'scope-enum': [2, 'always', [
-      // Dynamically populated from .specify/specs/ directories
+      // Dynamically populated from specs/ directories
     ]],
     'subject-case': [2, 'always', 'lower-case'],
     'subject-max-length': [2, 'always', 72],
@@ -475,9 +483,9 @@ module.exports = {
 
 - Do NOT implement any code - specification documents only
 - Use existing `.specify/memory/constitution.md` principles as foundation
-- Ensure compatibility with existing `.specify/` structure
+- Ensure compatibility with existing project structure
 - All paths relative to project root
 
 ---
 
-**Version**: 1.3.0 | **Last Updated**: 2026-02-14
+**Version**: 1.5.0 | **Last Updated**: 2026-02-14
