@@ -15,19 +15,9 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: node
-          package-name: di-lab
-          changelog-types: |
-            [
-              {"type":"feat","section":"Added","hidden":false},
-              {"type":"fix","section":"Fixed","hidden":false},
-              {"type":"deprecate","section":"Deprecated","hidden":false},
-              {"type":"remove","section":"Removed","hidden":false},
-              {"type":"security","section":"Security","hidden":false},
-              {"type":"refactor","section":"Changed","hidden":false},
-              {"type":"perf","section":"Changed","hidden":false}
-            ]
-      
+          manifest-file: .release-please-manifest.json
+          config-file: release-please-config.json
+
       # Optional: Create major/minor version tags
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
