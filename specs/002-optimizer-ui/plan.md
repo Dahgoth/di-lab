@@ -309,3 +309,15 @@ _Re-evaluated after Phase 1 design artifacts complete._
 ## Planning Complete
 
 This plan is ready for task generation via `/speckit.tasks` command.
+
+---
+
+## Analysis Remediation Changelog
+
+| Date       | ID   | Severity | Issue                                                                          | File(s) Modified | Change                                                         |
+| ---------- | ---- | -------- | ------------------------------------------------------------------------------ | ---------------- | -------------------------------------------------------------- |
+| 2026-02-15 | F-01 | CRITICAL | T052 referenced "exponential backoff" contradicting spec's "single retry only" | tasks.md         | Changed T052 description to "single retry with fixed 1s delay" |
+| 2026-02-15 | F-02 | CRITICAL | Deferred tasks T054/T055/T064 had numbering conflicts with Phase 6             | tasks.md         | Added disambiguation note to deferred section                  |
+| 2026-02-15 | E-01 | HIGH     | FR-034 mobile tooltip alternative had no task coverage                         | tasks.md         | Added T069a for mobile tap-to-reveal tooltips                  |
+| 2026-02-15 | E-02 | HIGH     | Network loss during optimization edge case uncovered                           | tasks.md         | Added T053a for offline detection and retry                    |
+| 2026-02-15 | E-03 | HIGH     | Deprecated gems in saved builds edge case uncovered                            | tasks.md         | Added T063a for deprecated gem detection                       |

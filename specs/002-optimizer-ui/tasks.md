@@ -127,8 +127,9 @@ User Story 3: As a player, I want to trigger optimization and view prioritized r
 - [ ] T049 [US3] Create error display component for validation errors
 - [ ] T050 [US3] Create error display for insufficient-resources with actionable guidance
 - [ ] T051 [US3] Create error display for timeout with retry option
-- [ ] T052 [US3] Implement single retry with 1s exponential backoff for transient failures
+- [ ] T052 [US3] Implement single retry with fixed 1s delay for transient failures
 - [ ] T053 [US3] Add loading state with disabled interaction during optimization
+- [ ] T053a [US3] Handle network connection loss during optimization with offline detection and retry-when-online option
 
 ---
 
@@ -151,6 +152,7 @@ User Story 4: As a returning player, I want to save my current build configurati
 - [ ] T061 [US4] Create save build modal with name input and optional notes
 - [ ] T062 [US4] Add load build functionality with state restoration
 - [ ] T063 [US4] Add delete build functionality with confirmation
+- [ ] T063a [US4] Detect and display deprecated gems in saved builds with visual indicator and removal option
 
 ---
 
@@ -165,6 +167,7 @@ User Story 5: As a player unfamiliar with certain gems, I want to view detailed 
 - [ ] T067 [US5] Add resonance thresholds display to gem detail
 - [ ] T068 [US5] Add categorized effects display (OFF, DEF, ALL, DOT, LOC, TLOC)
 - [ ] T069 [US5] Create `src/components/ui/Tooltip.tsx` for quick gem summaries on hover
+- [ ] T069a [US5] Implement mobile tooltip alternative with tap-to-reveal info buttons for touch devices
 
 ---
 
@@ -222,6 +225,8 @@ Final polish, accessibility, and cross-cutting concerns.
 ## Phase 11: Deferred Features (Future Enhancement)
 
 > **Note**: These tasks require authentication infrastructure and are deferred pending Battle.net OAuth implementation.
+
+> **Note:** T054, T055, and T064 are deferred from their original phases and listed here for tracking. They retain their original IDs to maintain traceability to spec requirements.
 
 - [ ] **T054**: Create src/lib/db/schema.ts with builds table (deferred - requires auth)
 - [ ] **T055**: Create src/lib/db/queries.ts for build CRUD (deferred - requires auth)
