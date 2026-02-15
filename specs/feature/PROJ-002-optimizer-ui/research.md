@@ -8,6 +8,26 @@ This document captures research findings for the Optimizer UI implementation, re
 
 ---
 
+## Exact Package Versions
+
+The following table lists the exact versions of key dependencies currently used in the project:
+
+| Package              | Version        | Purpose                         |
+| -------------------- | -------------- | ------------------------------- |
+| next                 | ^16.1.3        | React framework with App Router |
+| react                | ^19.2.3        | UI library                      |
+| react-dom            | ^19.2.3        | React DOM rendering             |
+| typescript           | ^5.9.3         | Type-safe JavaScript            |
+| tailwindcss          | ^4.1.17        | Utility-first CSS framework     |
+| @tailwindcss/postcss | ^4.1.17        | Tailwind CSS PostCSS plugin     |
+| zod                  | ^4.3.6         | Schema validation               |
+| lucide-react         | ^0.564.0       | Icon library                    |
+| next-auth            | ^5.0.0-beta.30 | Authentication                  |
+| drizzle-orm          | ^0.45.1        | Database ORM                    |
+| better-sqlite3       | ^12.6.2        | SQLite database driver          |
+
+---
+
 ## Research Topics
 
 ### 1. Gem Icon Assets
@@ -173,7 +193,7 @@ interface GemTierInfo {
 
 **Decision**: JSON structure with version field and array of build objects.
 
-**Schema**:
+**Schema** (CORRECTED - see T-02 findings):
 
 ```typescript
 interface StoredBuild {
@@ -181,8 +201,10 @@ interface StoredBuild {
   name: string; // User-provided build name
   gems: EquippedGem[]; // Array of equipped gems
   resources: {
-    platinum: number;
-    telluricPearls: number;
+    gemPower: number; // Primary upgrade currency
+  };
+  copyInventory: {
+    [gemId: string]: number; // Gem copies available per gem type
   };
   optimizationMode: "PVP" | "PVE";
   notes?: string; // Optional user notes
@@ -191,29 +213,37 @@ interface StoredBuild {
 }
 
 interface LocalStorageSchema {
-  version: 1; // Schema version for future migrations
+  version: 2; // Bumped for resource model correction
   builds: StoredBuild[];
   currentSession?: {
     // Auto-saved current work
     gems: EquippedGem[];
-    resources: { platinum: number; telluricPearls: number };
+    resources: { gemPower: number };
+    copyInventory: { [gemId: string]: number };
     optimizationMode: "PVP" | "PVE";
     updatedAt: string;
   };
 }
 ```
 
-**localStorage Key**: `di-lab-v1`
+**localStorage Key**: `di-lab-v2`
 
 **Implementation**:
 
 ```typescript
-const STORAGE_KEY = "di-lab-v1";
+const STORAGE_KEY = "di-lab-v2";
 
 function loadFromStorage(): LocalStorageSchema {
   const data = localStorage.getItem(STORAGE_KEY);
-  if (!data) return { version: 1, builds: [] };
-  return JSON.parse(data);
+  if (!data) return { version: 2, builds: [] };
+  const parsed = JSON.parse(data);
+
+  // Migration from v1 if needed
+  if (parsed.version === 1) {
+    return migrateFromV1(parsed);
+  }
+
+  return parsed;
 }
 
 function saveToStorage(data: LocalStorageSchema): void {
@@ -225,7 +255,21 @@ function autoSaveSession(session: CurrentSession): void {
   data.currentSession = { ...session, updatedAt: new Date().toISOString() };
   saveToStorage(data);
 }
+
+// Migration helper for v1 → v2
+function migrateFromV1(old: V1Schema): LocalStorageSchema {
+  return {
+    version: 2,
+    builds: old.builds.map((build) => ({
+      ...build,
+      resources: { gemPower: 0 }, // Reset resources
+      copyInventory: {}, // Empty copy inventory
+    })),
+  };
+}
 ```
+
+> **Note**: Schema version bumped to v2 due to resource model correction. See T-02 findings for details.
 
 ---
 
@@ -359,10 +403,360 @@ All NEEDS CLARIFICATION items from the plan have been resolved:
 
 ---
 
+## Resolved Research Items
+
+The following research items have been resolved through dedicated research subtasks:
+
+### T-01: CR Calculation Tables - RESOLVED
+
+**Status**: ✅ Data already exists in project documentation
+
+**Source Locations**:
+
+- [`docs/legendary-gems/upgrading.md`](docs/legendary-gems/upgrading.md:145-162) - CR formulas and tables
+- [`docs/legendary-gems.csv`](docs/legendary-gems.csv:593-604) - Raw data export
+
+**Findings**:
+
+#### Combat Rating (CR) by Star Rating and Rank
+
+| Rank | 1-Star CR | 2-Star CR | 5-Star 2/5 CR | 5-Star 3/5 CR | 5-Star 4/5 CR | 5-Star 5/5 CR |
+| ---- | --------- | --------- | ------------- | ------------- | ------------- | ------------- |
+| 1    | 8         | 12        | 12            | 16            | 20            | 24            |
+| 2    | 12        | 18        | 24            | 32            | 40            | 48            |
+| 3    | 16        | 24        | 36            | 48            | 60            | 72            |
+| 4    | 20        | 30        | 48            | 64            | 80            | 96            |
+| 5    | 24        | 36        | 60            | 80            | 100           | 120           |
+| 6    | 28        | 42        | 72            | 96            | 120           | 144           |
+| 7    | 32        | 48        | 84            | 112           | 140           | 168           |
+| 8    | 36        | 54        | 96            | 128           | 160           | 192           |
+| 9    | 40        | 60        | 108           | 144           | 180           | 216           |
+| 10   | 44        | 66        | 120           | 160           | 200           | 240           |
+
+#### CR Formulas
+
+```typescript
+// 1-Star gems: CR = 4 + (rank × 4)
+function calculate1StarCR(rank: number): number {
+  return 4 + rank * 4; // R1=8, R10=44
+}
+
+// 2-Star gems: CR = 6 + (rank × 6)
+function calculate2StarCR(rank: number): number {
+  return 6 + rank * 6; // R1=12, R10=66
+}
+
+// 5-Star gems: Quality-dependent lookup table
+function calculate5StarCR(rank: number, quality: Quality): number {
+  return FIVE_STAR_CR_TABLE[quality][rank]; // R1: 12-24, R10: 120-240
+}
+```
+
+**Implementation Guidance**:
+
+- Create `src/lib/calculations/cr.ts` with lookup tables and formulas
+- Export `calculateCR(gem: EquippedGem): number` function
+- Unit tests to verify all values match documentation
+
+---
+
+### T-02: Gem Power Conversion - CRITICAL FINDING
+
+**Status**: 🚨 Data model correction required
+
+**Issue**: The original data model incorrectly assumed Platinum and Telluric Pearls are used for gem upgrades. **This is incorrect.**
+
+**Correct Resources**:
+
+- **Gem Power**: Primary upgrade currency
+- **Gem Copies**: Required for rank upgrades (duplicates of the same gem)
+
+**Correction Required**:
+
+The localStorage schema in Section 5 must be updated:
+
+```typescript
+// CORRECTED RESOURCE MODEL
+interface GemResources {
+  gemPower: number; // Primary upgrade currency
+  // Gem copies are tracked per gem, not as global resources
+}
+
+// Per-gem copy tracking
+interface GemCopyInventory {
+  [gemId: string]: number; // Number of copies available per gem
+}
+```
+
+**Upgrade Cost Tables** (from `docs/legendary-gems/upgrading.md`):
+
+| Rank → Rank+1 | 1-Star GP | 2-Star GP | 5-Star GP |
+| ------------- | --------- | --------- | --------- |
+| 1 → 2         | 15        | 30        | 60        |
+| 2 → 3         | 30        | 60        | 120       |
+| 3 → 4         | 45        | 90        | 180       |
+| 4 → 5         | 60        | 120       | 240       |
+| 5 → 6         | 75        | 150       | 300       |
+| 6 → 7         | 90        | 180       | 360       |
+| 7 → 8         | 105       | 210       | 420       |
+| 8 → 9         | 120       | 240       | 480       |
+| 9 → 10        | 135       | 270       | 540       |
+
+**Gem Copy Requirements**:
+
+- All upgrades require 1 gem copy (duplicate) regardless of star rating
+- Exception: Some rank thresholds may require additional copies (verify in-game)
+
+**Implementation Guidance**:
+
+1. Update `data-model.md` to remove platinum/telluricPearls
+2. Add `gemPower: number` to resources
+3. Add per-gem copy tracking to user inventory
+4. Create `src/lib/calculations/upgrade-costs.ts` with cost lookup tables
+
+---
+
+### T-03: Optimization Algorithm - RESOLVED
+
+**Status**: ✅ Algorithm designed and documented
+
+**Approach**: Weighted Greedy Algorithm with O(n log n) complexity
+
+**Algorithm Overview**:
+
+```typescript
+interface OptimizationInput {
+  gems: EquippedGem[];
+  resources: GemResources;
+  copyInventory: GemCopyInventory;
+  mode: "PVP" | "PVE";
+}
+
+interface OptimizationResult {
+  recommendations: UpgradeRecommendation[];
+  expectedPowerGain: number;
+  resourceUsage: GemResources;
+}
+
+interface UpgradeRecommendation {
+  gemId: string;
+  currentRank: number;
+  targetRank: number;
+  cost: { gemPower: number; copies: number };
+  powerGain: number;
+  priority: number; // Higher = better ROI
+}
+```
+
+**Power Calculation Formula**:
+
+```typescript
+function calculatePower(gem: EquippedGem, mode: "PVP" | "PVE"): number {
+  const resonance = calculateResonance(gem);
+  const cr = calculateCR(gem);
+  const tier = getTierRanking(gem.gemId, mode);
+
+  // Base power from stats
+  const basePower = resonance * 1.0 + cr * 2.0;
+
+  // Tier multiplier
+  const tierMultiplier = TIER_WEIGHTS[tier]; // S=1.5, A=1.3, B=1.1, C=0.9, D=0.7
+
+  // Threshold bonus (wing slots unlocked)
+  const thresholdBonus = calculateThresholdBonus(gem);
+
+  // Diminishing returns for high ranks
+  const diminishingFactor = Math.max(0.5, 1 - (gem.rank - 1) * 0.05);
+
+  return basePower * tierMultiplier * thresholdBonus * diminishingFactor;
+}
+```
+
+**Tier Weights**:
+
+| Tier | Weight |
+| ---- | ------ |
+| S    | 1.5    |
+| A    | 1.3    |
+| B    | 1.1    |
+| C    | 0.9    |
+| D    | 0.7    |
+
+**Algorithm Steps**:
+
+1. **Calculate Current Power**: For each equipped gem
+2. **Identify Upgrade Candidates**: Gems that can be upgraded with available resources
+3. **Calculate ROI**: Power gain per resource cost for each candidate
+4. **Sort by ROI**: Descending order
+5. **Greedy Selection**: Pick highest ROI upgrade, deduct resources, repeat
+6. **Return Recommendations**: Sorted list with expected power gains
+
+**Complexity Analysis**:
+
+- Time: O(n log n) for sorting n candidates
+- Space: O(n) for candidate list
+- Suitable for real-time calculation (< 100ms for typical inputs)
+
+**File Structure**:
+
+```
+src/lib/optimization/
+├── engine.ts      # Main optimization entry point
+├── scoring.ts     # Power calculation functions
+├── resources.ts   # Resource management utilities
+└── types.ts       # Shared type definitions
+```
+
+**Implementation Guidance**:
+
+1. Implement scoring functions first (unit test thoroughly)
+2. Build resource checking utilities
+3. Implement greedy algorithm with sorted candidates
+4. Add edge case handling (no upgrades possible, max rank gems)
+
+---
+
+### B-01: Testing Framework - RESOLVED
+
+**Status**: ✅ Recommendation complete
+
+**Recommended Stack**:
+
+- **Unit/Integration**: Vitest + React Testing Library
+- **End-to-End**: Playwright
+
+**Rationale**:
+
+- Vitest: Native Bun compatibility, fast execution, Jest-compatible API
+- React Testing Library: Industry standard for React component testing
+- Playwright: Cross-browser E2E testing, excellent debugging tools
+
+**Setup Configuration**:
+
+```typescript
+// vitest.config.ts
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./tests/setup.ts"],
+    include: ["src/**/*.test.{ts,tsx}"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      exclude: ["node_modules/", "tests/"],
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
+```
+
+```json
+// package.json scripts
+{
+  "test": "vitest run",
+  "test:watch": "vitest",
+  "test:coverage": "vitest run --coverage",
+  "test:e2e": "playwright test"
+}
+```
+
+**Test File Structure**:
+
+```
+src/
+├── lib/
+│   ├── calculations/
+│   │   ├── cr.ts
+│   │   ├── cr.test.ts       # Co-located unit tests
+│   │   ├── resonance.ts
+│   │   └── resonance.test.ts
+│   └── optimization/
+│       ├── engine.ts
+│       └── engine.test.ts
+├── components/
+│   └── gems/
+│       ├── GemSelector.tsx
+│       └── GemSelector.test.tsx
+tests/
+├── setup.ts                  # Testing library setup
+├── fixtures/                 # Test data
+└── e2e/                      # Playwright E2E tests
+    └── optimize.spec.ts
+```
+
+**Dependencies to Add**:
+
+```bash
+bun add -d vitest @vitest/ui @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom @vitejs/plugin-react
+bun add -d @playwright/test
+```
+
+**Implementation Guidance**:
+
+1. Create `vitest.config.ts` at project root
+2. Add test scripts to `package.json`
+3. Create `tests/setup.ts` with testing library configuration
+4. Start with unit tests for calculation functions (CR, resonance)
+5. Add component tests for UI elements
+6. Add E2E tests for critical user flows
+
+---
+
+## Data Model Corrections
+
+### Resource Types Correction
+
+**Original (Incorrect)**:
+
+```typescript
+interface Resources {
+  platinum: number;
+  telluricPearls: number;
+}
+```
+
+**Corrected**:
+
+```typescript
+interface Resources {
+  gemPower: number;
+}
+
+interface GemCopyInventory {
+  [gemId: string]: number;
+}
+```
+
+**Impact**:
+
+- Update localStorage schema (Section 5)
+- Update API contracts (`contracts/optimize-api.schema.json`)
+- Update data model (`data-model.md`)
+- Update all UI components that reference old resources
+
+---
+
 ## Next Steps
 
 Proceed to Phase 1:
 
-1. Generate `data-model.md` with entity definitions
-2. Generate `contracts/` with API schemas
-3. Generate `quickstart.md` with implementation guide
+1. ~~Generate `data-model.md` with entity definitions~~ ✅ Complete (needs resource correction)
+2. ~~Generate `contracts/` with API schemas~~ ✅ Complete (needs resource correction)
+3. ~~Generate `quickstart.md` with implementation guide~~ ✅ Complete
+
+**Immediate Actions Required**:
+
+1. Update `data-model.md` with corrected resource types (gemPower + copies)
+2. Update `contracts/optimize-api.schema.json` with corrected resource schema
+3. Implement calculation functions (`src/lib/calculations/`)
+4. Implement optimization engine (`src/lib/optimization/`)
+5. Add testing framework configuration
