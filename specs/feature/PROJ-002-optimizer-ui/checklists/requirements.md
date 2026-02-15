@@ -35,7 +35,7 @@
 | Metric                  | Count | Notes                                 |
 | ----------------------- | ----- | ------------------------------------- |
 | User Stories            | 7     | P1: 3, P2: 3, P3: 1                   |
-| Functional Requirements | 52    | FR-001 to FR-045 + 7 sub-requirements |
+| Functional Requirements | 53    | FR-001 to FR-045 + 8 sub-requirements |
 | Success Criteria        | 10    | SC-001 to SC-010                      |
 | Edge Cases              | 9     | Lines 139-150 in spec.md              |
 | Clarifications Resolved | 27    | Lines 529-610 in spec.md              |
@@ -92,7 +92,7 @@ None - all items passed validation.
 
 10. **Error Handling Strategy**: Typed errors (validation, insufficient-resources, timeout, server-error) with tailored UI messages
 11. **Loading State Pattern**: Skeleton loaders - gray placeholder shapes mimicking content layout, replaced when data arrives
-12. **API Retry Strategy**: Single retry with exponential backoff (1s delay) for transient failures
+12. **API Retry Strategy**: Single retry only (no exponential backoff) for transient failures
 
 ### Input Handling
 
@@ -155,13 +155,13 @@ None - all items passed validation.
 | 597       | Auto-Persist Frequency    | FR-023a (on every change)              |
 | 600       | Responsive Breakpoints    | FR-038 (Tailwind defaults)             |
 | 603       | Toast Auto-Dismiss        | Edge case (multi-tab warning)          |
-| 606       | API Retry Strategy        | FR-021b (exponential backoff)          |
+| 606       | API Retry Strategy        | FR-021b (single retry only)            |
 | 609       | Gem Catalog Data Loading  | FR-001 (static JSON)                   |
 
 ## Notes
 
 - All quality checks have passed
-- Specification contains 52 functional requirements (45 base + 7 sub-requirements)
+- Specification contains 53 functional requirements (45 base + 8 sub-requirements)
 - 34 total acceptance scenarios across 7 user stories
 - 9 edge cases covering error conditions and boundary scenarios
 - 27 clarifications resolved with full traceability to requirements

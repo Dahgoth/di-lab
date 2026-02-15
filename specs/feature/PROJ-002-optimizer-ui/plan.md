@@ -1,7 +1,7 @@
 # Implementation Plan: Optimizer UI
 
 **Branch**: `feature/PROJ-002-optimizer-ui` | **Date**: 2026-02-14 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `specs/002-optimizer-ui/spec.md`
+**Input**: Feature specification from `specs/feature/PROJ-002-optimizer-ui/spec.md`
 
 ## Summary
 
@@ -134,7 +134,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 ### Documentation (this feature)
 
 ```text
-specs/002-optimizer-ui/
+specs/feature/PROJ-002-optimizer-ui/
 ├── spec.md              # Feature specification (complete)
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output
@@ -321,3 +321,37 @@ This plan is ready for task generation via `/speckit.tasks` command.
 | 2026-02-15 | E-01 | HIGH     | FR-034 mobile tooltip alternative had no task coverage                         | tasks.md         | Added T069a for mobile tap-to-reveal tooltips                  |
 | 2026-02-15 | E-02 | HIGH     | Network loss during optimization edge case uncovered                           | tasks.md         | Added T053a for offline detection and retry                    |
 | 2026-02-15 | E-03 | HIGH     | Deprecated gems in saved builds edge case uncovered                            | tasks.md         | Added T063a for deprecated gem detection                       |
+
+---
+
+## Remediation Changelog
+
+**Date**: 2026-02-15
+**Type**: Alignment Audit Remediation
+
+### Issues Resolved: 8
+
+| ID   | Severity | Issue                                         | Resolution                                         |
+| ---- | -------- | --------------------------------------------- | -------------------------------------------------- |
+| C-01 | CRITICAL | Folder naming convention violation            | Migrated to `specs/feature/PROJ-002-optimizer-ui/` |
+| C-02 | CRITICAL | Branch reference incorrect                    | Updated to `feature/PROJ-002-optimizer-ui`         |
+| C-03 | CRITICAL | Contradictory exponential backoff requirement | Aligned with spec.md clarification                 |
+| H-01 | HIGH     | Task count mismatch in context.md             | Updated to 93 tasks                                |
+| H-02 | HIGH     | FR count error in requirements.md             | Updated to 53 total FRs                            |
+| H-03 | HIGH     | Internal inconsistency in context.md          | Standardized to 93 tasks                           |
+| M-01 | MEDIUM   | Version inconsistency                         | Noted for future alignment                         |
+| M-02 | MEDIUM   | Status field outdated                         | Updated to "Ready for Implementation"              |
+
+### Files Modified
+
+- `specs/feature/PROJ-002-optimizer-ui/spec.md` - Branch reference, status
+- `specs/feature/PROJ-002-optimizer-ui/checklists/requirements.md` - Exponential backoff, FR count
+- `.kilocode/rules/memory-bank/context.md` - Task counts, path references
+- Folder migrated from `specs/002-optimizer-ui/` to `specs/feature/PROJ-002-optimizer-ui/`
+
+### Migration Actions
+
+- Created: `specs/feature/PROJ-002-optimizer-ui/`
+- Moved: All artifacts from `specs/002-optimizer-ui/`
+- Deleted: `specs/002-optimizer-ui/`
+- Updated: All cross-references in documentation

@@ -1,8 +1,8 @@
 # Feature Specification: Optimizer UI
 
-**Feature Branch**: `002-optimizer-ui`  
+**Feature Branch**: `feature/PROJ-002-optimizer-ui`  
 **Created**: 2026-02-14  
-**Status**: Draft  
+**Status**: Ready for Implementation  
 **Input**: Build the user interface components for the legendary gems optimizer, including gem selection, resource input, optimization results display, and build management
 
 ## Summary

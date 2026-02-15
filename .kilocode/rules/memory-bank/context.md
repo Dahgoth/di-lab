@@ -10,7 +10,7 @@ The Optimizer UI feature (002-optimizer-ui) has complete planning artifacts. The
 - Implementation plan with 10 phases
 - Data model with Zod schemas
 - API contracts for optimization endpoint
-- **89 implementation tasks** organized by user story priority
+- **93 implementation tasks** organized by user story priority
 
 The workflow foundation has been fully implemented with all 66 tasks complete:
 
@@ -43,23 +43,23 @@ The workflow foundation has been fully implemented with all 66 tasks complete:
 
 ## Current Structure
 
-| File/Directory                         | Purpose                          | Status                |
-| -------------------------------------- | -------------------------------- | --------------------- |
-| `.specify/memory/constitution.md`      | Foundational principles (v2.0.0) | ✅ Updated            |
-| `specs/001-workflow-foundation/`       | Workflow foundation spec         | ✅ Complete           |
-| `specs/README.md`                      | SDD workflow documentation       | ✅ Complete           |
-| `.github/ISSUE_TEMPLATE/`              | Issue templates                  | ✅ Complete           |
-| `.github/pull_request_template.md`     | PR template                      | ✅ Complete           |
-| `.github/workflows/release-please.yml` | Release automation               | ✅ Complete           |
-| `.kilocode/rules/commit.md`            | Agent commit instructions        | ✅ Complete           |
-| `.husky/pre-commit`                    | Lint + typecheck hook            | ✅ Complete           |
-| `.husky/commit-msg`                    | Commitlint hook                  | ✅ Complete           |
-| `commitlint.config.js`                 | Commit message rules             | ✅ Complete           |
-| `.lintstagedrc.json`                   | Lint-staged config               | ✅ Complete           |
-| `README.md`                            | Project documentation            | ✅ Complete           |
-| `LICENSE`                              | AGPL-3.0-or-later                | ✅ Complete           |
-| `CHANGELOG.md`                         | Change history                   | ✅ Complete           |
-| `src/app/`                             | Next.js application              | 🔄 Ready for features |
+| File/Directory                                | Purpose                          | Status                |
+| --------------------------------------------- | -------------------------------- | --------------------- |
+| `.specify/memory/constitution.md`             | Foundational principles (v2.0.0) | ✅ Updated            |
+| `specs/feature/PROJ-001-workflow-foundation/` | Workflow foundation spec         | ✅ Complete           |
+| `specs/README.md`                             | SDD workflow documentation       | ✅ Complete           |
+| `.github/ISSUE_TEMPLATE/`                     | Issue templates                  | ✅ Complete           |
+| `.github/pull_request_template.md`            | PR template                      | ✅ Complete           |
+| `.github/workflows/release-please.yml`        | Release automation               | ✅ Complete           |
+| `.kilocode/rules/commit.md`                   | Agent commit instructions        | ✅ Complete           |
+| `.husky/pre-commit`                           | Lint + typecheck hook            | ✅ Complete           |
+| `.husky/commit-msg`                           | Commitlint hook                  | ✅ Complete           |
+| `commitlint.config.js`                        | Commit message rules             | ✅ Complete           |
+| `.lintstagedrc.json`                          | Lint-staged config               | ✅ Complete           |
+| `README.md`                                   | Project documentation            | ✅ Complete           |
+| `LICENSE`                                     | AGPL-3.0-or-later                | ✅ Complete           |
+| `CHANGELOG.md`                                | Change history                   | ✅ Complete           |
+| `src/app/`                                    | Next.js application              | 🔄 Ready for features |
 
 ## Current Focus
 
@@ -101,10 +101,11 @@ The workflow foundation has been fully implemented with all 66 tasks complete:
 └── templates/                 # Document templates
 
 specs/
-├── 001-workflow-foundation/
-│   └── spec.md              # Master specification
-├── 002-gem-optimizer/
-│   └── ...
+├── feature/
+│   ├── PROJ-001-workflow-foundation/
+│   │   └── spec.md              # Master specification
+│   └── PROJ-002-optimizer-ui/
+│       └── ...
 └── README.md
 ```
 
@@ -144,26 +145,27 @@ naming:
 
 ## Session History
 
-| Date       | Changes                                                                |
-| ---------- | ---------------------------------------------------------------------- |
-| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc    |
-| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 89 implementation tasks     |
-| 2026-02-14 | Implemented template-based naming system with configurable formats     |
-| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done       |
-| 2026-02-14 | Updated Husky hooks to use bun commands                                |
-| 2026-02-14 | Added release-please workflow documentation to commit.md               |
-| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix |
-| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                     |
-| 2026-02-14 | Added enhanced quality commands to specs README                        |
-| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)    |
-| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md    |
-| 2026-02-13 | Created PR template with spec reference checklist                      |
-| 2026-02-13 | Created agent commit instructions with failure scenarios               |
-| 2026-02-13 | Created specs/README.md with SDD workflow documentation                |
-| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)        |
-| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                |
-| 2026-02-13 | Memory bank updated with DI-Lab project brief                          |
-| Initial    | Template created with base Next.js setup                               |
+| Date       | Changes                                                                 |
+| ---------- | ----------------------------------------------------------------------- |
+| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format |
+| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc     |
+| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks      |
+| 2026-02-14 | Implemented template-based naming system with configurable formats      |
+| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done        |
+| 2026-02-14 | Updated Husky hooks to use bun commands                                 |
+| 2026-02-14 | Added release-please workflow documentation to commit.md                |
+| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix  |
+| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                      |
+| 2026-02-14 | Added enhanced quality commands to specs README                         |
+| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)     |
+| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md     |
+| 2026-02-13 | Created PR template with spec reference checklist                       |
+| 2026-02-13 | Created agent commit instructions with failure scenarios                |
+| 2026-02-13 | Created specs/README.md with SDD workflow documentation                 |
+| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)         |
+| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                 |
+| 2026-02-13 | Memory bank updated with DI-Lab project brief                           |
+| Initial    | Template created with base Next.js setup                                |
 
 ## Spec-Kit Workflow Reference
 
@@ -180,24 +182,24 @@ naming:
 
 ## Workflow Foundation (001) Summary
 
-| Component       | File                                    | Purpose                                    |
-| --------------- | --------------------------------------- | ------------------------------------------ |
-| Spec            | `specs/001-workflow-foundation/spec.md` | 7 user stories, 30 functional requirements |
-| Issue Templates | `.github/ISSUE_TEMPLATE/`               | Bug, feature, task templates               |
-| PR Template     | `.github/pull_request_template.md`      | Spec reference checklist                   |
-| Commit Rules    | `.kilocode/rules/commit.md`             | Agent failure recovery                     |
-| Spec README     | `specs/README.md`                       | SDD workflow documentation                 |
-| Constitution    | `.specify/memory/constitution.md`       | SDD principles + human checkpoints         |
+| Component       | File                                                 | Purpose                                    |
+| --------------- | ---------------------------------------------------- | ------------------------------------------ |
+| Spec            | `specs/feature/PROJ-001-workflow-foundation/spec.md` | 7 user stories, 30 functional requirements |
+| Issue Templates | `.github/ISSUE_TEMPLATE/`                            | Bug, feature, task templates               |
+| PR Template     | `.github/pull_request_template.md`                   | Spec reference checklist                   |
+| Commit Rules    | `.kilocode/rules/commit.md`                          | Agent failure recovery                     |
+| Spec README     | `specs/README.md`                                    | SDD workflow documentation                 |
+| Constitution    | `.specify/memory/constitution.md`                    | SDD principles + human checkpoints         |
 
 ## Optimizer UI (002) Summary
 
-| Artifact      | File                                                        | Description                         |
-| ------------- | ----------------------------------------------------------- | ----------------------------------- |
-| Specification | `specs/002-optimizer-ui/spec.md`                            | 7 user stories (US1-US7), 47 FRs    |
-| Plan          | `specs/002-optimizer-ui/plan.md`                            | 11 implementation phases            |
-| Data Model    | `specs/002-optimizer-ui/data-model.md`                      | Entity definitions with Zod schemas |
-| API Contract  | `specs/002-optimizer-ui/contracts/optimize-api.schema.json` | API schema                          |
-| Tasks         | `specs/002-optimizer-ui/tasks.md`                           | 93 implementation tasks             |
+| Artifact      | File                                                                     | Description                         |
+| ------------- | ------------------------------------------------------------------------ | ----------------------------------- |
+| Specification | `specs/feature/PROJ-002-optimizer-ui/spec.md`                            | 7 user stories (US1-US7), 47 FRs    |
+| Plan          | `specs/feature/PROJ-002-optimizer-ui/plan.md`                            | 11 implementation phases            |
+| Data Model    | `specs/feature/PROJ-002-optimizer-ui/data-model.md`                      | Entity definitions with Zod schemas |
+| API Contract  | `specs/feature/PROJ-002-optimizer-ui/contracts/optimize-api.schema.json` | API schema                          |
+| Tasks         | `specs/feature/PROJ-002-optimizer-ui/tasks.md`                           | 93 implementation tasks             |
 
 **Analysis Status**: All 14 findings resolved (2 CRITICAL, 4 HIGH, 4 MEDIUM, 4 LOW)
 
