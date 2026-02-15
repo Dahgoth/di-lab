@@ -32,6 +32,7 @@ bunx husky init
 ```
 
 This creates:
+
 - `.husky/` directory
 - `.husky/_/` helper scripts
 - Default pre-commit hook
@@ -42,18 +43,38 @@ Create `commitlint.config.js` at repository root:
 
 ```javascript
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [2, 'always', [
-      'feat', 'fix', 'docs', 'style', 'refactor',
-      'test', 'chore', 'perf', 'ci', 'build', 'revert'
-    ]],
-    'scope-enum': [2, 'always', [
-      // Add spec directory names here
-      'optimize', 'gems', 'auth', 'workflow'
-    ]],
-    'subject-case': [2, 'always', 'lower-case'],
-    'subject-max-length': [2, 'always', 72],
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "test",
+        "chore",
+        "perf",
+        "ci",
+        "build",
+        "revert",
+      ],
+    ],
+    "scope-enum": [
+      2,
+      "always",
+      [
+        // Add spec directory names here
+        "optimize",
+        "gems",
+        "auth",
+        "workflow",
+      ],
+    ],
+    "subject-case": [2, "always", "lower-case"],
+    "subject-max-length": [2, "always", 72],
   },
 };
 ```
@@ -125,7 +146,7 @@ jobs:
               {"type":"refactor","section":"Changed","hidden":false},
               {"type":"perf","section":"Changed","hidden":false}
             ]
-      
+
       # Optional: Create major/minor version tags
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
@@ -150,13 +171,13 @@ Create `release-please-config.json` for advanced configuration:
   "package-name": "di-lab",
   "changelog-path": "CHANGELOG.md",
   "changelog-types": [
-    {"type": "feat", "section": "Added", "hidden": false},
-    {"type": "fix", "section": "Fixed", "hidden": false},
-    {"type": "deprecate", "section": "Deprecated", "hidden": false},
-    {"type": "remove", "section": "Removed", "hidden": false},
-    {"type": "security", "section": "Security", "hidden": false},
-    {"type": "refactor", "section": "Changed", "hidden": false},
-    {"type": "perf", "section": "Changed", "hidden": false}
+    { "type": "feat", "section": "Added", "hidden": false },
+    { "type": "fix", "section": "Fixed", "hidden": false },
+    { "type": "deprecate", "section": "Deprecated", "hidden": false },
+    { "type": "remove", "section": "Removed", "hidden": false },
+    { "type": "security", "section": "Security", "hidden": false },
+    { "type": "refactor", "section": "Changed", "hidden": false },
+    { "type": "perf", "section": "Changed", "hidden": false }
   ],
   "bump-minor-pre-major": true,
   "include-v-in-tag": true
@@ -180,6 +201,7 @@ Create `.release-please-manifest.json`:
 ### Test Pre-commit Hook
 
 1. **Test lint blocking**:
+
    ```bash
    # Introduce a lint error
    echo "const x=1" > test.ts
@@ -190,6 +212,7 @@ Create `.release-please-manifest.json`:
    ```
 
 2. **Test typecheck blocking**:
+
    ```bash
    # Introduce a type error
    echo "const x: string = 1" > test.ts
@@ -213,24 +236,28 @@ Create `.release-please-manifest.json`:
 ### Test Commit-msg Hook
 
 1. **Test invalid format**:
+
    ```bash
    git commit -m "update stuff"
    # Should fail with format guidance
    ```
 
 2. **Test missing type**:
+
    ```bash
    git commit -m "added new feature"
    # Should fail with type requirement
    ```
 
 3. **Test valid commit**:
+
    ```bash
    git commit -m "feat: add new feature"
    # Should pass
    ```
 
 4. **Test with scope**:
+
    ```bash
    git commit -m "feat(optimize): add greedy algorithm"
    # Should pass
@@ -289,10 +316,10 @@ release-please-action creates Release PR
 
 ### Version Bump Logic
 
-| Commit Type | Version Bump |
-|-------------|--------------|
-| `feat:` | MINOR (0.1.0 -> 0.2.0) |
-| `fix:` | PATCH (0.1.0 -> 0.1.1) |
+| Commit Type                    | Version Bump           |
+| ------------------------------ | ---------------------- |
+| `feat:`                        | MINOR (0.1.0 -> 0.2.0) |
+| `fix:`                         | PATCH (0.1.0 -> 0.1.1) |
 | `feat!:` or `BREAKING CHANGE:` | MAJOR (0.1.0 -> 1.0.0) |
 
 ### Example Release PR
@@ -323,6 +350,7 @@ release-please-action creates Release PR
 **Symptom**: Commits succeed without validation
 
 **Solution**:
+
 ```bash
 # Check Husky installation
 ls -la .husky/
@@ -340,6 +368,7 @@ chmod +x .husky/commit-msg
 **Symptom**: Commits blocked with no error message
 
 **Solution**:
+
 ```bash
 # Test commitlint directly
 echo "bad message" | bunx commitlint
@@ -353,6 +382,7 @@ cat commitlint.config.js
 **Symptom**: Pre-commit takes > 30 seconds
 
 **Solution**:
+
 ```bash
 # Check what files are staged
 git diff --cached --name-only
@@ -368,6 +398,7 @@ git diff --cached --name-only
 **Symptom**: Hook times out
 
 **Solution**:
+
 ```bash
 # Check if typecheck is slow
 bun typecheck
@@ -382,6 +413,7 @@ bunx lint-staged  # Remove typecheck for faster commits
 **Symptom**: No Release PR created after push to main
 
 **Solution**:
+
 1. Check GitHub Actions permissions (`contents: write`, `pull-requests: write`)
 2. Verify workflow triggers on `push: main`
 3. Check Actions tab for workflow errors
@@ -392,6 +424,7 @@ bunx lint-staged  # Remove typecheck for faster commits
 **Symptom**: Release PR has conflicts or won't merge
 
 **Solution**:
+
 1. Update main branch with latest changes
 2. Close and let release-please recreate, or
 3. Manually resolve conflicts in CHANGELOG.md
@@ -402,49 +435,49 @@ bunx lint-staged  # Remove typecheck for faster commits
 
 ### Commit Types
 
-| Type | Changelog Section | Example |
-|------|-------------------|---------|
-| `feat` | Added | `feat: add user authentication` |
-| `fix` | Fixed | `fix: resolve login redirect` |
-| `docs` | Documentation | `docs: update API reference` |
-| `style` | - | `style: format code` |
-| `refactor` | Changed | `refactor: simplify auth logic` |
-| `test` | Tests | `test: add auth unit tests` |
-| `chore` | - | `chore: update dependencies` |
-| `perf` | Changed | `perf: optimize database queries` |
-| `ci` | CI | `ci: add deployment workflow` |
-| `build` | - | `build: update Docker config` |
-| `revert` | - | `revert: undo last commit` |
+| Type       | Changelog Section | Example                           |
+| ---------- | ----------------- | --------------------------------- |
+| `feat`     | Added             | `feat: add user authentication`   |
+| `fix`      | Fixed             | `fix: resolve login redirect`     |
+| `docs`     | Documentation     | `docs: update API reference`      |
+| `style`    | -                 | `style: format code`              |
+| `refactor` | Changed           | `refactor: simplify auth logic`   |
+| `test`     | Tests             | `test: add auth unit tests`       |
+| `chore`    | -                 | `chore: update dependencies`      |
+| `perf`     | Changed           | `perf: optimize database queries` |
+| `ci`       | CI                | `ci: add deployment workflow`     |
+| `build`    | -                 | `build: update Docker config`     |
+| `revert`   | -                 | `revert: undo last commit`        |
 
 ### Scope Examples
 
-| Scope | Use Case |
-|-------|----------|
+| Scope      | Use Case                 |
+| ---------- | ------------------------ |
 | `optimize` | Gem optimization feature |
-| `gems` | Gem data management |
-| `auth` | Authentication system |
-| `workflow` | CI/CD and tooling |
+| `gems`     | Gem data management      |
+| `auth`     | Authentication system    |
+| `workflow` | CI/CD and tooling        |
 
 ### release-please-action Inputs
 
-| Input | Description | Default |
-|-------|-------------|---------|
-| `token` | GitHub token | `secrets.GITHUB_TOKEN` |
-| `release-type` | Release strategy | Required |
-| `package-name` | Package name for versioning | - |
-| `config-file` | Path to config | `release-please-config.json` |
-| `manifest-file` | Path to manifest | `.release-please-manifest.json` |
+| Input           | Description                 | Default                         |
+| --------------- | --------------------------- | ------------------------------- |
+| `token`         | GitHub token                | `secrets.GITHUB_TOKEN`          |
+| `release-type`  | Release strategy            | Required                        |
+| `package-name`  | Package name for versioning | -                               |
+| `config-file`   | Path to config              | `release-please-config.json`    |
+| `manifest-file` | Path to manifest            | `.release-please-manifest.json` |
 
 ### release-please-action Outputs
 
-| Output | Description |
-|--------|-------------|
-| `releases_created` | `true` if release created |
-| `release_created` | `true` if root release created |
-| `tag_name` | Created tag name (e.g., `v0.1.0`) |
-| `major` | Major version number |
-| `minor` | Minor version number |
-| `patch` | Patch version number |
+| Output             | Description                       |
+| ------------------ | --------------------------------- |
+| `releases_created` | `true` if release created         |
+| `release_created`  | `true` if root release created    |
+| `tag_name`         | Created tag name (e.g., `v0.1.0`) |
+| `major`            | Major version number              |
+| `minor`            | Minor version number              |
+| `patch`            | Patch version number              |
 
 ---
 
@@ -453,6 +486,7 @@ bunx lint-staged  # Remove typecheck for faster commits
 After setting up the workflow foundation:
 
 1. **Create initial commit**:
+
    ```bash
    git add -A
    git commit -m "chore: setup workflow foundation"

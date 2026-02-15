@@ -38,7 +38,17 @@
           "items": [
             { "type": "integer", "enum": [0, 1, 2] },
             { "type": "string", "enum": ["always", "never"] },
-            { "type": "string", "enum": ["lower-case", "upper-case", "camel-case", "kebab-case", "pascal-case", "snake-case"] }
+            {
+              "type": "string",
+              "enum": [
+                "lower-case",
+                "upper-case",
+                "camel-case",
+                "kebab-case",
+                "pascal-case",
+                "snake-case"
+              ]
+            }
           ],
           "description": "Case requirement for scope"
         },
@@ -47,7 +57,17 @@
           "items": [
             { "type": "integer", "enum": [0, 1, 2] },
             { "type": "string", "enum": ["always", "never"] },
-            { "type": "string", "enum": ["lower-case", "upper-case", "camel-case", "kebab-case", "pascal-case", "snake-case"] }
+            {
+              "type": "string",
+              "enum": [
+                "lower-case",
+                "upper-case",
+                "camel-case",
+                "kebab-case",
+                "pascal-case",
+                "snake-case"
+              ]
+            }
           ],
           "description": "Case requirement for subject"
         },
