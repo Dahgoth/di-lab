@@ -130,7 +130,7 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 **Acceptance Scenarios**:
 
 1. **Given** user accesses DI-Lab on mobile, **When** the page loads, **Then** the layout adapts to the viewport with appropriately sized touch targets
-2. **Given** mobile user is viewing the gem catalog, **When** user scrolls through gems, **Then** the catalog scrolls smoothly with appropriate pagination or lazy loading
+2. **Given** mobile user is viewing the gem catalog, **When** user scrolls through gems, **Then** the catalog scrolls smoothly at 60fps performance (full category loaded per tab, no infinite scroll needed)
 3. **Given** mobile user is configuring gems, **When** user interacts with quality/rank selectors, **Then** mobile-friendly input controls are used (dropdowns, sliders, or stepper buttons)
 4. **Given** mobile user is viewing optimization results, **When** user scrolls through recommendations, **Then** the results are presented in a mobile-optimized card stack
 
@@ -141,12 +141,12 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - What happens when a user tries to equip the same gem twice in base slots? The interface should prevent duplicate selections in base 8 slots and indicate the gem is already equipped there; duplicates are allowed in resonance wing slots.
 - What happens when a user equips/removes a legendary gem? The interface should automatically recalculate total resonance and dynamically update the number of available wing slots based on resonance thresholds (6000=4, 7000=8, 8000=12, 8500+=16).
 - What happens when a user has multiple copies of the same gem in their inventory? The app should allow recording multiple identical gems (quantity tracking), though only one can occupy a base slot during optimization.
-- What happens when a user has multiple copies of the same gem in their inventory? The app should allow recording multiple identical gems (quantity tracking), though only one can occupy a base slot during optimization.
 - What happens when a user enters invalid resource values (negative, non-numeric)? The interface should reject invalid input and display an error message.
 - What happens when optimization takes longer than expected? The interface should show a progress indicator and allow cancellation if processing exceeds a reasonable time.
 - What happens when a user loses network connection during optimization? The interface should handle errors gracefully and allow retry when connection is restored.
 - What happens when a user's saved build contains gems that have been removed from the database? The interface should indicate the deprecated gems and allow removal.
 - What happens when a user has very high resource amounts that exceed display formatting? The interface should format large numbers appropriately (e.g., "1.2M platinum").
+- What happens when a user has DI-Lab open in multiple browser tabs and makes conflicting build changes? The interface should allow concurrent edits but show a non-blocking toast warning (auto-dismiss after 5 seconds with pause on hover) when changes are detected from another tab (optimistic UI pattern).
 
 ---
 
@@ -156,11 +156,12 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 
 #### Gem Selection & Configuration
 
-- **FR-001**: System MUST display a gem catalog organized by star rating (1-star, 2-star, 5-star)
+- **FR-001**: System MUST display a gem catalog organized by star rating (1-star, 2-star, 5-star) using tabbed category selector, with 5-star category selected by default
 - **FR-002**: System MUST display each gem with its name, star rating, and visual icon/placeholder
 - **FR-003**: System MUST allow users to select gems from the catalog for equipment
 - **FR-004**: System MUST provide quality selection (1-5) for each equipped gem
 - **FR-005**: System MUST provide rank selection (1-10) for each equipped gem
+- **FR-005a**: System MUST use dropdown select controls for quality and rank selection on equipped gem cards, providing compact mobile-friendly interaction with native accessibility support
 - **FR-006**: System MUST limit equipped gems to 8 base slots plus resonance-unlocked slots (up to 24 total: 8 base + 16 from resonance wings). Resonance is automatically calculated from equipped legendary gems and dynamically unlocks wing slots at thresholds (6000 resonance = 4 slots, 7000 = 8 slots, 8000 = 12 slots, 8500+ = 16 slots). No manual resonance input is required.
 - **FR-007**: System MUST display equipped gems in a dedicated section showing current configuration, including automatically calculated total resonance from all equipped legendary gems
 - **FR-008**: System MUST allow removal of equipped gems
@@ -183,47 +184,51 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-018**: System MUST display optimization results as prioritized recommendations
 - **FR-019**: System MUST show for each recommendation: target gem, upgrade path, resource cost, expected power gain
 - **FR-020**: System MUST allow users to expand recommendations for additional details
-- **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded limit), and server-error (backend failure)
-- **FR-022**: System MUST handle optimization timeout gracefully with a cancellation option
+- **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), and server-error (backend failure)
+- **FR-022**: System MUST handle optimization timeout gracefully with a cancellation option after 30 seconds
 - **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors)
+- **FR-021b**: System MUST implement single retry with exponential backoff (1s delay) for transient optimization API failures before displaying error to user
 
 #### Build Management
 
-- **FR-023**: System MUST provide a "Save Build" action that captures current configuration
-- **FR-024**: System MUST prompt for a unique build name when saving, rejecting duplicates with a clear error message
-- **FR-025**: System MUST display saved builds in a builds section with name and timestamp
-- **FR-026**: System MUST allow loading saved builds to restore configuration
-- **FR-027**: System MUST allow deletion of saved builds with confirmation
-- **FR-028**: System MUST indicate authentication requirement for cloud storage of builds
-- **FR-028a**: System MUST enforce build capacity limits based on subscription tier (free tier: limited builds, paid tiers: higher limits) and display remaining capacity to the user
+- **FR-023**: System MUST restore the last session state (equipped gems, resources, optimization mode) from localStorage when the user loads the optimizer, providing continuity for returning users
+- **FR-023a**: System MUST auto-persist session state to localStorage on every change (gem add/remove, quality/rank change, resource input) to ensure data is never lost
+- **FR-023b**: System MUST show a confirmation dialog when user attempts to navigate away (close tab, navigate to another page) with unsaved changes, preventing accidental data loss
+- **FR-024**: System MUST provide a "Save Build" action that captures current configuration
+- **FR-025**: System MUST prompt for a unique build name when saving, rejecting duplicates with a clear error message
+- **FR-026**: System MUST display saved builds in a builds section with name and timestamp
+- **FR-027**: System MUST allow loading saved builds to restore configuration
+- **FR-028**: System MUST allow deletion of saved builds with confirmation
+- **FR-029**: System MUST indicate authentication requirement for cloud storage of builds
+- **FR-029a**: System MUST enforce build capacity limits based on subscription tier (free tier: 5 builds maximum, paid tiers: higher limits) and display remaining capacity to the user
 
 #### Gem Information
 
-- **FR-029**: System MUST provide detailed view for each gem showing full effect description
-- **FR-030**: System MUST categorize gem effects (OFF, DEF, ALL, DOT, LOC, etc.)
-- **FR-031**: System MUST display upgrade cost information for each rank
-- **FR-032**: System MUST display tier rankings (PVP and PVE) for each gem
-- **FR-033**: System MUST provide hover tooltips with quick gem summaries
+- **FR-030**: System MUST provide detailed view for each gem showing full effect description
+- **FR-031**: System MUST categorize gem effects (OFF, DEF, ALL, DOT, LOC, etc.)
+- **FR-032**: System MUST display upgrade cost information for each rank
+- **FR-033**: System MUST display tier rankings (PVP and PVE) for each gem
+- **FR-034**: System MUST provide hover tooltips with quick gem summaries
 
 #### Optimization Preferences
 
-- **FR-034**: System MUST provide optimization mode selection (PVP/PVE)
-- **FR-035**: System MUST apply selected mode to optimization algorithm
-- **FR-036**: System MUST display the currently active optimization mode
+- **FR-035**: System MUST provide optimization mode selection (PVP/PVE) with PVE as the default selection
+- **FR-036**: System MUST apply selected mode to optimization algorithm
+- **FR-037**: System MUST display the currently active optimization mode
 
 #### Responsive Design
 
-- **FR-037**: System MUST adapt layout for mobile viewport sizes
-- **FR-038**: System MUST provide touch-friendly interaction targets on mobile
-- **FR-039**: System MUST ensure all core functionality is accessible on mobile devices
-- **FR-040**: System MUST optimize scrolling performance for long lists on mobile
+- **FR-038**: System MUST adapt layout for mobile viewport sizes using Tailwind default breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px)
+- **FR-039**: System MUST provide touch-friendly interaction targets on mobile
+- **FR-040**: System MUST ensure all core functionality is accessible on mobile devices
+- **FR-041**: System MUST optimize scrolling performance for long lists on mobile
 
 #### Accessibility
 
-- **FR-041**: System MUST conform to WCAG 2.1 AA accessibility standards
-- **FR-042**: System MUST provide keyboard navigation for all interactive elements
-- **FR-043**: System MUST include appropriate ARIA labels and roles for screen reader support
-- **FR-044**: System MUST maintain sufficient color contrast ratios (4.5:1 for normal text, 3:1 for large text)
+- **FR-042**: System MUST conform to WCAG 2.1 AA accessibility standards
+- **FR-043**: System MUST provide keyboard navigation for all interactive elements
+- **FR-044**: System MUST include appropriate ARIA labels and roles for screen reader support
+- **FR-045**: System MUST maintain sufficient color contrast ratios (4.5:1 for normal text, 3:1 for large text)
 
 ---
 
@@ -383,6 +388,8 @@ Builds Page
 
 ### Client-Side State
 
+The UI uses React's built-in state management (useState/useContext) for all client-side state. This approach is sufficient for the P1-P3 scope without over-engineering.
+
 The UI requires management of the following state:
 
 #### Selection State
@@ -390,7 +397,7 @@ The UI requires management of the following state:
 - **Selected Gems**: Array of currently equipped gems with their configurations
 - **Active Slot**: Which slot is currently being configured (if any)
 - **Catalog Filter**: Current filter/search criteria for gem catalog
-- **Active Star Rating Tab**: Which star rating category is displayed
+- **Active Star Rating Tab**: Which star rating category is displayed (default: 5-star)
 - **Total Resonance**: Auto-calculated sum of resonance from all equipped legendary gems
 - **Unlocked Wing Slots**: Number of resonance-unlocked slots available (derived from total resonance thresholds)
 
@@ -559,6 +566,48 @@ The following items are explicitly out of scope for this UI specification:
 
 - Q: Should there be a maximum limit on the number of saved builds per user?  
   A: Tiered subscription model - Build capacity varies by subscription tier (free tier: limited, paid tiers: higher limits)
+
+- Q: What should happen when a user has DI-Lab open in multiple browser tabs and makes conflicting build changes?  
+  A: Optimistic UI with warning - Allow concurrent edits but show a non-blocking toast warning when changes are detected from another tab
+
+- Q: What should be the default optimization mode when a user first loads the optimizer?  
+  A: PVE as default - PVE content represents the majority of gameplay for most Diablo Immortal players
+
+- Q: What timeout threshold should the UI use before offering a cancellation option during optimization?  
+  A: 30 seconds - Provides sufficient time for complex calculations while giving users a reasonable bound
+
+- Q: How should the gem catalog display the 50-100 gems for user browsing?  
+  A: Tabbed category selector with full category load - Tabs for 1-star, 2-star, 5-star categories; load entire selected category at once; 5-star selected by default; infinite scroll batching not needed
+
+- Q: What state management approach should the UI use for client-side state?  
+  A: React useState/useContext - Sufficient for P1-P3 scope without over-engineering; avoids adding complexity without clear benefit
+
+- Q: What should be the initial state when a user loads the optimizer?  
+  A: Restore last session - Load previous gems/resources from localStorage for returning users, providing continuity and reducing friction
+
+- Q: What should happen if a user navigates away from the optimizer with unsaved changes?  
+  A: Show confirmation dialog - Prevent accidental data loss when user attempts to close tab or navigate away with unsaved changes
+
+- Q: What UI control pattern should be used for quality (1-5) and rank (1-10) selection on equipped gem cards?  
+  A: Dropdown select - Compact, mobile-friendly, familiar UX pattern with native accessibility support
+
+- Q: What should be the specific build capacity limit for free tier users?  
+  A: 5 builds - Provides meaningful value for free users while creating natural upgrade incentive
+
+- Q: How frequently should session state be auto-persisted to localStorage?  
+  A: On every change - Ensures users never lose data, simpler implementation without debounce edge cases
+
+- Q: What mobile responsive breakpoint strategy should the UI use?  
+  A: Tailwind defaults (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px) - Industry-standard, well-tested, aligns with Tailwind CSS 4
+
+- Q: What toast notification behavior should the UI use for multi-tab conflict warnings?  
+  A: Auto-dismiss after 5 seconds with pause on hover - Users have enough time to read, can pause if needed, doesn't persist indefinitely
+
+- Q: What API retry strategy should the UI use for transient optimization failures?  
+  A: Single retry with exponential backoff (1s delay) - Resilience without over-complication
+
+- Q: How should the gem catalog data be loaded by the UI?  
+  A: Static JSON bundled at build time - Fastest load time, no API latency, works offline for viewing; updated via code deployment when game patches release
 
 ---
 
