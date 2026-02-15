@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Optimize API Contract",
-  "description": "API contract for the /api/optimize endpoint",
-  "version": "1.0.0",
+  "description": "API contract for the /api/optimize endpoint. NOTE: Resource model corrected 2026-02-15 - uses gemPower and copyInventory instead of platinum/telluricPearls.",
+  "version": "1.1.0",
   "endpoints": {
     "/api/optimize": {
       "method": "POST",
@@ -72,10 +72,16 @@
               "type": "insufficient-resources",
               "title": "Insufficient Resources",
               "message": "Your current resources cannot fund any upgrades.",
-              "guidance": "Add more platinum or Telluric Pearls to enable upgrade recommendations.",
+              "guidance": "Add more Gem Power or gem copies to enable upgrade recommendations.",
               "details": {
-                "required": { "platinum": 1000, "telluricPearls": 5 },
-                "available": { "platinum": 500, "telluricPearls": 2 }
+                "required": {
+                  "gemPower": 1000,
+                  "copies": { "blood-soaked-jade": 2 }
+                },
+                "available": {
+                  "gemPower": 500,
+                  "copies": { "blood-soaked-jade": 1 }
+                }
               }
             }
           ]
@@ -155,17 +161,36 @@
     },
     "ResourceInventory": {
       "type": "object",
-      "required": ["platinum", "telluricPearls"],
+      "required": ["gemPower", "copyInventory"],
       "properties": {
-        "platinum": {
+        "gemPower": {
           "type": "integer",
           "minimum": 0,
-          "description": "Platinum currency amount"
+          "description": "Primary upgrade currency amount"
         },
-        "telluricPearls": {
+        "copyInventory": {
+          "type": "object",
+          "description": "Map of gemId to count of R1 copies available",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "UpgradeCost": {
+      "type": "object",
+      "required": ["gemPower", "copies"],
+      "properties": {
+        "gemPower": {
           "type": "integer",
           "minimum": 0,
-          "description": "Telluric Pearls amount"
+          "description": "Gem Power required for this upgrade"
+        },
+        "copies": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of R1 copies required (of same gem type)"
         }
       }
     },
@@ -193,7 +218,7 @@
           "description": "Sum of all power gains"
         },
         "totalResourceCost": {
-          "$ref": "#/definitions/ResourceInventory"
+          "$ref": "#/definitions/UpgradeCost"
         },
         "mode": {
           "type": "string",
@@ -245,7 +270,7 @@
           "description": "Destination rank"
         },
         "resourceCost": {
-          "$ref": "#/definitions/ResourceInventory"
+          "$ref": "#/definitions/UpgradeCost"
         },
         "powerGain": {
           "type": "number",
@@ -284,7 +309,7 @@
           "description": "Power gain for this alternative"
         },
         "resourceCost": {
-          "$ref": "#/definitions/ResourceInventory"
+          "$ref": "#/definitions/UpgradeCost"
         },
         "tradeoff": {
           "type": "string",

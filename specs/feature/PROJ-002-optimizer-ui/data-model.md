@@ -149,17 +149,28 @@ const SLOT_CONFIG = {
 
 Represents the user's available upgrade resources.
 
+> **⚠️ Data Model Correction (2026-02-15)**
+>
+> The original specification incorrectly used `platinum` and `telluricPearls` as resources.
+> Research findings (T-02) revealed the actual game uses:
+>
+> - **Gem Power (GP)**: Primary upgrade currency accumulated from various sources
+> - **Gem Copies**: R1 copies of specific gems used for rank upgrades
+>
+> This correction aligns with the optimization engine implementation in `src/lib/optimization/`.
+
 ```typescript
 interface ResourceInventory {
-  platinum: number; // Platinum currency
-  telluricPearls: number; // Telluric Pearls
-  // Future resources can be added as needed
+  gemPower: number; // Primary upgrade currency
+  copyInventory: Record<string, number>; // gemId → count of R1 copies
 }
 ```
 
 **Validation Rules**:
 
-- All values must be non-negative integers
+- `gemPower` must be non-negative integer
+- `copyInventory` keys must be valid gem IDs
+- `copyInventory` values must be non-negative integers
 - Maximum value: 2,147,483,647 (32-bit integer max)
 - Values above 1,000,000 should display with M suffix (e.g., "1.2M")
 
@@ -384,12 +395,12 @@ interface OptimizationError {
 └────────┬────────┘
          │ referenced by
          ▼
-┌─────────────────┐         ┌─────────────────┐
-│  EquippedGem    │         │ ResourceInventory│
-│  - gemId ───────┼────────►│  - platinum      │
-│  - quality      │         │  - telluricPearls│
-│  - rank         │         └─────────────────┘
-│  - slotPosition │                 │
+┌─────────────────┐         ┌──────────────────────┐
+│  EquippedGem    │         │  ResourceInventory   │
+│  - gemId ───────┼────────►│  - gemPower          │
+│  - quality      │         │  - copyInventory     │
+│  - rank         │         │    (gemId → count)   │
+│  - slotPosition │         └──────────────────────┘
 └────────┬────────┘                 │
          │                          │
          │ grouped in               │ grouped in
@@ -414,6 +425,8 @@ interface OptimizationError {
 │  - mode                                 │
 └─────────────────────────────────────────┘
 ```
+
+> **Note**: The `copyInventory` in `ResourceInventory` stores gem IDs as keys and their R1 copy counts as values. This allows the optimization engine to check if sufficient copies are available for specific gem upgrades.
 
 ---
 
@@ -447,8 +460,8 @@ const EquippedGemSchema = z.object({
 });
 
 const ResourceInventorySchema = z.object({
-  platinum: z.number().int().min(0),
-  telluricPearls: z.number().int().min(0),
+  gemPower: z.number().int().min(0),
+  copyInventory: z.record(z.string(), z.number().int().min(0)),
 });
 
 // XSS sanitization helpers
