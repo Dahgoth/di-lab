@@ -53,11 +53,11 @@ specs/
 
 ### Branch Naming Convention
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Feature | `feature/<identifier>-<###>-<name>` | `feature/PROJ-001-gem-optimizer` |
-| Fix | `fix/<identifier>-<###>-<name>` | `fix/PROJ-001-login-error` |
-| Identifier | Optional Linear/task tracker ID | `PROJ`, `DI` |
+| Type       | Pattern                             | Example                          |
+| ---------- | ----------------------------------- | -------------------------------- |
+| Feature    | `feature/<identifier>-<###>-<name>` | `feature/PROJ-001-gem-optimizer` |
+| Fix        | `fix/<identifier>-<###>-<name>`     | `fix/PROJ-001-login-error`       |
+| Identifier | Optional Linear/task tracker ID     | `PROJ`, `DI`                     |
 
 Mapping: `specs/001-gem-optimizer/` → `feature/<id>-001-gem-optimizer`
 
@@ -327,12 +327,23 @@ Represents a validated conventional commit message:
 
 ```typescript
 interface CommitMessage {
-  type: 'feat' | 'fix' | 'docs' | 'style' | 'refactor' | 'test' | 'chore' | 'perf' | 'ci' | 'build' | 'revert';
-  scope?: string;  // Optional: matches spec directory name
-  description: string;  // Max 72 chars, starts with lowercase
-  body?: string;  // Optional: detailed explanation
-  breaking?: boolean;  // BREAKING CHANGE footer
-  issues?: string[];  // Related issue references
+  type:
+    | "feat"
+    | "fix"
+    | "docs"
+    | "style"
+    | "refactor"
+    | "test"
+    | "chore"
+    | "perf"
+    | "ci"
+    | "build"
+    | "revert";
+  scope?: string; // Optional: matches spec directory name
+  description: string; // Max 72 chars, starts with lowercase
+  body?: string; // Optional: detailed explanation
+  breaking?: boolean; // BREAKING CHANGE footer
+  issues?: string[]; // Related issue references
 }
 ```
 
@@ -342,11 +353,11 @@ Represents a single changelog entry:
 
 ```typescript
 interface ChangelogEntry {
-  type: 'added' | 'changed' | 'deprecated' | 'removed' | 'fixed' | 'security';
+  type: "added" | "changed" | "deprecated" | "removed" | "fixed" | "security";
   description: string;
   prNumber: number;
   commitHash: string;
-  date: string;  // ISO 8601
+  date: string; // ISO 8601
 }
 ```
 
@@ -356,10 +367,10 @@ Represents the link between issues/tasks and specs:
 
 ```typescript
 interface SpecReference {
-  specId: string;  // e.g., "001-workflow-foundation"
-  specPath: string;  // e.g., "specs/001-workflow-foundation/"
-  taskId?: string;  // e.g., "T001" if linked to specific task
-  issueUrl?: string;  // GitHub issue URL for bidirectional sync
+  specId: string; // e.g., "001-workflow-foundation"
+  specPath: string; // e.g., "specs/001-workflow-foundation/"
+  taskId?: string; // e.g., "T001" if linked to specific task
+  issueUrl?: string; // GitHub issue URL for bidirectional sync
 }
 ```
 
@@ -369,16 +380,16 @@ interface SpecReference {
 
 This project follows the [Spec Kit](https://github.com/github/spec-kit) workflow with human-in-the-loop validation:
 
-| Phase | Command | Purpose | Required |
-|-------|---------|---------|----------|
-| Constitution | `/speckit.constitution` | Establish foundational principles | ✅ Yes |
-| Specify | `/speckit.specify` | Create feature specification | ✅ Yes |
-| Clarify | `/speckit.clarify` | Resolve underspecified areas | ⚪ Optional |
-| Plan | `/speckit.plan` | Create implementation plan | ✅ Yes |
-| Checklist | `/speckit.checklist` | Verify requirements completeness | ⚪ Optional |
-| Tasks | `/speckit.tasks` | Generate actionable tasks | ✅ Yes |
-| Analyze | `/speckit.analyze` | Cross-artifact consistency check | ⚪ Optional |
-| Implement | `/speckit.implement` | Execute implementation | ✅ Yes |
+| Phase        | Command                 | Purpose                           | Required    |
+| ------------ | ----------------------- | --------------------------------- | ----------- |
+| Constitution | `/speckit.constitution` | Establish foundational principles | ✅ Yes      |
+| Specify      | `/speckit.specify`      | Create feature specification      | ✅ Yes      |
+| Clarify      | `/speckit.clarify`      | Resolve underspecified areas      | ⚪ Optional |
+| Plan         | `/speckit.plan`         | Create implementation plan        | ✅ Yes      |
+| Checklist    | `/speckit.checklist`    | Verify requirements completeness  | ⚪ Optional |
+| Tasks        | `/speckit.tasks`        | Generate actionable tasks         | ✅ Yes      |
+| Analyze      | `/speckit.analyze`      | Cross-artifact consistency check  | ⚪ Optional |
+| Implement    | `/speckit.implement`    | Execute implementation            | ✅ Yes      |
 
 ### Human Checkpoints (Non-Negotiable)
 
@@ -411,6 +422,7 @@ gh issue create --title "[T001] Task description" --body "Task content" --parent
 **Failover: GitHub MCP Server**
 
 If `gh` CLI is unavailable or fails, use the GitHub MCP server tools as a fallback:
+
 - `mcp_github_issue_write` for creating/updating issues
 - `mcp_github_add_issue_comment` for adding comments to issues
 
@@ -442,17 +454,34 @@ If `gh` CLI is unavailable or fails, use the GitHub MCP server tools as a fallba
 
 ```javascript
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [2, 'always', [
-      'feat', 'fix', 'docs', 'style', 'refactor',
-      'test', 'chore', 'perf', 'ci', 'build', 'revert'
-    ]],
-    'scope-enum': [2, 'always', [
-      // Dynamically populated from specs/ directories
-    ]],
-    'subject-case': [2, 'always', 'lower-case'],
-    'subject-max-length': [2, 'always', 72],
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "test",
+        "chore",
+        "perf",
+        "ci",
+        "build",
+        "revert",
+      ],
+    ],
+    "scope-enum": [
+      2,
+      "always",
+      [
+        // Dynamically populated from specs/ directories
+      ],
+    ],
+    "subject-case": [2, "always", "lower-case"],
+    "subject-max-length": [2, "always", 72],
   },
 };
 ```

@@ -12,32 +12,53 @@ This document consolidates research findings for implementing the workflow found
 ## R1: commitlint with Bun
 
 ### Decision
+
 Use `@commitlint/cli` and `@commitlint/config-conventional` with Bun's npm compatibility.
 
 ### Rationale
+
 - commitlint is a Node.js tool that works with any npm-compatible package manager
 - Bun can execute npm packages transparently
 - `@commitlint/config-conventional` provides the standard conventional commit rules
 
 ### Alternatives Considered
+
 1. **Custom commit message parser**: Rejected - reinventing the wheel, less robust
 2. **commitlint via npx**: Rejected - slower than local installation
 
 ### Configuration Pattern
+
 ```javascript
 // commitlint.config.js
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
+  extends: ["@commitlint/config-conventional"],
   rules: {
-    'type-enum': [2, 'always', [
-      'feat', 'fix', 'docs', 'style', 'refactor',
-      'test', 'chore', 'perf', 'ci', 'build', 'revert'
-    ]],
-    'scope-enum': [2, 'always', [
-      // Dynamically populated from specs/ directories
-    ]],
-    'subject-case': [2, 'always', 'lower-case'],
-    'subject-max-length': [2, 'always', 72],
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "test",
+        "chore",
+        "perf",
+        "ci",
+        "build",
+        "revert",
+      ],
+    ],
+    "scope-enum": [
+      2,
+      "always",
+      [
+        // Dynamically populated from specs/ directories
+      ],
+    ],
+    "subject-case": [2, "always", "lower-case"],
+    "subject-max-length": [2, "always", 72],
   },
 };
 ```
@@ -47,20 +68,24 @@ module.exports = {
 ## R2: Husky v9 Configuration
 
 ### Decision
+
 Use Husky v9 with simplified configuration format.
 
 ### Rationale
+
 - Husky v9 uses a cleaner `.husky/` directory structure
 - Native support for modern Node.js/Bun environments
 - Simplified hook definition without JSON configuration
 - Built-in timeout support
 
 ### Alternatives Considered
+
 1. **simple-git-hooks**: Rejected - less mature, smaller community
 2. **Yorkie**: Rejected - Vue-specific, less flexible
 3. **Pre-commit (Python)**: Rejected - not npm-native
 
 ### Configuration Pattern
+
 ```bash
 # .husky/pre-commit
 bun lint && bun typecheck
@@ -70,6 +95,7 @@ bunx commitlint --edit $1
 ```
 
 ### Installation
+
 ```bash
 bun add -d husky
 bunx husky init
@@ -80,9 +106,11 @@ bunx husky init
 ## R3: GitHub Actions for Changelog & Release (UPDATED)
 
 ### Decision
+
 Use **release-please-action** by Google for automated changelog and release management.
 
 ### Rationale
+
 - **Official Google-supported action**: Well-maintained, widely adopted (10k+ stars)
 - **Native Conventional Commits support**: Works out of the box with our commit format
 - **Release PR workflow**: Creates release PRs for review before merging
@@ -93,14 +121,14 @@ Use **release-please-action** by Google for automated changelog and release mana
 
 ### Why release-please-action over git-cliff
 
-| Feature | release-please-action | git-cliff |
-|---------|----------------------|-----------|
-| GitHub Release Creation | Built-in | Requires separate step |
-| Release PR Workflow | Built-in review process | No PR workflow |
-| package.json version bump | Automatic | Manual/scrip required |
-| Maintenance | Google-supported | Community project |
-| Workflow complexity | Simple configuration | Requires cliff.toml |
-| CI triggers on releases | Works with GITHUB_TOKEN | May need PAT |
+| Feature                   | release-please-action   | git-cliff              |
+| ------------------------- | ----------------------- | ---------------------- |
+| GitHub Release Creation   | Built-in                | Requires separate step |
+| Release PR Workflow       | Built-in review process | No PR workflow         |
+| package.json version bump | Automatic               | Manual/scrip required  |
+| Maintenance               | Google-supported        | Community project      |
+| Workflow complexity       | Simple configuration    | Requires cliff.toml    |
+| CI triggers on releases   | Works with GITHUB_TOKEN | May need PAT           |
 
 ### How It Works
 
@@ -147,11 +175,11 @@ jobs:
               {"type":"refactor","section":"Changed","hidden":false},
               {"type":"perf","section":"Changed","hidden":false}
             ]
-      
+
       # Optional: Checkout and do something when a release is created
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
-        
+
       # Example: Create major/minor tags for GitHub Actions
       - name: Tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
@@ -174,13 +202,13 @@ For more advanced configuration, create `release-please-config.json`:
   "package-name": "di-lab",
   "changelog-path": "CHANGELOG.md",
   "changelog-types": [
-    {"type": "feat", "section": "Added", "hidden": false},
-    {"type": "fix", "section": "Fixed", "hidden": false},
-    {"type": "deprecate", "section": "Deprecated", "hidden": false},
-    {"type": "remove", "section": "Removed", "hidden": false},
-    {"type": "security", "section": "Security", "hidden": false},
-    {"type": "refactor", "section": "Changed", "hidden": false},
-    {"type": "perf", "section": "Changed", "hidden": false}
+    { "type": "feat", "section": "Added", "hidden": false },
+    { "type": "fix", "section": "Fixed", "hidden": false },
+    { "type": "deprecate", "section": "Deprecated", "hidden": false },
+    { "type": "remove", "section": "Removed", "hidden": false },
+    { "type": "security", "section": "Security", "hidden": false },
+    { "type": "refactor", "section": "Changed", "hidden": false },
+    { "type": "perf", "section": "Changed", "hidden": false }
   ],
   "bump-minor-pre-major": true,
   "include-v-in-tag": true
@@ -209,24 +237,27 @@ Create `.release-please-manifest.json` for initial version:
 ## R4: Semantic Versioning Automation (UPDATED)
 
 ### Decision
+
 Semantic versioning is handled automatically by release-please-action.
 
 ### Rationale
+
 - release-please-action handles version bumps based on conventional commits
 - No separate tooling needed
 - Version stored in package.json (standard for Node.js projects)
 
 ### Version Bump Logic
 
-| Commit Type | Version Bump |
-|-------------|--------------|
-| `feat:` | MINOR (0.1.0 -> 0.2.0) |
-| `fix:` | PATCH (0.1.0 -> 0.1.1) |
+| Commit Type                    | Version Bump           |
+| ------------------------------ | ---------------------- |
+| `feat:`                        | MINOR (0.1.0 -> 0.2.0) |
+| `fix:`                         | PATCH (0.1.0 -> 0.1.1) |
 | `feat!:` or `BREAKING CHANGE:` | MAJOR (0.1.0 -> 1.0.0) |
 
 ### Pre-release Support
 
 For pre-release versions, configure in release-please-config.json:
+
 ```json
 {
   "prerelease": true,
@@ -241,18 +272,22 @@ This generates versions like `0.1.0-alpha.1`, `0.1.0-alpha.2`, etc.
 ## R5: lint-staged with Bun
 
 ### Decision
+
 Use lint-staged with Bun for faster execution.
 
 ### Rationale
+
 - lint-staged runs linters on staged files only, improving performance
 - Bun executes lint-staged faster than npm/npx
 - Integrates seamlessly with Husky pre-commit hook
 
 ### Alternatives Considered
+
 1. **Pre-commit on all files**: Rejected - slower, redundant
 2. **Nano-staged**: Rejected - less mature, smaller community
 
 ### Configuration Pattern
+
 ```json
 // .lintstagedrc.json
 {
@@ -262,6 +297,7 @@ Use lint-staged with Bun for faster execution.
 ```
 
 ### Hook Integration
+
 ```bash
 # .husky/pre-commit
 bunx lint-staged && bun typecheck
@@ -272,36 +308,37 @@ bunx lint-staged && bun typecheck
 ## Dependencies Summary
 
 ### Production Dependencies
+
 None (infrastructure only)
 
 ### Development Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `@commitlint/cli` | ^19.x | Commit message validation |
-| `@commitlint/config-conventional` | ^19.x | Conventional commit rules |
-| `husky` | ^9.x | Git hooks management |
-| `lint-staged` | ^15.x | Staged files linting |
-| `prettier` | ^3.x | Code formatting |
+| Package                           | Version | Purpose                   |
+| --------------------------------- | ------- | ------------------------- |
+| `@commitlint/cli`                 | ^19.x   | Commit message validation |
+| `@commitlint/config-conventional` | ^19.x   | Conventional commit rules |
+| `husky`                           | ^9.x    | Git hooks management      |
+| `lint-staged`                     | ^15.x   | Staged files linting      |
+| `prettier`                        | ^3.x    | Code formatting           |
 
 ### GitHub Actions (workflow dependencies)
 
-| Action | Version | Purpose |
-|--------|---------|---------|
-| `googleapis/release-please-action` | v4 | Changelog & release automation |
-| `actions/checkout` | v4 | Repository checkout |
+| Action                             | Version | Purpose                        |
+| ---------------------------------- | ------- | ------------------------------ |
+| `googleapis/release-please-action` | v4      | Changelog & release automation |
+| `actions/checkout`                 | v4      | Repository checkout            |
 
 ---
 
 ## Questions Resolved
 
-| ID | Question | Resolution |
-|----|----------|------------|
-| Q1 | Does commitlint work with Bun? | Yes, via npm compatibility |
-| Q2 | Husky v9 setup for Bun? | Use `bunx husky init` |
-| Q3 | Changelog tool choice? | **release-please-action** (Google-supported) |
-| Q4 | Hook timeout enforcement? | Husky native + wrapper if needed |
-| Q5 | How to handle releases? | Release PR workflow via release-please |
+| ID  | Question                       | Resolution                                   |
+| --- | ------------------------------ | -------------------------------------------- |
+| Q1  | Does commitlint work with Bun? | Yes, via npm compatibility                   |
+| Q2  | Husky v9 setup for Bun?        | Use `bunx husky init`                        |
+| Q3  | Changelog tool choice?         | **release-please-action** (Google-supported) |
+| Q4  | Hook timeout enforcement?      | Husky native + wrapper if needed             |
+| Q5  | How to handle releases?        | Release PR workflow via release-please       |
 
 ---
 

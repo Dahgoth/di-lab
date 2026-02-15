@@ -19,41 +19,42 @@ Represents a validated conventional commit message.
 interface CommitMessage {
   /** Commit type - determines changelog section mapping */
   type: CommitType;
-  
+
   /** Optional scope - typically matches spec directory name */
   scope?: string;
-  
+
   /** Commit description - max 72 chars, starts lowercase */
   description: string;
-  
+
   /** Optional body for detailed explanation */
   body?: string;
-  
+
   /** Indicates breaking change */
   breaking?: boolean;
-  
+
   /** Footer with breaking change description */
   breakingChange?: string;
-  
+
   /** Related issue references */
   issues?: string[];
 }
 
-type CommitType = 
-  | 'feat'      // New feature → Added
-  | 'fix'       // Bug fix → Fixed
-  | 'docs'      // Documentation
-  | 'style'     // Code style (formatting)
-  | 'refactor'  // Code refactoring → Changed
-  | 'test'      // Tests
-  | 'chore'     // Maintenance
-  | 'perf'      // Performance → Changed
-  | 'ci'        // CI/CD
-  | 'build'     // Build system
-  | 'revert';   // Revert commit
+type CommitType =
+  | "feat" // New feature → Added
+  | "fix" // Bug fix → Fixed
+  | "docs" // Documentation
+  | "style" // Code style (formatting)
+  | "refactor" // Code refactoring → Changed
+  | "test" // Tests
+  | "chore" // Maintenance
+  | "perf" // Performance → Changed
+  | "ci" // CI/CD
+  | "build" // Build system
+  | "revert"; // Revert commit
 ```
 
 **Validation Rules**:
+
 - `type` is required and must be one of the defined types
 - `scope` must match a spec directory name if provided
 - `description` must start with lowercase letter
@@ -61,6 +62,7 @@ type CommitType =
 - If `breaking` is true, `breakingChange` should be provided
 
 **Example**:
+
 ```
 feat(optimize): add greedy algorithm for gem ranking
 
@@ -82,43 +84,43 @@ Represents a single changelog entry.
 interface ChangelogEntry {
   /** Changelog section */
   type: ChangelogSection;
-  
+
   /** Entry description (from commit message) */
   description: string;
-  
+
   /** PR number for reference */
   prNumber: number;
-  
+
   /** Commit hash for traceability */
   commitHash: string;
-  
+
   /** ISO 8601 date */
   date: string;
-  
+
   /** Breaking change indicator */
   breaking?: boolean;
 }
 
-type ChangelogSection = 
-  | 'added'       // feat commits
-  | 'changed'     // refactor, perf commits
-  | 'deprecated'  // deprecate commits
-  | 'removed'     // remove commits
-  | 'fixed'       // fix commits
-  | 'security';   // security commits
+type ChangelogSection =
+  | "added" // feat commits
+  | "changed" // refactor, perf commits
+  | "deprecated" // deprecate commits
+  | "removed" // remove commits
+  | "fixed" // fix commits
+  | "security"; // security commits
 ```
 
 **Mapping from CommitType to ChangelogSection**:
 
 | Commit Type | Changelog Section |
-|-------------|-------------------|
-| `feat` | `added` |
-| `fix` | `fixed` |
-| `deprecate` | `deprecated` |
-| `remove` | `removed` |
-| `security` | `security` |
-| `refactor` | `changed` |
-| `perf` | `changed` |
+| ----------- | ----------------- |
+| `feat`      | `added`           |
+| `fix`       | `fixed`           |
+| `deprecate` | `deprecated`      |
+| `remove`    | `removed`         |
+| `security`  | `security`        |
+| `refactor`  | `changed`         |
+| `perf`      | `changed`         |
 
 ---
 
@@ -130,22 +132,23 @@ Represents the link between issues/tasks and specifications.
 interface SpecReference {
   /** Spec identifier (e.g., "001-workflow-foundation") */
   specId: string;
-  
+
   /** Absolute path to spec directory */
   specPath: string;
-  
+
   /** Optional task ID within spec */
   taskId?: string;
-  
+
   /** GitHub issue URL for bidirectional sync */
   issueUrl?: string;
-  
+
   /** Issue state for tracking */
-  issueState?: 'open' | 'closed';
+  issueState?: "open" | "closed";
 }
 ```
 
 **Example**:
+
 ```json
 {
   "specId": "001-workflow-foundation",
@@ -166,25 +169,29 @@ Configuration schema for commitlint.
 interface CommitlintConfig {
   /** Extend base configurations */
   extends?: string[];
-  
+
   /** Custom rules */
   rules: {
-    [ruleName: string]: [severity: 0 | 1 | 2, condition: 'always' | 'never', value?: unknown];
+    [ruleName: string]: [
+      severity: 0 | 1 | 2,
+      condition: "always" | "never",
+      value?: unknown,
+    ];
   };
-  
+
   /** Optional scope enum for validation */
-  'scope-enum'?: [2, 'always', string[]];
+  "scope-enum"?: [2, "always", string[]];
 }
 ```
 
 **Default Rules**:
 
-| Rule | Severity | Condition | Value |
-|------|----------|-----------|-------|
-| `type-enum` | 2 (error) | always | `['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore', 'perf', 'ci', 'build', 'revert']` |
-| `subject-case` | 2 (error) | always | `'lower-case'` |
-| `subject-max-length` | 2 (error) | always | `72` |
-| `scope-enum` | 2 (error) | always | `[/* spec directories */]` |
+| Rule                 | Severity  | Condition | Value                                                                                            |
+| -------------------- | --------- | --------- | ------------------------------------------------------------------------------------------------ |
+| `type-enum`          | 2 (error) | always    | `['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore', 'perf', 'ci', 'build', 'revert']` |
+| `subject-case`       | 2 (error) | always    | `'lower-case'`                                                                                   |
+| `subject-max-length` | 2 (error) | always    | `72`                                                                                             |
+| `scope-enum`         | 2 (error) | always    | `[/* spec directories */]`                                                                       |
 
 ---
 
@@ -201,7 +208,7 @@ interface HuskyConfig {
     /** Timeout in seconds */
     timeout?: number;
   };
-  
+
   /** Commit-msg hook configuration */
   commitMsg?: {
     /** Commands to run */
@@ -213,6 +220,7 @@ interface HuskyConfig {
 ```
 
 **Default Hook Structure**:
+
 ```bash
 # .husky/pre-commit
 #!/usr/bin/env sh
@@ -243,6 +251,7 @@ interface LintStagedConfig {
 ```
 
 **Default Configuration**:
+
 ```json
 {
   "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
@@ -323,14 +332,14 @@ interface LintStagedConfig {
 
 ## File Storage
 
-| Entity | Storage Location | Format |
-|--------|------------------|--------|
-| CommitMessage | Git commit history | Plain text |
-| ChangelogEntry | `CHANGELOG.md` | Markdown |
-| SpecReference | Task frontmatter | YAML |
-| CommitlintConfig | `commitlint.config.js` | JavaScript |
-| HuskyConfig | `.husky/` directory | Shell scripts |
-| LintStagedConfig | `.lintstagedrc.json` | JSON |
+| Entity           | Storage Location       | Format        |
+| ---------------- | ---------------------- | ------------- |
+| CommitMessage    | Git commit history     | Plain text    |
+| ChangelogEntry   | `CHANGELOG.md`         | Markdown      |
+| SpecReference    | Task frontmatter       | YAML          |
+| CommitlintConfig | `commitlint.config.js` | JavaScript    |
+| HuskyConfig      | `.husky/` directory    | Shell scripts |
+| LintStagedConfig | `.lintstagedrc.json`   | JSON          |
 
 ---
 
