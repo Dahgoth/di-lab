@@ -232,6 +232,13 @@ interface SavedBuild {
 - `name` must be 1-50 characters
 - `notes` must be 0-500 characters (if provided)
 
+**XSS Prevention**:
+
+- `name` and `notes` must not contain HTML tags
+- `name` and `notes` must not contain URL schemes (javascript:, data:, vbscript:)
+- Sanitization must occur on both client (before save) and server (before storage)
+- Display must use React's default escaping (do NOT use dangerouslySetInnerHTML)
+
 ---
 
 ### 6. SessionState (Auto-persisted)
@@ -244,6 +251,8 @@ interface SessionState {
   resources: ResourceInventory;
   optimizationMode: "PVP" | "PVE";
   updatedAt: string; // ISO timestamp
+  lastSavedBuildId?: string; // Reference to last saved/loaded build (if any)
+  hasUnsavedChanges?: boolean; // True if named build was modified
 }
 ```
 
@@ -442,13 +451,35 @@ const ResourceInventorySchema = z.object({
   telluricPearls: z.number().int().min(0),
 });
 
+// XSS sanitization helpers
+const stripHtmlTags = (str: string): string => str.replace(/<[^>]*>/g, "");
+
+const hasDangerousUrlScheme = (str: string): boolean =>
+  /(?:javascript|data|vbscript):/i.test(str);
+
+const sanitizeUserContent = (str: string): string => {
+  const stripped = stripHtmlTags(str);
+  if (hasDangerousUrlScheme(stripped)) {
+    throw new Error("Content contains forbidden URL scheme");
+  }
+  return stripped;
+};
+
+// Enhanced schema with sanitization
+const UserContentSchema = z
+  .string()
+  .transform(sanitizeUserContent)
+  .refine((val) => !hasDangerousUrlScheme(val), {
+    message: "Content contains forbidden URL scheme",
+  });
+
 const SavedBuildSchema = z.object({
   id: z.string().uuid(),
-  name: z.string().min(1).max(50),
+  name: UserContentSchema.min(1).max(50),
   gems: z.array(EquippedGemSchema),
   resources: ResourceInventorySchema,
   optimizationMode: OptimizationModeSchema,
-  notes: z.string().max(500).optional(),
+  notes: UserContentSchema.max(500).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
@@ -458,6 +489,8 @@ const SessionStateSchema = z.object({
   resources: ResourceInventorySchema,
   optimizationMode: OptimizationModeSchema,
   updatedAt: z.string().datetime(),
+  lastSavedBuildId: z.string().uuid().optional(),
+  hasUnsavedChanges: z.boolean().optional(),
 });
 
 const LocalStorageSchema = z.object({

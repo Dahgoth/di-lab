@@ -181,20 +181,48 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-015**: System MUST provide an "Optimize" button that triggers the optimization process via server-side API route (`/api/optimize`)
 - **FR-016**: System MUST display skeleton loaders (gray placeholder shapes mimicking content layout) during data fetching and optimization processing, replaced by actual content when data arrives
 - **FR-016a**: System MUST implement skeleton loaders for gem catalog grid (showing placeholder gem cards) and optimization results (showing placeholder recommendation cards)
-- **FR-017**: System MUST disable user interaction during optimization processing
+- **FR-017**: System MUST display a modal overlay during optimization processing that:
+  - Shows a progress indicator (spinner or progress bar)
+  - Displays elapsed time (optional, updates every second)
+  - Provides a Cancel button that remains interactive
+  - Visually disables the underlying form with a semi-transparent overlay
+  - Prevents all form interactions (clicks, keyboard navigation) on the underlying UI
+  - Allows cancellation via the Cancel button or Escape key
 - **FR-018**: System MUST display optimization results as prioritized recommendations
 - **FR-019**: System MUST show for each recommendation: target gem, upgrade path, resource cost, expected power gain
 - **FR-020**: System MUST allow users to expand recommendations for additional details
 - **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), and server-error (backend failure)
-- **FR-022**: System MUST handle optimization timeout gracefully with a cancellation option after 30 seconds
+- **FR-022**: System MUST handle optimization timeout gracefully:
+  - Display a timeout warning after 20 seconds with "Still processing..." message
+  - Enable cancellation at any time via Cancel button in the modal overlay
+  - After 30 seconds, automatically offer cancellation if still processing
+  - On cancellation: abort the optimization request, close modal, restore form interactivity
+  - Show toast notification confirming cancellation with retry option
 - **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors)
 - **FR-021b**: System MUST implement single retry with fixed 1s delay for transient optimization API failures before displaying error to user (note: single retry only, not exponential backoff which would require multiple retries with increasing delays)
 
 #### Build Management
 
 - **FR-023**: System MUST restore the last session state (equipped gems, resources, optimization mode) from localStorage when the user loads the optimizer, providing continuity for returning users
-- **FR-023a**: System MUST auto-persist session state to localStorage on every change (gem add/remove, quality/rank change, resource input) to ensure data is never lost
-- **FR-023b**: System MUST show a confirmation dialog when user attempts to navigate away (close tab, navigate to another page) with unsaved changes, preventing accidental data loss
+- **FR-023a**: System MUST auto-persist session state to localStorage on every change:
+  - Auto-save applies to SessionState only (gems, resources, optimizationMode)
+  - Auto-save occurs on every user action (gem add/remove, quality/rank change, resource input)
+  - Auto-saved session is automatically restored on page load
+  - Auto-saved session does NOT create a named build
+  - User sees "Session auto-saved" indicator (subtle, non-intrusive)
+- **FR-023b**: System MUST show unsaved changes confirmation only for named builds:
+  - Confirmation dialog appears when user has an unsaved named build in progress
+  - A named build is considered "unsaved" when:
+    - User explicitly saved the build, then modified it
+    - User started with a loaded named build, then modified it
+  - Confirmation does NOT appear for:
+    - New session state (auto-persisted, no explicit save)
+    - Already saved named builds (no modifications since save)
+  - Dialog options: "Save", "Don't Save", "Cancel"
+- **FR-023c**: System MUST distinguish between session state and named builds:
+  - SessionState: Auto-persisted, restored on load, no confirmation on exit
+  - SavedBuild: Explicit save required, confirmation on exit if modified
+  - Transition from session to named build occurs when user clicks "Save Build"
 - **FR-024**: System MUST provide a "Save Build" action that captures current configuration
 - **FR-025**: System MUST prompt for a unique build name when saving, rejecting duplicates with a clear error message
 - **FR-026**: System MUST display saved builds in a builds section with name and timestamp
@@ -230,7 +258,23 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-042**: System MUST conform to WCAG 2.1 AA accessibility standards
 - **FR-043**: System MUST provide keyboard navigation for all interactive elements
 - **FR-044**: System MUST include appropriate ARIA labels and roles for screen reader support
+- **FR-044a**: System MUST provide screen reader announcements for critical optimization events:
+  - **Optimization completion**: Announce "Optimization complete. X recommendations found."
+  - **Optimization error**: Announce the error title and guidance from FR-021
+  - **Optimization cancellation**: Announce "Optimization cancelled."
+  - Do NOT announce loading start (modal overlay already indicates progress)
+  - Use aria-live="polite" region for non-intrusive announcements
+  - Use aria-live="assertive" for error announcements requiring immediate attention
 - **FR-045**: System MUST maintain sufficient color contrast ratios (4.5:1 for normal text, 3:1 for large text)
+- **FR-046**: System MUST prevent XSS attacks in user-entered content:
+  - Build names (1-50 characters) and notes (0-500 characters) are user-controllable
+  - React's JSX auto-escaping provides baseline protection against injection
+  - Additional sanitization required for defense-in-depth:
+    - Strip HTML tags from build names and notes before storage
+    - Escape special characters (< > & " ') on display
+    - Reject content containing javascript: or data: URLs
+  - Server-side validation must mirror client-side validation
+  - Content Security Policy (CSP) header must be configured to prevent inline script execution
 
 ---
 

@@ -66,8 +66,8 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Conflict Detection
 
-- [ ] CHK026 - Are there conflicts between "disable user interaction during optimization" (FR-017) and "cancellation option after 30 seconds" (FR-022)? [Conflict, Spec §FR-017, FR-022]
-- [ ] CHK027 - Are there conflicts between "auto-persist on every change" (FR-023a) and "unsaved changes confirmation" (FR-023b)? [Conflict, Spec §FR-023a, FR-023b]
+- [x] ✅ RESOLVED CHK026 - Are there conflicts between "disable user interaction during optimization" (FR-017) and "cancellation option after 30 seconds" (FR-022)? [Conflict, Spec §FR-017, FR-022] → Resolution: Modal overlay pattern with interactive Cancel button (see FR-017, FR-022 updates and plans/PROJ-002-resolution-plan.md)
+- [x] ✅ RESOLVED CHK027 - Are there conflicts between "auto-persist on every change" (FR-023a) and "unsaved changes confirmation" (FR-023b)? [Conflict, Spec §FR-023a, FR-023b] → Resolution: Hybrid persistence model - auto-save session state, explicit save for named builds (see FR-023a, FR-023b, FR-023c and plans/PROJ-002-resolution-plan.md)
 
 ---
 
@@ -133,7 +133,7 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 ### Accessibility Requirements
 
 - [ ] CHK052 - Are accessibility requirements for keyboard navigation order and focus management across all panels defined? [NFR Accessibility, Spec §FR-043]
-- [ ] CHK053 - Are accessibility requirements for screen reader announcements during async operations (loading, errors) defined? [NFR Accessibility, Gap]
+- [x] ✅ RESOLVED CHK053 - Are accessibility requirements for screen reader announcements during async operations (loading, errors) defined? [NFR Accessibility, Gap] → Resolution: ARIA live regions for critical events (see FR-044a and plans/PROJ-002-resolution-plan.md)
 - [ ] CHK054 - Are accessibility requirements for color contrast on all state variations (hover, active, disabled, error) defined? [NFR Accessibility, Spec §FR-045]
 - [ ] CHK055 - Are accessibility requirements for the gem detail modal focus trap and restoration defined? [NFR Accessibility, Gap]
 
@@ -142,7 +142,7 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 - [ ] CHK056 - Are security requirements for client-side vs server-side validation split documented with rationale? [NFR Security, Gap]
 - [ ] CHK057 - Are security requirements for localStorage data exposure risk mitigation defined? [NFR Security, Gap]
 - [ ] CHK058 - Are security requirements for error message information exposure (avoiding internal details) defined? [NFR Security, Spec §FR-021]
-- [ ] CHK059 - Are security requirements for XSS prevention in user-entered build names and notes defined? [NFR Security, Gap]
+- [x] ✅ RESOLVED CHK059 - Are security requirements for XSS prevention in user-entered build names and notes defined? [NFR Security, Gap] → Resolution: Defense-in-depth XSS prevention with sanitization (see FR-046, data-model XSS Prevention section, and plans/PROJ-002-resolution-plan.md)
 
 ---
 
