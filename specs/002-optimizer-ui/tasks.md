@@ -6,13 +6,15 @@
 
 This document contains all implementation tasks for the Optimizer UI feature, organized by phase and user story priority. Tasks are designed for sequential execution within phases, with parallelizable tasks marked with `[P]`.
 
-**Total Tasks**: 89
+**Total Tasks**: 93
 **MVP Tasks**: Phases 1-5 (60 tasks)
-**Post-MVP Tasks**: Phases 6-10 (29 tasks)
+**Post-MVP Tasks**: Phases 6-10 (33 tasks)
 
 ---
 
 ## Phase 1: Setup
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 Project initialization and infrastructure setup.
 
@@ -22,6 +24,8 @@ Project initialization and infrastructure setup.
 ---
 
 ## Phase 2: Foundational
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 Core types, utilities, and static data. No user story labels - these are infrastructure tasks.
 
@@ -36,6 +40,8 @@ Core types, utilities, and static data. No user story labels - these are infrast
 ---
 
 ## Phase 3: US1 - Gem Inventory Entry (P1)
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 User Story 1: As a player, I want to select and configure my legendary gems so that the optimizer can analyze my current build.
 
@@ -73,6 +79,8 @@ User Story 1: As a player, I want to select and configure my legendary gems so t
 
 ## Phase 4: US2 - Resource Specification (P1)
 
+> **Checkpoint**: Review phase output before proceeding to next phase
+
 User Story 2: As a player, I want to input my available upgrade resources so that the optimizer can provide realistic recommendations.
 
 - [ ] T028 [US2] Create `src/components/optimization/ResourceInput.tsx` with platinum and Telluric Pearls input fields
@@ -85,6 +93,8 @@ User Story 2: As a player, I want to input my available upgrade resources so tha
 ---
 
 ## Phase 5: US3 - Optimization Execution & Results (P1)
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 User Story 3: As a player, I want to trigger optimization and view prioritized recommendations so that I can make informed decisions.
 
@@ -124,12 +134,9 @@ User Story 3: As a player, I want to trigger optimization and view prioritized r
 
 ## Phase 6: US4 - Build Management (P2)
 
+> **Checkpoint**: Review phase output before proceeding to next phase
+
 User Story 4: As a returning player, I want to save my current build configuration so that I can quickly reload it in future sessions.
-
-### Database Layer
-
-- [ ] T054 [US4] Create `src/lib/db/schema.ts` with builds table definition (deferred: requires Drizzle setup)
-- [ ] T055 [US4] Create `src/lib/db/queries.ts` for build CRUD operations (deferred: requires database)
 
 ### Client-Side Persistence (MVP)
 
@@ -144,11 +151,12 @@ User Story 4: As a returning player, I want to save my current build configurati
 - [ ] T061 [US4] Create save build modal with name input and optional notes
 - [ ] T062 [US4] Add load build functionality with state restoration
 - [ ] T063 [US4] Add delete build functionality with confirmation
-- [ ] T064 [US4] Add auth requirement notice for cloud storage (deferred feature)
 
 ---
 
 ## Phase 7: US5 - Gem Information Reference (P2)
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 User Story 5: As a player unfamiliar with certain gems, I want to view detailed gem information so that I can make informed selection decisions.
 
@@ -162,6 +170,8 @@ User Story 5: As a player unfamiliar with certain gems, I want to view detailed 
 
 ## Phase 8: US7 - Responsive Mobile Experience (P2)
 
+> **Checkpoint**: Review phase output before proceeding to next phase
+
 User Story 7: As a player using my phone during gameplay, I want the interface to work smoothly on mobile so that I can use DI-Lab while playing Diablo Immortal.
 
 - [ ] T070 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints
@@ -174,9 +184,11 @@ User Story 7: As a player using my phone during gameplay, I want the interface t
 
 ## Phase 9: US6 - Optimization Constraints & Goals (P3)
 
+> **Checkpoint**: Review phase output before proceeding to next phase
+
 User Story 6: As an advanced player, I want to set optimization preferences so that recommendations align with my specific goals.
 
-- [ ] T075 [US6] Add PVP/PVE mode toggle to optimization controls with PVE default
+- [ ] T075 [US6] Add PVP/PVE mode toggle to optimization controls with PVE default and display active mode in UI
 - [ ] T076 [US6] Add resource budget constraints input (optional max platinum/pearls)
 - [ ] T077 [US6] Update optimization engine to respect mode selection in tier rankings
 - [ ] T078 [US6] Update optimization engine to respect resource budget constraints
@@ -184,6 +196,8 @@ User Story 6: As an advanced player, I want to set optimization preferences so t
 ---
 
 ## Phase 10: Polish & Cross-cutting
+
+> **Checkpoint**: Review phase output before proceeding to next phase
 
 Final polish, accessibility, and cross-cutting concerns.
 
@@ -198,6 +212,20 @@ Final polish, accessibility, and cross-cutting concerns.
 - [ ] T087 Add focus management for modals (focus trap, escape to close)
 - [ ] T088 Test and verify WCAG 2.1 AA color contrast ratios (4.5:1 text, 3:1 large text)
 - [ ] T089 Final integration testing and bug fixes
+- [ ] **T090**: Manual usability validation for SC-003 (90% gem addition success) and SC-008 (95% result comprehension)
+- [ ] **T091**: Run Lighthouse CI and verify score > 90
+- [ ] **T092**: Verify FCP < 1.5s and TTI < 3s with performance profiling tools
+- [ ] **T093**: Verify saved builds load in under 2 seconds (SC-006 validation)
+
+---
+
+## Phase 11: Deferred Features (Future Enhancement)
+
+> **Note**: These tasks require authentication infrastructure and are deferred pending Battle.net OAuth implementation.
+
+- [ ] **T054**: Create src/lib/db/schema.ts with builds table (deferred - requires auth)
+- [ ] **T055**: Create src/lib/db/queries.ts for build CRUD (deferred - requires auth)
+- [ ] **T064**: Add auth requirement notice for cloud storage (deferred - requires auth)
 
 ---
 
@@ -341,4 +369,4 @@ The Minimum Viable Product delivers the core optimization flow:
 
 ---
 
-**Version**: 1.0.0 | **Last Updated**: 2026-02-14
+**Version**: 1.1.0 | **Last Updated**: 2026-02-15

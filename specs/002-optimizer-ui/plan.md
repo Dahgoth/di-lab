@@ -19,18 +19,78 @@ Build the user interface components for the legendary gems optimizer, including 
 **Constraints**: <1.5s First Contentful Paint, WCAG 2.1 AA accessibility, mobile-first design
 **Scale/Scope**: 50-100 gems catalog, localStorage builds (5 free tier limit), 24 max gem slots
 
+### Client Component Boundary
+
+The following components require `"use client"` directive due to interactive features:
+
+| Component                | Reason for Client Boundary        |
+| ------------------------ | --------------------------------- |
+| `GemCatalog.tsx`         | Tab selection, click handlers     |
+| `GemCard.tsx`            | Click selection, hover states     |
+| `GemSelector.tsx`        | Quality/rank dropdown selection   |
+| `GemDetail.tsx`          | Modal open/close state            |
+| `ResourceInput.tsx`      | Form inputs, debounced validation |
+| `OptimizeButton.tsx`     | Click handler, loading state      |
+| `ResultsPanel.tsx`       | Display client-side results       |
+| `RecommendationCard.tsx` | Expand/collapse interaction       |
+| `Modal.tsx`              | Open/close state, focus trap      |
+| `Toast.tsx`              | Animation, auto-dismiss timers    |
+| `Tooltip.tsx`            | Hover state, positioning          |
+
+**Strategy**: Use Server Components for:
+
+- Static gem data fetching (initial catalog load)
+- Page layouts and wrappers
+- SEO-critical content
+
+**Hydration Pattern**: Server-render initial state, hydrate for interactivity.
+
+### Progressive Enhancement Strategy
+
+**Scope Clarification**: The optimizer's core functionality (gem selection, resource input, optimization calculation, results display) inherently requires JavaScript for:
+
+- localStorage persistence
+- API calls to `/api/optimize`
+- Interactive form validation
+- Dynamic UI updates
+
+**Enhanced Experience (with JavaScript)**:
+
+- Full gem selection and configuration
+- Real-time validation feedback
+- Optimization execution and results
+- Build saving/loading
+- Session persistence
+
+**Baseline Experience (without JavaScript)**:
+
+- Static gem catalog view (read-only)
+- Informational content about gem effects and rankings
+- Navigation between pages
+
+**Implementation**:
+
+- Use `<noscript>` elements for fallback messaging
+- Server-render gem catalog as static HTML
+- Display message: "JavaScript required for optimization features" when JS disabled
+
+### Technical Constraints
+
+- **Hybrid Rendering**: Server Components for static content, Client Components for interactivity
+- **No-JS Fallback**: Static gem catalog viewable without JavaScript; optimization requires JS
+
 ## Constitution Check
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### User-First Experience ✅
 
-| Requirement             | Status     | Implementation                                                |
-| ----------------------- | ---------- | ------------------------------------------------------------- |
-| Fast Results (<5s)      | ✅ Pass    | Server-side optimization via `/api/optimize` route            |
-| Clear Output            | ✅ Pass    | Ranked recommendations with power gain visibility             |
-| Mobile-First            | ✅ Pass    | Tailwind responsive breakpoints, touch targets ≥44px          |
-| Progressive Enhancement | ⚠️ Partial | Requires JavaScript for interactivity; SSR for initial render |
+| Requirement             | Status  | Implementation                                             |
+| ----------------------- | ------- | ---------------------------------------------------------- |
+| Fast Results (<5s)      | ✅ Pass | Server-side optimization via `/api/optimize` route         |
+| Clear Output            | ✅ Pass | Ranked recommendations with power gain visibility          |
+| Mobile-First            | ✅ Pass | Tailwind responsive breakpoints, touch targets ≥44px       |
+| Progressive Enhancement | ✅ Pass | Server-rendered catalog; no-JS fallback documented in plan |
 
 ### Data Integrity ✅
 
@@ -200,12 +260,12 @@ _Re-evaluated after Phase 1 design artifacts complete._
 
 ### User-First Experience
 
-| Requirement             | Status  | Design Artifact                                                 |
-| ----------------------- | ------- | --------------------------------------------------------------- |
-| Fast Results (<5s)      | Pass    | Server-side `/api/optimize` route defined in contracts          |
-| Clear Output            | Pass    | `UpgradeRecommendation` schema includes powerGain, reasoning    |
-| Mobile-First            | Pass    | Native `<select>` elements, 44x44px touch targets in quickstart |
-| Progressive Enhancement | Partial | SSR for initial render; JS required for interactivity           |
+| Requirement             | Status | Design Artifact                                                 |
+| ----------------------- | ------ | --------------------------------------------------------------- |
+| Fast Results (<5s)      | Pass   | Server-side `/api/optimize` route defined in contracts          |
+| Clear Output            | Pass   | `UpgradeRecommendation` schema includes powerGain, reasoning    |
+| Mobile-First            | Pass   | Native `<select>` elements, 44x44px touch targets in quickstart |
+| Progressive Enhancement | Pass   | Server-rendered catalog; no-JS fallback documented in plan      |
 
 ### Data Integrity
 

@@ -145,7 +145,7 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - What happens when optimization takes longer than expected? The interface should show a progress indicator and allow cancellation if processing exceeds a reasonable time.
 - What happens when a user loses network connection during optimization? The interface should handle errors gracefully and allow retry when connection is restored.
 - What happens when a user's saved build contains gems that have been removed from the database? The interface should indicate the deprecated gems and allow removal.
-- What happens when a user has very high resource amounts that exceed display formatting? The interface should format large numbers appropriately (e.g., "1.2M platinum").
+- What happens when a user has very high resource amounts that exceed display formatting? The interface should format numbers >= 1,000,000 with M suffix (e.g., "1.2M platinum"), numbers >= 1,000 with K suffix (e.g., "15.3K platinum"); exact thresholds: >= 1,000,000 uses M, >= 10,000 uses K.
 - What happens when a user has DI-Lab open in multiple browser tabs and makes conflicting build changes? The interface should allow concurrent edits but show a non-blocking toast warning (auto-dismiss after 5 seconds with pause on hover) when changes are detected from another tab (optimistic UI pattern).
 
 ---
@@ -165,6 +165,7 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-006**: System MUST limit equipped gems to 8 base slots plus resonance-unlocked slots (up to 24 total: 8 base + 16 from resonance wings). Resonance is automatically calculated from equipped legendary gems and dynamically unlocks wing slots at thresholds (6000 resonance = 4 slots, 7000 = 8 slots, 8000 = 12 slots, 8500+ = 16 slots). No manual resonance input is required.
 - **FR-007**: System MUST display equipped gems in a dedicated section showing current configuration, including automatically calculated total resonance from all equipped legendary gems
 - **FR-008**: System MUST allow removal of equipped gems
+- **FR-008a**: System MUST provide optimistic UI updates for gem add/remove operations with automatic rollback on failure (optimistic update pattern: update UI immediately, revert if server operation fails)
 - **FR-009**: System MUST prevent duplicate gem selections in base 8 slots (same gem ID); duplicate gem IDs are allowed in resonance wing slots. Users may record multiple copies of identical gems in their inventory for quantity tracking.
 
 #### Resource Input
@@ -187,7 +188,7 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), and server-error (backend failure)
 - **FR-022**: System MUST handle optimization timeout gracefully with a cancellation option after 30 seconds
 - **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors)
-- **FR-021b**: System MUST implement single retry with exponential backoff (1s delay) for transient optimization API failures before displaying error to user
+- **FR-021b**: System MUST implement single retry with fixed 1s delay for transient optimization API failures before displaying error to user (note: single retry only, not exponential backoff which would require multiple retries with increasing delays)
 
 #### Build Management
 
@@ -208,13 +209,14 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-031**: System MUST categorize gem effects (OFF, DEF, ALL, DOT, LOC, etc.)
 - **FR-032**: System MUST display upgrade cost information for each rank
 - **FR-033**: System MUST display tier rankings (PVP and PVE) for each gem
-- **FR-034**: System MUST provide hover tooltips with quick gem summaries
+- **FR-034**: System MUST provide hover tooltips with quick gem summaries on desktop; on mobile/touch devices, provide tap-to-reveal info button or long-press gesture alternative with visual feedback
 
 #### Optimization Preferences
 
 - **FR-035**: System MUST provide optimization mode selection (PVP/PVE) with PVE as the default selection
 - **FR-036**: System MUST apply selected mode to optimization algorithm
 - **FR-037**: System MUST display the currently active optimization mode
+- **FR-037a**: System MUST allow optional maximum resource budget constraint input that limits optimization recommendations to a user-specified platinum/pearls ceiling
 
 #### Responsive Design
 
@@ -604,7 +606,7 @@ The following items are explicitly out of scope for this UI specification:
   A: Auto-dismiss after 5 seconds with pause on hover - Users have enough time to read, can pause if needed, doesn't persist indefinitely
 
 - Q: What API retry strategy should the UI use for transient optimization failures?  
-  A: Single retry with exponential backoff (1s delay) - Resilience without over-complication
+  A: Single retry with fixed 1s delay - Resilience without over-complication (note: single retry only, not exponential backoff)
 
 - Q: How should the gem catalog data be loaded by the UI?  
   A: Static JSON bundled at build time - Fastest load time, no API latency, works offline for viewing; updated via code deployment when game patches release
