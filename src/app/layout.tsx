@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Template",
-  description: "A minimal Next.js starter template",
+  title: "DI-Lab - Diablo Immortal Legendary Gems Optimizer",
+  description:
+    "Optimize your legendary gems in Diablo Immortal with AI-powered recommendations. Maximize your build efficiency.",
 };
 
 export default function RootLayout({
