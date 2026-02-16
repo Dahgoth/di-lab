@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.1...di-lab-v0.2.2) (2026-02-16)
+
+
+### Bug Fixes
+
+* update metadata and page content for di-lab project ([#10](https://github.com/Dahgoth/di-lab/issues/10)) ([a8bc049](https://github.com/Dahgoth/di-lab/commit/a8bc0494decb74c02403a6fae7d1193a5573d837))
+
 ## [0.2.1](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.0...di-lab-v0.2.1) (2026-02-14)
 
 
