@@ -170,7 +170,7 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 
 #### Resource Input
 
-- **FR-010**: System MUST provide input fields for upgrade resources (Platinum, Telluric Pearls). Note: Resonance is NOT a manual input; it is auto-calculated from equipped legendary gems.
+- **FR-010**: System MUST provide input fields for upgrade resources (Gem Power and Gem Copy Inventory). Note: Resonance is NOT a manual input; it is auto-calculated from equipped legendary gems.
 - **FR-011**: System MUST validate resource inputs as non-negative integers with debounced feedback (300-500ms delay after user stops typing)
 - **FR-012**: System MUST display resource values with appropriate number formatting
 - **FR-013**: System MUST show a resources summary panel with all configured values

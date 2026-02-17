@@ -6,9 +6,9 @@
 
 This document contains all implementation tasks for the Optimizer UI feature, organized by phase and user story priority. Tasks are designed for sequential execution within phases, with parallelizable tasks marked with `[P]`.
 
-**Total Tasks**: 96
-**MVP Tasks**: Phases 1-5 (62 tasks)
-**Post-MVP Tasks**: Phases 6-10 (34 tasks)
+**Total Tasks**: 100
+**MVP Tasks**: Phases 1-5 (64 tasks)
+**Post-MVP Tasks**: Phases 6-10 (36 tasks)
 **Already Implemented**: 6 tasks (optimization engine)
 
 ---
@@ -127,6 +127,10 @@ User Story 3: As a player, I want to trigger optimization and view prioritized r
 - [ ] T049 [US3] Add resource cost breakdown to recommendation details
 - [ ] T050 [US3] Add alternatives display in expanded recommendation view
 
+### Optimization Modal
+
+- [ ] T097 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay, and Escape key cancellation
+
 ### Error Handling
 
 - [ ] T051 [US3] Create error display component for validation errors
@@ -135,6 +139,10 @@ User Story 3: As a player, I want to trigger optimization and view prioritized r
 - [ ] T054 [US3] Implement single retry with fixed 1s delay for transient failures
 - [ ] T055 [US3] Add loading state with disabled interaction during optimization
 - [ ] T056 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option
+
+### Enhanced Timeout Handling
+
+- [ ] T099 [US3] Enhance timeout handling in `src/components/optimization/OptimizeButton.tsx` with 20-second warning toast and 30-second cancel offer
 
 ---
 
@@ -150,6 +158,10 @@ User Story 4: As a returning player, I want to save my current build configurati
 - [ ] T058 [US4] Implement build load from localStorage with state restoration
 - [ ] T059 [US4] Implement build delete from localStorage with confirmation dialog
 - [ ] T060 [US4] Add 5-build limit for free tier users
+
+### Session Restore
+
+- [ ] T100 [US4] Implement session restore logic in `src/app/optimize/page.tsx` to check localStorage and restore previous state on load
 
 ### UI Components
 
@@ -225,6 +237,7 @@ Final polish, accessibility, and cross-cutting concerns.
 - [ ] T094 Run Lighthouse CI and verify score > 90
 - [ ] T095 Verify FCP < 1.5s and TTI < 3s with performance profiling tools
 - [ ] T096 Verify saved builds load in under 2 seconds (SC-006 validation)
+- [ ] T098 Create sanitization utilities in `src/lib/utils/sanitize.ts` with HTML tag stripping, character escaping, URL validation, and CSP header configuration
 
 ---
 
@@ -232,9 +245,9 @@ Final polish, accessibility, and cross-cutting concerns.
 
 > **Note**: These tasks require authentication infrastructure and are deferred pending Battle.net OAuth implementation.
 
-- [ ] T097 Create `src/lib/db/schema.ts` with builds table (deferred - requires auth)
-- [ ] T098 Create `src/lib/db/queries.ts` for build CRUD (deferred - requires auth)
-- [ ] T099 Add auth requirement notice for cloud storage (deferred - requires auth)
+- [ ] T101 Create `src/lib/db/schema.ts` with builds table (deferred - requires auth)
+- [ ] T102 Create `src/lib/db/queries.ts` for build CRUD (deferred - requires auth)
+- [ ] T103 Add auth requirement notice for cloud storage (deferred - requires auth)
 
 ---
 
@@ -332,9 +345,9 @@ The Minimum Viable Product delivers the core optimization flow:
 - Phase 2: 7 tasks
 - Phase 3: 18 tasks
 - Phase 4: 6 tasks
-- Phase 5: 23 tasks (6 already complete = 17 remaining)
-- **Total MVP Tasks**: 56 tasks
-- **Remaining MVP Tasks**: 50 tasks
+- Phase 5: 31 tasks (6 already complete = 25 remaining)
+- **Total MVP Tasks**: 64 tasks
+- **Remaining MVP Tasks**: 58 tasks
 
 ### MVP Success Criteria
 
