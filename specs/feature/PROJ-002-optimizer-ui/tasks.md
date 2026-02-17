@@ -1,385 +1,473 @@
-# Implementation Tasks: Optimizer UI
+# Tasks: Optimizer UI
 
-**Branch**: `feature/PROJ-002-optimizer-ui` | **Date**: 2026-02-17 | **Spec**: [spec.md](./spec.md)
+**Input**: Design documents from `specs/feature/PROJ-002-optimizer-ui/`
+**Prerequisites**: plan.md (required), spec.md (required), research.md, data-model.md, contracts/optimize-api.schema.json
 
-## Overview
+**Tests**: No tests requested in feature specification. Vitest is configured with 15 tests already passing for the optimization engine.
 
-This document contains all implementation tasks for the Optimizer UI feature, organized by phase and user story priority. Tasks are designed for sequential execution within phases, with parallelizable tasks marked with `[P]`.
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
-**Total Tasks**: 100
-**MVP Tasks**: Phases 1-5 (64 tasks)
-**Post-MVP Tasks**: Phases 6-10 (36 tasks)
-**Already Implemented**: 6 tasks (optimization engine)
+## Format: `[ID] [P?] [Story] Description`
 
----
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Include exact file paths in descriptions
 
-## Phase 1: Setup
+## Path Conventions
 
-> **Checkpoint**: Review phase output before proceeding to next phase
-
-Project initialization and infrastructure setup.
-
-- [ ] T001 Create directory structure: `src/types/`, `src/components/ui/`, `src/components/gems/`, `src/components/optimization/`, `src/components/layout/`, `src/lib/utils/`, `src/lib/storage/`, `src/data/`
-- [ ] T002 Update `src/app/globals.css` with Tailwind base styles and custom properties for gem colors
+- **Single project**: `src/` at repository root
+- **App Router**: `src/app/` for pages and API routes
+- **Components**: `src/components/` organized by domain
 
 ---
 
-## Phase 2: Foundational
+## Phase 1: Setup (Shared Infrastructure)
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Purpose**: Project initialization and basic structure
 
-Core types, utilities, and static data. No user story labels - these are infrastructure tasks.
+- [ ] T001 Create directory structure: `src/types/`, `src/components/ui/`, `src/components/gems/`, `src/components/optimization/`, `src/components/layout/`, `src/lib/utils/`, `src/lib/storage/`, `src/lib/db/`, `src/lib/session/`, `src/data/`
+- [ ] T002 Update `src/app/globals.css` with Tailwind base styles and custom properties for gem colors (1-star, 2-star, 5-star visual indicators)
 
-- [ ] T003 Create `src/types/gem.ts` with LegendaryGem, EquippedGem, GemEffect, TierRanking, EffectCategory interfaces
-- [ ] T004 [P] Create `src/types/optimization.ts` with OptimizationResult, UpgradeRecommendation, OptimizationError interfaces
+---
+
+## Phase 2: Foundational (Blocking Prerequisites)
+
+**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+
+**CRITICAL**: No user story work can begin until this phase is complete
+
+### Type Definitions
+
+- [ ] T003 Create `src/types/gem.ts` with StarRating, Quality, Rank, TierRanking, EffectCategory, EffectType, SlotType, OptimizationMode types and LegendaryGem, GemEffect, EquippedGem interfaces
+- [ ] T004 [P] Create `src/types/optimization.ts` with OptimizationResult, UpgradeRecommendation, AlternativeUpgrade, OptimizationError, OptimizationErrorType interfaces
 - [ ] T005 [P] Create `src/types/build.ts` with SavedBuild, SessionState, ResourceInventory interfaces
-- [ ] T006 Create `src/data/gems.json` with static gem database parsed from `docs/legendary-gems.csv`
-- [ ] T007 [P] Create `src/lib/utils/formatting.ts` with formatNumber, formatGemPower, formatDate utilities
-- [ ] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild
-- [ ] T009 Create `src/lib/storage/localStorage.ts` with versioned storage helpers (getStorage, setStorage, migrateStorage)
+
+### Static Data
+
+- [ ] T006 Create `src/data/gems.json` with static gem database parsed from `docs/legendary-gems.csv` (include id, name, starRating, effects, pvpTier, pveTier, resonanceTable, upgradeCosts for ~50-100 gems)
+
+### Utility Functions
+
+- [ ] T007 [P] Create `src/lib/utils/formatting.ts` with formatNumber (K suffix >=10,000, M suffix >=1,000,000), formatGemPower, formatDate utilities
+- [ ] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild, and validation helpers
+- [ ] T009 [P] Create `src/lib/utils/sanitization.ts` with stripHtmlTags, escapeSpecialChars, hasDangerousUrlScheme, sanitizeUserContent functions for XSS prevention (FR-046)
+
+### Session Management (Server-Side)
+
+- [ ] T010 Create `src/lib/db/schema.ts` with Drizzle SQLite schema for anonymousSessions and savedBuilds tables per data-model.md
+- [ ] T011 Create `src/lib/session/anonymous.ts` with getOrCreateAnonymousId (UUID v4), localStorage fallback detection, server-side session sync functions (FR-029, FR-029b)
+
+### Storage Layer
+
+- [ ] T012 Create `src/lib/storage/localStorage.ts` with versioned storage helpers for anonymous ID only (session state persisted to server database)
+
+**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
 ---
 
-## Phase 3: US1 - Gem Inventory Entry (P1)
+## Phase 3: User Story 1 - Gem Inventory Entry (Priority: P1) MVP
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Goal**: Users can select and configure legendary gems with quality and rank, view equipped gems with resonance calculation
 
-User Story 1: As a player, I want to select and configure my legendary gems so that the optimizer can analyze my current build.
+**Independent Test**: User can open the application, select gems from a categorized list (1-star, 2-star, 5-star tabs), set quality and rank for each, and see their selections displayed with auto-calculated resonance
 
-### UI Components
+### Base UI Components
 
-- [ ] T010 [US1] Create `src/components/ui/Button.tsx` with variants (primary, secondary, ghost) and sizes (sm, md, lg)
-- [ ] T011 [P] [US1] Create `src/components/ui/Card.tsx` with header, body, footer sections
-- [ ] T012 [P] [US1] Create `src/components/ui/Input.tsx` with label, error state, and validation
-- [ ] T013 [P] [US1] Create `src/components/ui/Select.tsx` with options, placeholder, and change handler
-- [ ] T014 [P] [US1] Create `src/components/ui/Modal.tsx` with open/close state and backdrop click handling
+- [ ] T013 [P] [US1] Create `src/components/ui/Button.tsx` with variants (primary, secondary, ghost, danger) and sizes (sm, md, lg), loading state, and disabled state
+- [ ] T014 [P] [US1] Create `src/components/ui/Card.tsx` with header, body, footer sections and responsive padding
+- [ ] T015 [P] [US1] Create `src/components/ui/Input.tsx` with label, error state, validation, and debounced onChange
+- [ ] T016 [P] [US1] Create `src/components/ui/Select.tsx` with native dropdown for mobile compatibility, options array, placeholder, and change handler
+- [ ] T017 [P] [US1] Create `src/components/ui/Modal.tsx` with open/close state, backdrop click handling, ESC key close, focus trap, and focus return to trigger element (FR-030a)
 
 ### Gem Components
 
-- [ ] T015 [US1] Create `src/components/gems/GemCatalog.tsx` with star-rating tabs (1-star, 2-star, 5-star), 5-star default
-- [ ] T016 [US1] Create `src/components/gems/GemCard.tsx` for catalog view with gem icon, name, quick-add button
-- [ ] T017 [US1] Create `src/components/gems/GemSelector.tsx` with quality (1-5) and rank (1-10) dropdown selects
-- [ ] T018 [US1] Create `src/components/gems/GemDetail.tsx` modal showing full gem information
+- [ ] T018 [US1] Create `src/components/gems/GemCatalog.tsx` with star-rating tabs (1-star, 2-star, 5-star), 5-star default, search/filter bar, and grid layout (FR-001)
+- [ ] T019 [US1] Create `src/components/gems/GemCard.tsx` for catalog view with gem icon/placeholder, name, star rating, quick-add button, and hover state (FR-002, FR-003)
+- [ ] T020 [US1] Create `src/components/gems/GemSelector.tsx` with quality (1-5) and rank (1-10) native dropdown selects per FR-005a
+- [ ] T021 [US1] Create `src/components/gems/GemDetail.tsx` modal showing full gem information with close button, ESC key support, click-outside close, and focus management (FR-030, FR-030a)
 
-### Slot Management
+### Slot Management Logic
 
-- [ ] T019 [US1] Add slot management logic in `src/lib/utils/slots.ts` with SLOT_CONFIG constants and validation
-- [ ] T020 [US1] Implement base slot duplicate prevention (positions 1-8: no duplicate gemId)
-- [ ] T021 [US1] Implement wing slot duplicate allowance (positions 9-24: duplicates allowed)
-- [ ] T022 [US1] Create resonance calculation in `src/lib/utils/resonance.ts` with calculateTotalResonance function
-- [ ] T023 [US1] Create wing slot unlocking logic with threshold checks (6000=4, 7000=8, 8000=12, 8500+=16)
+- [ ] T022 [US1] Create `src/lib/utils/slots.ts` with SLOT_CONFIG constants (8 base, 16 wing, 24 max), slot type derivation, and position validation (FR-006)
+- [ ] T023 [US1] Implement base slot duplicate prevention logic in `src/lib/utils/slots.ts` (positions 1-8: no duplicate gemId allowed) (FR-009)
+- [ ] T024 [US1] Implement wing slot duplicate allowance logic in `src/lib/utils/slots.ts` (positions 9-24: duplicates allowed) (FR-009)
+- [ ] T025 [US1] Create resonance calculation in `src/lib/utils/resonance.ts` with calculateTotalResonance, getResonanceForGem functions using gem database (FR-007)
+- [ ] T026 [US1] Create wing slot unlocking logic in `src/lib/utils/slots.ts` with threshold checks (6000=4 slots, 7000=8, 8000=12, 8500+=16) (FR-006)
 
 ### Page Integration
 
-- [ ] T024 [US1] Create `src/app/optimize/page.tsx` with gem selection grid and equipped gems panel
-- [ ] T025 [US1] Add equipped gems display with quality/rank selectors and remove button
-- [ ] T026 [US1] Add summary stats display showing total resonance and unlocked wing slots
-- [ ] T027 [US1] Implement gem add/remove flow with slot assignment
+- [ ] T027 [US1] Create `src/app/optimize/page.tsx` as Client Component with gem selection grid, equipped gems panel, and state management
+- [ ] T028 [US1] Add equipped gems display with quality/rank dropdown selectors and remove button per FR-005a, FR-008
+- [ ] T029 [US1] Add summary stats display showing auto-calculated total resonance and unlocked wing slots indicator (FR-007)
+- [ ] T030 [US1] Implement gem add/remove flow with slot assignment and optimistic UI updates (FR-008a)
+- [ ] T031 [US1] Add empty state for equipped gems panel: "No gems equipped" with "Browse gems" action button (FR-009a)
+- [ ] T032 [US1] Add empty state for gem catalog when filter returns no results: "No gems match your filter" with "Clear filters" action (FR-009a)
+
+**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - users can select, configure, and view gems with resonance calculation
 
 ---
 
-## Phase 4: US2 - Resource Specification (P1)
+## Phase 4: User Story 2 - Resource Specification (Priority: P1) MVP
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Goal**: Users can input available upgrade resources with validation and formatted display
 
-User Story 2: As a player, I want to input my available upgrade resources so that the optimizer can provide realistic recommendations.
+**Independent Test**: User can input amounts for gemPower and copyInventory, see totals displayed with formatting, and modify values with validation feedback
 
-> **Note**: Resources use `gemPower: number` and `copyInventory: Record<string, number>` per the data model, NOT platinum/telluricPearls.
+### Resource Input Components
 
-- [ ] T028 [US2] Create `src/components/optimization/ResourceInput.tsx` with gemPower input and copy inventory management
-- [ ] T029 [US2] Add debounced validation (300-500ms delay) for resource inputs
-- [ ] T030 [US2] Add number formatting display (commas for thousands, M suffix for millions, K suffix for >=10,000)
-- [ ] T031 [US2] Create resource summary panel showing gemPower and copy inventory counts
-- [ ] T032 [US2] Add clear/reset functionality for resource values
-- [ ] T033 [US2] Integrate resource state with session persistence
+- [ ] T033 [US2] Create `src/components/optimization/ResourceInput.tsx` with gemPower number input and copy inventory management UI (FR-010)
+- [ ] T034 [US2] Add debounced validation (300-500ms delay) for resource inputs with non-negative integer validation (FR-011)
+- [ ] T035 [US2] Add number formatting display with commas for thousands, K suffix >=10,000, M suffix >=1,000,000 (FR-012)
+- [ ] T036 [US2] Create resource summary panel showing gemPower total and copy inventory counts per gem (FR-013)
+- [ ] T037 [US2] Add clear/reset functionality for resource values (FR-014)
+
+### Session Persistence
+
+- [ ] T038 [US2] Create `src/app/api/session/route.ts` GET endpoint to restore session state from server database (FR-023)
+- [ ] T039 [US2] Create `src/app/api/session/route.ts` POST endpoint to auto-persist session state on every change (FR-023a)
+- [ ] T040 [US2] Integrate resource state with session auto-persistence in `src/app/optimize/page.tsx`
+
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - gem selection and resource input complete
 
 ---
 
-## Phase 5: US3 - Optimization Execution & Results (P1)
+## Phase 5: User Story 3 - Optimization Execution & Results (Priority: P1) MVP
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Goal**: Users can trigger optimization and view ranked recommendations with power gains
 
-User Story 3: As a player, I want to trigger optimization and view prioritized recommendations so that I can make informed decisions.
+**Independent Test**: User can click optimize button, see loading state, and view ranked recommendations with expected power gains
 
 ### Optimization Engine (Already Implemented)
 
-- [x] T034 [US3] Create `src/lib/optimization/types.ts` with engine-specific type definitions
-- [x] T035 [US3] Create `src/lib/optimization/engine.ts` with weighted greedy algorithm implementation
-- [x] T036 [US3] Create `src/lib/optimization/scoring.ts` with power gain calculation per upgrade path
-- [x] T037 [US3] Create `src/lib/optimization/resources.ts` with resource cost calculation per upgrade path
-- [x] T038 [US3] Create `src/lib/optimization/constants.ts` with tier weights, resonance thresholds, and slot config
-- [x] T039 [US3] Add `src/lib/optimization/engine.test.ts` with 15 passing tests for optimization engine
+- [x] T041 [US3] Create `src/lib/optimization/types.ts` with engine-specific type definitions
+- [x] T042 [US3] Create `src/lib/optimization/engine.ts` with weighted greedy algorithm implementation
+- [x] T043 [US3] Create `src/lib/optimization/scoring.ts` with power gain calculation
+- [x] T044 [US3] Create `src/lib/optimization/resources.ts` with resource cost calculation
+- [x] T045 [US3] Create `src/lib/optimization/constants.ts` with tier weights and resonance thresholds
+- [x] T046 [US3] Create `src/lib/optimization/resonance.ts` with resonance calculation utilities
+- [x] T047 [US3] Add `src/lib/optimization/engine.test.ts` with 15 passing tests
 
 ### API Endpoint
 
-- [ ] T040 [US3] Create `src/app/api/optimize/route.ts` POST endpoint
-- [ ] T041 [US3] Add request validation with Zod schemas
-- [ ] T042 [US3] Add error handling with typed error responses (validation, insufficient-resources, timeout, server-error)
-- [ ] T043 [US3] Add 30-second timeout with AbortController
+- [ ] T048 [US3] Create `src/app/api/optimize/route.ts` POST endpoint per contracts/optimize-api.schema.json
+- [ ] T049 [US3] Add request validation with Zod schemas from `src/lib/utils/validation.ts`
+- [ ] T050 [US3] Add typed error responses: validation (400), insufficient-resources (422), timeout (408), server-error (500) per FR-021
+- [ ] T051 [US3] Add 30-second timeout with AbortController for optimization requests (FR-022)
 
-### UI Components
+### Optimization UI Components
 
-- [ ] T044 [US3] Create `src/components/optimization/OptimizeButton.tsx` with loading and disabled states
-- [ ] T045 [US3] Create `src/components/ui/Skeleton.tsx` for loading placeholder shapes
-- [ ] T046 [US3] Create `src/components/optimization/ResultsPanel.tsx` for recommendations display
-- [ ] T047 [US3] Create `src/components/optimization/RecommendationCard.tsx` with expandable details
-- [ ] T048 [US3] Add priority badge and power gain display to recommendation cards
-- [ ] T049 [US3] Add resource cost breakdown to recommendation details
-- [ ] T050 [US3] Add alternatives display in expanded recommendation view
-
-### Optimization Modal
-
-- [ ] T097 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay, and Escape key cancellation
+- [ ] T052 [US3] Create `src/components/ui/Skeleton.tsx` for loading placeholder shapes with pulse animation (FR-016, FR-016a)
+- [ ] T053 [US3] Create `src/components/optimization/OptimizeButton.tsx` with loading and disabled states (FR-015)
+- [ ] T054 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay blocking underlying form, and Escape key cancellation (FR-017)
+- [ ] T055 [US3] Create `src/components/optimization/ResultsPanel.tsx` for ranked recommendations display with skeleton loading state (FR-018)
+- [ ] T056 [US3] Create `src/components/optimization/RecommendationCard.tsx` with expandable details showing target gem, upgrade path, resource cost, power gain (FR-019, FR-020)
+- [ ] T057 [US3] Add priority badge and power gain display to recommendation cards
+- [ ] T058 [US3] Add resource cost breakdown to recommendation details
+- [ ] T059 [US3] Add alternatives display in expanded recommendation view
 
 ### Error Handling
 
-- [ ] T051 [US3] Create error display component for validation errors
-- [ ] T052 [US3] Create error display for insufficient-resources with actionable guidance
-- [ ] T053 [US3] Create error display for timeout with retry option
-- [ ] T054 [US3] Implement single retry with fixed 1s delay for transient failures
-- [ ] T055 [US3] Add loading state with disabled interaction during optimization
-- [ ] T056 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option
+- [ ] T060 [US3] Create `src/components/ui/Toast.tsx` with top-right positioning, vertical stack, z-index 50, max 3 visible, 5s auto-dismiss with pause on hover, mobile full-width adaptation (FR-021c)
+- [ ] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a)
+- [ ] T062 [US3] Create error display for insufficient-resources with "Add more resources" guidance (FR-021, FR-021a)
+- [ ] T063 [US3] Create error display for timeout with retry option (FR-021, FR-021a)
+- [ ] T064 [US3] Implement single retry with fixed 1s delay for transient API failures (FR-021b)
+- [ ] T065 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option
+- [ ] T066 [US3] Implement cancel-and-replace pattern for concurrent optimization requests using AbortController (FR-022a)
 
-### Enhanced Timeout Handling
+### Timeout Enhancement
 
-- [ ] T099 [US3] Enhance timeout handling in `src/components/optimization/OptimizeButton.tsx` with 20-second warning toast and 30-second cancel offer
+- [ ] T067 [US3] Add 20-second "Still processing..." warning toast and 30-second cancellation offer in `src/components/optimization/OptimizeButton.tsx` (FR-022)
 
----
+### Screen Reader Announcements
 
-## Phase 6: US4 - Build Management (P2)
+- [ ] T068 [US3] Add aria-live="polite" region for optimization completion and cancellation announcements (FR-044a)
+- [ ] T069 [US3] Add aria-live="assertive" region for optimization error announcements (FR-044a)
 
-> **Checkpoint**: Review phase output before proceeding to next phase
-
-User Story 4: As a returning player, I want to save my current build configuration so that I can quickly reload it in future sessions.
-
-### Client-Side Persistence (MVP)
-
-- [ ] T057 [US4] Implement build save to localStorage with name validation (unique names enforced)
-- [ ] T058 [US4] Implement build load from localStorage with state restoration
-- [ ] T059 [US4] Implement build delete from localStorage with confirmation dialog
-- [ ] T060 [US4] Add 5-build limit for free tier users
-
-### Session Restore
-
-- [ ] T100 [US4] Implement session restore logic in `src/app/optimize/page.tsx` to check localStorage and restore previous state on load
-
-### UI Components
-
-- [ ] T061 [US4] Create `src/app/builds/page.tsx` for saved builds list
-- [ ] T062 [US4] Create save build modal with name input and optional notes
-- [ ] T063 [US4] Add load build functionality with state restoration
-- [ ] T064 [US4] Add delete build functionality with confirmation
-- [ ] T065 [US4] Detect and display deprecated gems in saved builds with visual indicator and removal option
+**Checkpoint**: At this point, MVP is complete - users can select gems, input resources, and receive optimization recommendations
 
 ---
 
-## Phase 7: US5 - Gem Information Reference (P2)
+## Phase 6: User Story 4 - Build Management (Priority: P2)
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Goal**: Users can save, load, and delete named build configurations
 
-User Story 5: As a player unfamiliar with certain gems, I want to view detailed gem information so that I can make informed selection decisions.
+**Independent Test**: User can save a build with a name, see it in their saved builds list, and load it to restore all gem and resource configuration
 
-- [ ] T066 [US5] Enhance `src/components/gems/GemDetail.tsx` with upgrade cost display per rank
-- [ ] T067 [US5] Add tier ranking display (PVP and PVE: S/A/B/C/D) to gem detail
-- [ ] T068 [US5] Add resonance thresholds display to gem detail
-- [ ] T069 [US5] Add categorized effects display (OFF, DEF, ALL, DOT, LOC, TLOC)
-- [ ] T070 [US5] Create `src/components/ui/Tooltip.tsx` for quick gem summaries on hover
-- [ ] T071 [US5] Implement mobile tooltip alternative with tap-to-reveal info buttons for touch devices
+### Server-Side Build Storage
 
----
+- [ ] T070 [US4] Create `src/lib/db/queries.ts` with build CRUD operations: createBuild, getBuildsBySession, getBuildById, updateBuild, deleteBuild
+- [ ] T071 [US4] Add build name uniqueness validation per session in database queries (FR-025)
+- [ ] T072 [US4] Add 5-build limit enforcement for free tier users in database queries (FR-029a)
 
-## Phase 8: US7 - Responsive Mobile Experience (P2)
+### Build Pages and Components
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+- [ ] T073 [US4] Create `src/app/builds/page.tsx` for saved builds list with name, timestamp, and summary stats (FR-026)
+- [ ] T074 [US4] Create save build modal in `src/components/optimization/SaveBuildModal.tsx` with name input (1-50 chars), optional notes (0-500 chars), and XSS sanitization (FR-024, FR-025, FR-046)
+- [ ] T075 [US4] Add load build functionality with state restoration in `src/app/builds/page.tsx` (FR-027)
+- [ ] T076 [US4] Add delete build functionality with confirmation dialog (FR-028)
+- [ ] T077 [US4] Add empty state for builds page: "No saved builds" with "Create your first build" guidance
 
-User Story 7: As a player using my phone during gameplay, I want the interface to work smoothly on mobile so that I can use DI-Lab while playing Diablo Immortal.
+### Session Restore and Unsaved Changes
 
-- [ ] T072 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px)
-- [ ] T073 [US7] Ensure 44x44px minimum touch targets for all interactive elements
-- [ ] T074 [US7] Use native `<select>` elements for dropdowns on mobile (already done in T013)
-- [ ] T075 [US7] Optimize scroll performance with CSS `will-change` and ensure 60fps on mid-range devices
-- [ ] T076 [US7] Test and fix horizontal scroll prevention on narrow viewports (320px minimum)
+- [ ] T078 [US4] Implement session restore on page load in `src/app/optimize/page.tsx` fetching from `/api/session` (FR-023)
+- [ ] T079 [US4] Implement beforeunload confirmation dialog for unsaved named builds only (FR-023b, FR-023c)
+- [ ] T080 [US4] Add "Session auto-saved" subtle indicator in optimizer UI (FR-023a)
 
----
+### Deprecated Gem Detection
 
-## Phase 9: US6 - Optimization Constraints & Goals (P3)
+- [ ] T081 [US4] Add deprecated gem detection when loading builds - show visual indicator and removal option for gems no longer in database (FR-009a edge case)
 
-> **Checkpoint**: Review phase output before proceeding to next phase
-
-User Story 6: As an advanced player, I want to set optimization preferences so that recommendations align with my specific goals.
-
-- [ ] T077 [US6] Add PVP/PVE mode toggle to optimization controls with PVE default and display active mode in UI
-- [ ] T078 [US6] Add resource budget constraints input (optional max gemPower/copy limits)
-- [ ] T079 [US6] Update optimization engine to respect mode selection in tier rankings
-- [ ] T080 [US6] Update optimization engine to respect resource budget constraints
+**Checkpoint**: At this point, User Stories 1-4 are complete - full build management available
 
 ---
 
-## Phase 10: Polish & Cross-cutting
+## Phase 7: User Story 5 - Gem Information Reference (Priority: P2)
 
-> **Checkpoint**: Review phase output before proceeding to next phase
+**Goal**: Users can view detailed gem information including effects, tier rankings, and upgrade costs
 
-Final polish, accessibility, and cross-cutting concerns.
+**Independent Test**: User can click on any gem to view its full effect description, tier ranking (PVP/PVE), and upgrade costs at each rank
 
-- [ ] T081 Add keyboard navigation for gem catalog (arrow keys, enter to select)
-- [ ] T082 Add ARIA labels and roles for screen reader support
-- [ ] T083 Implement session auto-save to localStorage on every change
-- [ ] T084 Add beforeunload confirmation dialog for unsaved named builds only
-- [ ] T085 Create `src/components/ui/Toast.tsx` for notification feedback
-- [ ] T086 Add toast notification for multi-tab conflict warning (auto-dismiss 5s, pause on hover)
-- [ ] T087 Add loading skeleton animations with pulse effect
-- [ ] T088 Implement optimistic UI updates for gem add/remove operations with automatic rollback
-- [ ] T089 Add focus management for modals (focus trap, escape to close)
-- [ ] T090 Test and verify WCAG 2.1 AA color contrast ratios (4.5:1 text, 3:1 large text)
-- [ ] T091 Add screen reader announcements for optimization events (complete, error, cancelled)
-- [ ] T092 Final integration testing and bug fixes
-- [ ] T093 Manual usability validation for SC-003 (90% gem addition success) and SC-008 (95% result comprehension)
-- [ ] T094 Run Lighthouse CI and verify score > 90
-- [ ] T095 Verify FCP < 1.5s and TTI < 3s with performance profiling tools
-- [ ] T096 Verify saved builds load in under 2 seconds (SC-006 validation)
-- [ ] T098 Create sanitization utilities in `src/lib/utils/sanitize.ts` with HTML tag stripping, character escaping, URL validation, and CSP header configuration
+### Enhanced Gem Detail
+
+- [ ] T082 [US5] Add upgrade cost table to `src/components/gems/GemDetail.tsx` showing resource costs per rank (FR-032)
+- [ ] T083 [US5] Add tier ranking display (PVP and PVE: S/A/B/C/D) to `src/components/gems/GemDetail.tsx` (FR-033)
+- [ ] T084 [US5] Add resonance values display per quality/rank to `src/components/gems/GemDetail.tsx`
+- [ ] T085 [US5] Add categorized effects display (OFF, DEF, ALL, DOT, LOC, TLOC) with descriptions to `src/components/gems/GemDetail.tsx` (FR-031)
+
+### Tooltips
+
+- [ ] T086 [US5] Create `src/components/ui/Tooltip.tsx` for quick gem summaries on desktop hover (FR-034)
+- [ ] T087 [US5] Implement mobile tooltip alternative with tap-to-reveal info button for touch devices (FR-034)
+
+**Checkpoint**: At this point, User Story 5 is complete - full gem information available
+
+---
+
+## Phase 8: User Story 7 - Responsive Mobile Experience (Priority: P2)
+
+**Goal**: Interface works smoothly on mobile devices during gameplay
+
+**Independent Test**: User can access DI-Lab on a mobile device (320px+ viewport), navigate all sections, and complete the optimization flow with touch interactions
+
+### Responsive Layout
+
+- [ ] T088 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px) per FR-038
+- [ ] T089 [US7] Ensure 44x44px minimum touch targets for all interactive elements (FR-039, SC-005)
+- [ ] T090 [US7] Optimize scroll performance with CSS `will-change` and virtualization if needed for 60fps on mid-range mobile devices (FR-041, SC-007)
+- [ ] T091 [US7] Test and fix horizontal scroll prevention on narrow viewports (320px minimum) (SC-004)
+- [ ] T092 [US7] Add full-width mobile adaptation for toast notifications on viewports < 640px (FR-021c)
+
+### Progressive Enhancement
+
+- [ ] T093 [US7] Add skeleton loaders for gem catalog grid and optimization results (FR-016a)
+- [ ] T094 [US7] Implement lazy loading for gem images with placeholder fallbacks (FR-041b)
+- [ ] T095 [US7] Add `prefers-reduced-motion` media query support to disable non-essential animations (FR-041b)
+
+**Checkpoint**: At this point, User Story 7 is complete - mobile experience optimized
+
+---
+
+## Phase 9: User Story 6 - Optimization Constraints & Goals (Priority: P3)
+
+**Goal**: Advanced users can set optimization preferences for PVP vs PVE and resource budgets
+
+**Independent Test**: User can toggle between PVP and PVE optimization modes and see recommendations update accordingly
+
+### Optimization Mode Selection
+
+- [ ] T096 [US6] Add PVP/PVE mode toggle to optimization controls in `src/app/optimize/page.tsx` with PVE default and active mode display (FR-035, FR-037)
+- [ ] T097 [US6] Update optimization engine in `src/lib/optimization/engine.ts` to respect mode selection when ranking recommendations (FR-036)
+- [ ] T098 [US6] Pass optimization mode to `/api/optimize` endpoint and include in response (FR-036)
+
+### Resource Budget Constraints
+
+- [ ] T099 [US6] Add optional maximum resource budget constraint input in `src/components/optimization/ResourceInput.tsx` (FR-037a)
+- [ ] T100 [US6] Update optimization engine to respect resource budget constraints when generating recommendations
+
+**Checkpoint**: At this point, User Story 6 is complete - advanced optimization features available
+
+---
+
+## Phase 10: Polish & Cross-Cutting Concerns
+
+**Purpose**: Final polish, accessibility, and cross-cutting concerns
+
+### Accessibility
+
+- [ ] T101 Add keyboard navigation for gem catalog (arrow keys, Tab, Enter to select) (FR-043)
+- [ ] T102 Add ARIA labels and roles for all interactive elements (FR-044)
+- [ ] T103 Implement focus management for modals (focus trap on open, focus return on close) (FR-030a)
+- [ ] T104 Test and verify WCAG 2.1 AA color contrast ratios (4.5:1 text, 3:1 large text) (FR-045, FR-042)
+
+### Optimistic UI & Multi-tab Handling
+
+- [ ] T105 Implement optimistic UI updates for gem add/remove with automatic rollback on failure (FR-008a)
+- [ ] T106 Add multi-tab conflict detection and non-blocking toast warning (auto-dismiss 5s, pause on hover) (edge case)
+
+### Performance Validation
+
+- [ ] T107 Run Lighthouse CI and verify score > 90
+- [ ] T108 Verify Core Web Vitals: FCP < 1.8s, LCP < 2.5s, TTI < 3.8s, CLS < 0.1 (FR-041a)
+- [ ] T109 Verify saved builds load in under 2 seconds (SC-006)
+- [ ] T110 Verify optimization results display within 5 seconds (SC-002)
+
+### Integration Testing
+
+- [ ] T111 Manual usability validation for SC-003 (90% gem addition success rate)
+- [ ] T112 Manual usability validation for SC-008 (95% result comprehension)
+- [ ] T113 Final integration testing and bug fixes
+
+### CSP and Security
+
+- [ ] T114 Configure Content Security Policy header to prevent inline script execution (FR-046)
 
 ---
 
 ## Phase 11: Deferred Features (Future Enhancement)
 
-> **Note**: These tasks require authentication infrastructure and are deferred pending Battle.net OAuth implementation.
+**Note**: These tasks require Battle.net authentication infrastructure and are deferred pending future implementation.
 
-- [ ] T101 Create `src/lib/db/schema.ts` with builds table (deferred - requires auth)
-- [ ] T102 Create `src/lib/db/queries.ts` for build CRUD (deferred - requires auth)
-- [ ] T103 Add auth requirement notice for cloud storage (deferred - requires auth)
+- [ ] T115 [DEFERRED] Add email opt-in UI in user settings for notifications and account recovery (FR-029c)
+- [ ] T116 [DEFERRED] Add email verification flow with confirmation (FR-029c)
+- [ ] T117 [DEFERRED] Implement Battle.net OAuth authentication (out of scope per spec)
 
 ---
 
-## Dependencies
+## Dependencies & Execution Order
 
-### Phase Dependency Graph
+### Phase Dependencies
 
-```
-Phase 1 (Setup)
-    │
-    ▼
-Phase 2 (Foundational)
-    │
-    ├──────────────────┬──────────────────┐
-    │                  │                  │
-    ▼                  ▼                  ▼
-Phase 3 (US1)    Phase 4 (US2)    Phase 5 (US3)
-    │                  │                  │
-    └──────────────────┴──────────────────┘
-                       │
-                       ▼
-            ┌──────────┼──────────┐
-            │          │          │
-            ▼          ▼          ▼
-    Phase 6 (US4) Phase 7 (US5) Phase 8 (US7)
-            │          │          │
-            └──────────┼──────────┘
-                       │
-                       ▼
-              Phase 9 (US6)
-                       │
-                       ▼
-             Phase 10 (Polish)
-```
+- **Setup (Phase 1)**: No dependencies - can start immediately
+- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
+- **User Stories (Phase 3-9)**: All depend on Foundational phase completion
+  - US1, US2 can proceed in parallel after Foundation
+  - US3 depends on US1, US2 (needs gem and resource input)
+  - US4, US5, US7 can proceed in parallel after US3
+  - US6 depends on US3 (needs optimization working)
+- **Polish (Phase 10)**: Depends on all desired user stories being complete
+
+### User Story Dependencies
+
+- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
+- **User Story 2 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
+- **User Story 3 (P1)**: Depends on US1 and US2 (needs gem selections and resources for optimization)
+- **User Story 4 (P2)**: Can start after US3 - Uses session persistence infrastructure
+- **User Story 5 (P2)**: Can start after US1 - Enhances gem detail view
+- **User Story 7 (P2)**: Can start after US3 - Applies responsive design to completed UI
+- **User Story 6 (P3)**: Can start after US3 - Extends optimization controls
 
 ### Critical Path
 
-1. **Phase 1 → Phase 2**: Directory structure required before creating files
-2. **Phase 2 → Phases 3-5**: Types and data required before UI components
-3. **Phase 3 → Phase 5**: Gem selection required for optimization input
-4. **Phase 4 → Phase 5**: Resources required for optimization constraints
-5. **Phase 5 → Phases 6-8**: Core optimization flow complete before enhancements
-6. **Phases 6-8 → Phase 9**: P2 features complete before P3 advanced features
-7. **All Phases → Phase 10**: Polish applies to all completed features
+1. **Phase 1 (Setup)**: Directory structure
+2. **Phase 2 (Foundational)**: Types, data, utilities, session management
+3. **Phase 3 (US1)**: Gem selection and configuration
+4. **Phase 4 (US2)**: Resource input (can run parallel with US1)
+5. **Phase 5 (US3)**: Optimization (depends on US1 + US2)
+6. **Phases 6-8 (US4, US5, US7)**: Can run in parallel after US3
+7. **Phase 9 (US6)**: Advanced features after core complete
+8. **Phase 10 (Polish)**: Final integration and validation
+
+### Parallel Opportunities
+
+- **Phase 2**: T004, T005 (type files) can run in parallel; T007, T008, T009 (utility files) can run in parallel
+- **Phase 3**: T013-T017 (UI components) can all run in parallel
+- **Phase 4**: Can run in parallel with Phase 3 (different files)
+- **Phases 6-8**: US4, US5, US7 can be worked on in parallel by different developers
 
 ---
 
-## Parallel Execution
+## Parallel Example: User Story 1
 
-Tasks marked with `[P]` can be executed in parallel within their phase.
+```bash
+# Launch all base UI components together:
+Task: "Create src/components/ui/Button.tsx"
+Task: "Create src/components/ui/Card.tsx"
+Task: "Create src/components/ui/Input.tsx"
+Task: "Create src/components/ui/Select.tsx"
+Task: "Create src/components/ui/Modal.tsx"
 
-### Phase 2 Parallel Groups
-
-```
-Group 1: T003 (gem.ts) - blocks other type files
-Group 2: T004, T005 (optimization.ts, build.ts) - can run in parallel
-Group 3: T006 (gems.json) - independent of types
-Group 4: T007, T008 (formatting.ts, validation.ts) - can run in parallel
-Group 5: T009 (localStorage.ts) - depends on T005, T008
-```
-
-### Phase 3 Parallel Groups
-
-```
-Group 1: T010-T014 (UI components) - can all run in parallel
-Group 2: T015-T018 (Gem components) - sequential, depend on Group 1
-Group 3: T019-T023 (Slot management) - can run in parallel with Group 2
-Group 4: T024-T027 (Page integration) - depends on Groups 2, 3
-```
-
-### Phase 5 Parallel Groups
-
-```
-Group 1: T034-T039 (Optimization engine) - ALREADY COMPLETE
-Group 2: T040-T043 (API endpoint) - independent
-Group 3: T044-T050 (UI components) - depend on Group 2
-Group 4: T051-T056 (Error handling) - depends on Group 2
+# Then launch gem components (depends on UI components):
+Task: "Create src/components/gems/GemCatalog.tsx"
+Task: "Create src/components/gems/GemCard.tsx"
+# ... etc
 ```
 
 ---
 
-## MVP Scope
+## Implementation Strategy
+
+### MVP First (User Stories 1, 2, 3 Only)
+
+1. Complete Phase 1: Setup (2 tasks)
+2. Complete Phase 2: Foundational (10 tasks)
+3. Complete Phase 3: User Story 1 (20 tasks)
+4. Complete Phase 4: User Story 2 (8 tasks)
+5. Complete Phase 5: User Story 3 (29 tasks, 7 already done = 22 remaining)
+6. **STOP and VALIDATE**: Test complete optimization flow independently
+7. Deploy/demo MVP
+
+### Incremental Delivery
+
+1. Complete Setup + Foundational (12 tasks) - Foundation ready
+2. Add User Story 1 (20 tasks) - Gem selection working - Deploy/Demo
+3. Add User Story 2 (8 tasks) - Resources working - Deploy/Demo
+4. Add User Story 3 (22 remaining tasks) - Full optimization - Deploy/Demo (MVP!)
+5. Add User Story 4 (12 tasks) - Build management - Deploy/Demo
+6. Add User Stories 5, 7 (11 tasks) - Enhanced UX - Deploy/Demo
+7. Add User Story 6 (5 tasks) - Advanced features - Deploy/Demo
+8. Polish (14 tasks) - Production ready
+
+---
+
+## MVP Scope Summary
 
 **MVP = Phases 1-5 (US1 + US2 + US3)**
 
 The Minimum Viable Product delivers the core optimization flow:
 
-1. **Gem Selection** (US1): Users can select, configure, and manage equipped gems
-2. **Resource Input** (US2): Users can specify available upgrade resources (gemPower + copyInventory)
-3. **Optimization** (US3): Users can trigger optimization and view recommendations
+1. **Gem Selection** (US1): Select, configure, and manage equipped gems with resonance calculation
+2. **Resource Input** (US2): Specify available upgrade resources (gemPower + copyInventory)
+3. **Optimization** (US3): Trigger optimization and view ranked recommendations
 
 ### MVP Task Count
 
-- Phase 1: 2 tasks
-- Phase 2: 7 tasks
-- Phase 3: 18 tasks
-- Phase 4: 6 tasks
-- Phase 5: 31 tasks (6 already complete = 25 remaining)
-- **Total MVP Tasks**: 64 tasks
-- **Remaining MVP Tasks**: 58 tasks
+| Phase                 | Total  | Already Complete | Remaining |
+| --------------------- | ------ | ---------------- | --------- |
+| Phase 1: Setup        | 2      | 0                | 2         |
+| Phase 2: Foundational | 10     | 0                | 10        |
+| Phase 3: US1          | 20     | 0                | 20        |
+| Phase 4: US2          | 8      | 0                | 8         |
+| Phase 5: US3          | 29     | 7                | 22        |
+| **MVP Total**         | **69** | **7**            | **62**    |
 
 ### MVP Success Criteria
 
-- [ ] Users can complete full optimization flow in under 3 minutes
-- [ ] Optimization results display within 5 seconds
-- [ ] 90% of users successfully add at least one gem on first attempt
-- [ ] Mobile users can complete optimization without horizontal scrolling
-- [ ] All interactive elements have 44x44px touch targets on mobile
+- [ ] Users can complete full optimization flow in under 3 minutes (SC-001)
+- [ ] Optimization results display within 5 seconds (SC-002)
+- [ ] 90% of users successfully add at least one gem on first attempt (SC-003)
+- [ ] Mobile users can complete optimization without horizontal scrolling (SC-004)
+- [ ] All interactive elements have 44x44px touch targets on mobile (SC-005)
 
 ---
 
-## Task Execution Guidelines
+## Total Task Summary
 
-### Before Starting
-
-1. Ensure Phase 1 directory structure is complete
-2. Run `bun install` to verify dependencies
-3. Check that all prerequisite tasks are marked complete
-
-### During Implementation
-
-1. Follow the task order within each phase
-2. Run `bun typecheck` after each task
-3. Run `bun lint` before committing
-4. Update task checkboxes as completed
-
-### After Completion
-
-1. Run full test suite with `bun test`
-2. Verify accessibility with keyboard navigation
-3. Test on mobile viewport (320px minimum)
-4. Commit with conventional commit format: `feat(optimizer): description`
+| Category              | Count                |
+| --------------------- | -------------------- |
+| Phase 1: Setup        | 2                    |
+| Phase 2: Foundational | 10                   |
+| Phase 3: US1 (P1)     | 20                   |
+| Phase 4: US2 (P1)     | 8                    |
+| Phase 5: US3 (P1)     | 29 (7 complete)      |
+| Phase 6: US4 (P2)     | 12                   |
+| Phase 7: US5 (P2)     | 6                    |
+| Phase 8: US7 (P2)     | 8                    |
+| Phase 9: US6 (P3)     | 5                    |
+| Phase 10: Polish      | 14                   |
+| Phase 11: Deferred    | 3                    |
+| **Total**             | **117** (7 complete) |
+| **Remaining**         | **110**              |
 
 ---
 
@@ -387,26 +475,27 @@ The Minimum Viable Product delivers the core optimization flow:
 
 The following optimization engine files exist and are complete:
 
-| File                                  | Status      | Description                              |
-| ------------------------------------- | ----------- | ---------------------------------------- |
-| `src/lib/optimization/types.ts`       | ✅ Complete | Engine-specific type definitions         |
-| `src/lib/optimization/engine.ts`      | ✅ Complete | Weighted greedy algorithm implementation |
-| `src/lib/optimization/scoring.ts`     | ✅ Complete | Power gain calculation                   |
-| `src/lib/optimization/resources.ts`   | ✅ Complete | Resource cost calculation                |
-| `src/lib/optimization/constants.ts`   | ✅ Complete | Tier weights, thresholds, config         |
-| `src/lib/optimization/resonance.ts`   | ✅ Complete | Resonance calculation utilities          |
-| `src/lib/optimization/engine.test.ts` | ✅ Complete | 15 passing tests                         |
+| File                                  | Status   | Description                              |
+| ------------------------------------- | -------- | ---------------------------------------- |
+| `src/lib/optimization/types.ts`       | Complete | Engine-specific type definitions         |
+| `src/lib/optimization/engine.ts`      | Complete | Weighted greedy algorithm implementation |
+| `src/lib/optimization/scoring.ts`     | Complete | Power gain calculation                   |
+| `src/lib/optimization/resources.ts`   | Complete | Resource cost calculation                |
+| `src/lib/optimization/constants.ts`   | Complete | Tier weights, thresholds, config         |
+| `src/lib/optimization/resonance.ts`   | Complete | Resonance calculation utilities          |
+| `src/lib/optimization/engine.test.ts` | Complete | 15 passing tests                         |
 
 ---
 
 ## Notes
 
-- **Authentication**: Battle.net OAuth deferred to a later feature (P4)
-- **Database**: Drizzle + SQLite setup deferred; localStorage used for MVP
+- **Authentication**: Battle.net OAuth deferred to future feature (Phase 11)
+- **Database**: Drizzle + SQLite schema defined in data-model.md, implemented in Phase 2
 - **Tests**: Vitest configured with 15 tests passing for optimization engine
 - **Icons**: Placeholder graphics acceptable; representative icons can be added later
 - **Data Model**: Resources use `gemPower` and `copyInventory`, NOT platinum/telluricPearls
+- **Session**: Server-side persistence with anonymous ID (localStorage UUID v4)
 
 ---
 
-**Version**: 2.0.0 | **Last Updated**: 2026-02-17
+**Version**: 3.0.0 | **Last Updated**: 2026-02-17
