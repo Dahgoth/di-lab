@@ -4,13 +4,70 @@
 
 ## Overview
 
-This document defines the data models, entities, and their relationships for the Optimizer UI feature. All entities are designed for client-side state management with localStorage persistence.
+This document defines the data models, entities, and their relationships for the Optimizer UI feature. Data is persisted to a server-side database with anonymous session identification (localStorage UUID v4).
+
+> **⚠️ Storage Architecture Update (2026-02-17)**
+>
+> The application uses server-side database persistence with anonymous identification:
+>
+> - **Anonymous ID**: UUID v4 stored in localStorage for user identification
+> - **Server Database**: Session state and builds stored in SQLite via Drizzle ORM
+> - **Optional Email**: Users can opt-in to provide email for notifications/recovery
+>
+> This replaces the previous localStorage-only approach to enable cross-session persistence
+> and optional account recovery features while maintaining zero-friction onboarding.
 
 ---
 
 ## Core Entities
 
-### 1. LegendaryGem (Static Data)
+### 1. AnonymousSession (Server-Side)
+
+Represents an anonymous user session stored in the server database.
+
+```typescript
+interface AnonymousSession {
+  // Identification
+  anonymousId: string; // UUID v4 stored in localStorage
+
+  // Optional Email (FR-029c)
+  email?: string; // Opt-in email for notifications/recovery
+  emailVerified?: boolean; // Whether email has been verified
+
+  // Session State (auto-persisted per FR-023a)
+  sessionState?: SessionState; // Current gems, resources, mode
+
+  // Timestamps
+  createdAt: Date;
+  lastActive: Date;
+}
+```
+
+**Validation Rules**:
+
+- `anonymousId` must be a valid UUID v4
+- `email` must be valid email format (if provided)
+- `emailVerified` defaults to `false`
+
+**Database Schema** (Drizzle):
+
+```typescript
+// src/lib/db/schema.ts
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+
+export const anonymousSessions = sqliteTable("anonymous_sessions", {
+  anonymousId: text("anonymous_id").primaryKey(),
+  email: text("email"),
+  emailVerified: integer("email_verified", { mode: "boolean" }).default(false),
+  sessionState: text("session_state", { mode: "json" }).$type<SessionState>(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  lastActive: integer("last_active", { mode: "timestamp" }).defaultNow(),
+});
+```
+
+---
+
+### 2. LegendaryGem (Static Data)
 
 Represents a legendary gem in the game database. This data is static and bundled with the application.
 
@@ -219,22 +276,45 @@ interface AlternativeUpgrade {
 
 ---
 
-### 5. SavedBuild (Persistent Data)
+### 5. SavedBuild (Server-Side)
 
-Represents a persisted build configuration stored in localStorage.
+Represents a persisted build configuration stored in the server database.
 
 ```typescript
 interface SavedBuild {
   id: string; // UUID for unique identification
-  name: string; // User-provided build name (must be unique)
+  anonymousId: string; // Reference to owning session
+  name: string; // User-provided build name (unique per session)
   gems: EquippedGem[];
   resources: ResourceInventory;
   optimizationMode: "PVP" | "PVE";
   notes?: string; // Optional user notes
-  createdAt: string; // ISO timestamp
-  updatedAt: string; // ISO timestamp
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
+
+**Database Schema** (Drizzle):
+
+```typescript
+export const savedBuilds = sqliteTable("saved_builds", {
+  id: text("id").primaryKey(),
+  anonymousId: text("anonymous_id")
+    .notNull()
+    .references(() => anonymousSessions.anonymousId),
+  name: text("name").notNull(),
+  gems: text("gems", { mode: "json" }).notNull().$type<EquippedGem[]>(),
+  resources: text("resources", { mode: "json" })
+    .notNull()
+    .$type<ResourceInventory>(),
+  optimizationMode: text("optimization_mode").notNull().$type<"PVP" | "PVE">(),
+  notes: text("notes"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+```
+
+````
 
 **Validation Rules**:
 
@@ -265,26 +345,42 @@ interface SessionState {
   lastSavedBuildId?: string; // Reference to last saved/loaded build (if any)
   hasUnsavedChanges?: boolean; // True if named build was modified
 }
-```
+````
 
 **Persistence**: Auto-saved on every change (gem add/remove, quality/rank change, resource input)
 
 ---
 
-### 7. LocalStorageSchema
+### 7. LocalStorageSchema (Simplified)
 
-Complete localStorage structure for the application.
+localStorage now only stores the anonymous ID for user identification. All session data and builds are persisted to the server database.
 
 ```typescript
 interface LocalStorageSchema {
-  version: 1; // Schema version for migrations
-  builds: SavedBuild[];
-  currentSession?: SessionState;
+  anonymousId: string; // UUID v4 for server session lookup
 }
 
 // Storage key
-const STORAGE_KEY = "di-lab-v1";
+const STORAGE_KEY = "di-lab-anon-id";
+
+// Helper functions
+function getOrCreateAnonymousId(): string {
+  let id = localStorage.getItem(STORAGE_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(STORAGE_KEY, id);
+  }
+  return id;
+}
 ```
+
+**Fallback for localStorage Unavailability** (FR-029b):
+
+If localStorage is unavailable (private browsing, disabled, quota exceeded):
+
+1. Generate a session-scoped ID in memory
+2. Use server-side session cookie as fallback
+3. Display one-time info message "Session saving to cloud"
 
 ---
 
@@ -385,6 +481,39 @@ interface OptimizationError {
 ## Entity Relationships
 
 ```
+┌─────────────────────────┐
+│    AnonymousSession     │ (Server database)
+│  - anonymousId (PK)     │
+│  - email?               │
+│  - emailVerified?       │
+│  - sessionState?        │
+│  - createdAt            │
+│  - lastActive           │
+└───────────┬─────────────┘
+            │ owns
+            ▼
+┌─────────────────────────┐
+│      SavedBuild         │ (Server database)
+│  - id (PK)              │
+│  - anonymousId (FK)     │
+│  - name                 │
+│  - gems[]               │
+│  - resources            │
+│  - optimizationMode     │
+│  - notes?               │
+│  - createdAt/updatedAt  │
+└───────────┬─────────────┘
+            │ contains
+            ▼
+┌─────────────────┐         ┌──────────────────────┐
+│  EquippedGem    │         │  ResourceInventory   │
+│  - gemId ───────┼────────►│  - gemPower          │
+│  - quality      │    refs │  - copyInventory     │
+│  - rank         │         │    (gemId → count)   │
+│  - slotPosition │         └──────────────────────┘
+└────────┬────────┘
+         │ references
+         ▼
 ┌─────────────────┐
 │  LegendaryGem   │ (Static data, ~100 records)
 │  - id           │
@@ -392,41 +521,16 @@ interface OptimizationError {
 │  - starRating   │
 │  - effects[]    │
 │  - tierRankings │
-└────────┬────────┘
-         │ referenced by
-         ▼
-┌─────────────────┐         ┌──────────────────────┐
-│  EquippedGem    │         │  ResourceInventory   │
-│  - gemId ───────┼────────►│  - gemPower          │
-│  - quality      │         │  - copyInventory     │
-│  - rank         │         │    (gemId → count)   │
-│  - slotPosition │         └──────────────────────┘
-└────────┬────────┘                 │
-         │                          │
-         │ grouped in               │ grouped in
-         ▼                          ▼
-┌─────────────────────────────────────────┐
-│            SavedBuild                    │
-│  - id                                    │
-│  - name                                  │
-│  - gems: EquippedGem[]                   │
-│  - resources: ResourceInventory          │
-│  - optimizationMode                      │
-│  - createdAt / updatedAt                 │
-└─────────────────────────────────────────┘
-         │
-         │ produces
-         ▼
-┌─────────────────────────────────────────┐
-│        OptimizationResult               │
-│  - recommendations[]                    │
-│  - totalPowerGain                       │
-│  - totalResourceCost                    │
-│  - mode                                 │
-└─────────────────────────────────────────┘
+│  - resonanceTbl │
+└─────────────────┘
 ```
 
-> **Note**: The `copyInventory` in `ResourceInventory` stores gem IDs as keys and their R1 copy counts as values. This allows the optimization engine to check if sufficient copies are available for specific gem upgrades.
+**Key Changes from localStorage Architecture**:
+
+1. **AnonymousSession** is now the root entity in server database
+2. **SavedBuild** references `anonymousId` as foreign key
+3. **localStorage** only stores `anonymousId` for lookups
+4. **Session state** is persisted to server, enabling cross-device access (with email)
 
 ---
 
@@ -448,6 +552,16 @@ const EffectCategorySchema = z.enum([
   "TLOC",
 ]);
 const OptimizationModeSchema = z.enum(["PVP", "PVE"]);
+
+// Anonymous Session Schema
+const AnonymousSessionSchema = z.object({
+  anonymousId: z.string().uuid(),
+  email: z.string().email().optional(),
+  emailVerified: z.boolean().optional().default(false),
+  sessionState: SessionStateSchema.optional(),
+  createdAt: z.coerce.date(),
+  lastActive: z.coerce.date(),
+});
 
 // Core schemas
 const EquippedGemSchema = z.object({
@@ -488,13 +602,14 @@ const UserContentSchema = z
 
 const SavedBuildSchema = z.object({
   id: z.string().uuid(),
+  anonymousId: z.string().uuid(),
   name: UserContentSchema.min(1).max(50),
   gems: z.array(EquippedGemSchema),
   resources: ResourceInventorySchema,
   optimizationMode: OptimizationModeSchema,
   notes: UserContentSchema.max(500).optional(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 const SessionStateSchema = z.object({
@@ -506,10 +621,9 @@ const SessionStateSchema = z.object({
   hasUnsavedChanges: z.boolean().optional(),
 });
 
+// Simplified localStorage schema (only stores anonymous ID)
 const LocalStorageSchema = z.object({
-  version: z.literal(1),
-  builds: z.array(SavedBuildSchema),
-  currentSession: SessionStateSchema.optional(),
+  anonymousId: z.string().uuid(),
 });
 
 // API schemas

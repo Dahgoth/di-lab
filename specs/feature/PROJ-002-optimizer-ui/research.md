@@ -745,6 +745,331 @@ interface GemCopyInventory {
 
 ---
 
+### T-04: Anonymous Session Strategy - Device Fingerprinting vs Registration Form
+
+**Status**: 🔍 Research Required
+
+**Question**: Should the application use device fingerprinting for anonymous identification or implement a registration form for user authentication? Battle.net Auth and account linking is out of this iteration scope.
+
+**Context**:
+
+- FR-029 specifies device fingerprinting for anonymous session identification
+- FR-029c adds opt-in email collection for notifications
+- Battle.net OAuth is explicitly out of scope for this iteration
+- Users need to save builds and restore sessions across visits
+
+#### Option A: Device Fingerprinting (Current Spec)
+
+**How It Works**:
+
+```typescript
+// Generate fingerprint from browser characteristics
+async function generateFingerprint(): Promise<string> {
+  const components = await FingerprintJS.load();
+  const result = await components.get();
+  return result.visitorId; // e.g., "a1b2c3d4e5f6g7h8"
+}
+
+// Store in localStorage for returning user recognition
+function storeFingerprint(fingerprint: string): void {
+  localStorage.setItem("di-lab-device-id", fingerprint);
+}
+
+// Session data linked to fingerprint in database
+interface AnonymousSession {
+  sessionId: string; // UUID
+  deviceFingerprint: string; // From FingerprintJS
+  email?: string; // Optional opt-in
+  sessionState: SessionState;
+  createdAt: Date;
+  lastActive: Date;
+}
+```
+
+**Pros**:
+
+- ✅ **Zero friction**: No user action required to start using the app
+- ✅ **Instant session**: Immediate access to all features
+- ✅ **No password management**: No reset flows, no forgotten passwords
+- ✅ **Lower barrier to entry**: Users can try the app without commitment
+- ✅ **Privacy-friendly**: No PII required for basic usage
+- ✅ **Spec aligned**: Current FR-029 already specifies this approach
+
+**Cons**:
+
+- ❌ **Fingerprint instability**: Browser updates, setting changes can change fingerprint
+- ❌ **Data loss risk**: User clears localStorage → loses session recognition
+- ❌ **Cross-device limitation**: Can't access same data on phone + desktop
+- ❌ **Privacy concerns**: Some users block fingerprinting scripts
+- ❌ **GDPR/ePrivacy**: May require consent for fingerprinting in EU
+- ❌ **No account recovery**: If fingerprint lost, data is inaccessible
+
+**Reliability Analysis**:
+
+- FingerprintJS reports 40-60% stability over 30 days
+- Major changes: Browser updates (20%), clearing storage (15%), private browsing (10%)
+- Fallback needed: When fingerprint changes, show "Welcome back?" prompt with merge option
+
+**Implementation Complexity**: Medium
+
+- FingerprintJS library (~15KB gzipped)
+- Server-side session management
+- Fingerprint change detection and migration logic
+
+#### Option B: Registration Form (Email + Password)
+
+**How It Works**:
+
+```typescript
+// Traditional registration flow
+interface RegisteredUser {
+  userId: string;
+  email: string;
+  passwordHash: string;
+  emailVerified: boolean;
+  builds: SavedBuild[];
+  sessionState: SessionState;
+  createdAt: Date;
+  lastActive: Date;
+}
+
+// Registration form required before saving
+async function register(email: string, password: string): Promise<User> {
+  // Validate email format
+  // Check for duplicates
+  // Hash password with bcrypt
+  // Send verification email
+  // Create user record
+}
+```
+
+**Pros**:
+
+- ✅ **Stable identification**: Email is reliable long-term identifier
+- ✅ **Account recovery**: Password reset flow available
+- ✅ **Cross-device access**: Same account works on any device
+- ✅ **Email communication**: Can send notifications, updates
+- ✅ **User trust**: Familiar pattern, users understand it
+- ✅ **No privacy concerns**: No fingerprinting, clear data ownership
+
+**Cons**:
+
+- ❌ **High friction**: Users must register before saving builds
+- ❌ **Password management**: Reset flows, forgotten passwords, security concerns
+- ❌ **Email verification**: Additional step before full access
+- ❌ **Higher abandonment**: Registration forms cause 20-30% drop-off
+- ❌ **Implementation overhead**: Auth flows, email service, security
+- ❌ **Out of scope complexity**: Battle.net auth deferred, but registration adds similar complexity
+
+**Implementation Complexity**: High
+
+- Password hashing (bcrypt/argon2)
+- Email service (Resend/SendGrid)
+- Verification token flow
+- Password reset flow
+- Session management with next-auth
+
+#### Option C: Hybrid Approach (Recommended)
+
+**How It Works**:
+
+```typescript
+// Tiered identification strategy
+interface UserSession {
+  // Tier 1: Anonymous (always available)
+  anonymousId: string; // Random UUID in localStorage
+
+  // Tier 2: Device Fingerprint (optional enhancement)
+  deviceFingerprint?: string; // For returning user recognition
+
+  // Tier 3: Email Opt-in (optional, FR-029c)
+  email?: string; // For notifications/recovery
+  emailVerified?: boolean;
+
+  // Tier 4: Battle.net (future, out of scope)
+  battlenetId?: string;
+}
+
+// Progressive enhancement
+function identifyUser(): UserSession {
+  // 1. Check localStorage for existing anonymous ID
+  let anonymousId = localStorage.getItem("di-lab-anon-id");
+
+  // 2. If not found, create new
+  if (!anonymousId) {
+    anonymousId = crypto.randomUUID();
+    localStorage.setItem("di-lab-anon-id", anonymousId);
+  }
+
+  // 3. Optionally enhance with fingerprint (with consent)
+  const fingerprint = await checkFingerprintConsent();
+
+  // 4. Check for opt-in email
+  const email = await getStoredEmail();
+
+  return { anonymousId, deviceFingerprint: fingerprint, email };
+}
+```
+
+**Pros**:
+
+- ✅ **Zero friction start**: Anonymous ID works immediately
+- ✅ **Progressive enhancement**: Users can add email later
+- ✅ **Data recovery option**: Email enables cross-device access
+- ✅ **Privacy-first**: Fingerprinting only with consent
+- ✅ **Best of both worlds**: Low barrier + recovery option
+- ✅ **GDPR compliant**: No fingerprinting without consent
+
+**Cons**:
+
+- ⚠️ **More complex logic**: Multiple identification tiers
+- ⚠️ **Migration complexity**: Need to handle tier upgrades
+- ⚠️ **Still no password auth**: Email is opt-in only
+
+**Implementation Complexity**: Medium-High
+
+- Anonymous ID generation and storage
+- Optional fingerprinting with consent
+- Email opt-in flow (simpler than full registration)
+- Session merge logic
+
+#### Recommendation: Hybrid Approach (Modified Option A)
+
+**Decision**: Use **localStorage-based anonymous ID** as primary identification, with **optional email opt-in** for recovery/notifications. **Defer fingerprinting** to avoid privacy/GDPR concerns.
+
+**Rationale**:
+
+1. **Simplicity**: localStorage anonymous ID is simpler than fingerprinting
+2. **Privacy**: No fingerprinting = no GDPR consent required
+3. **Friction**: Zero friction to start, optional email for committed users
+4. **Recovery**: Email opt-in provides account recovery path
+5. **Spec alignment**: Still satisfies FR-029 goals with lower complexity
+
+**Implementation**:
+
+```typescript
+// src/lib/session/anonymous-session.ts
+
+const ANONYMOUS_ID_KEY = "di-lab-anon-id";
+
+export function getOrCreateAnonymousId(): string {
+  if (typeof window === "undefined") return "";
+
+  let id = localStorage.getItem(ANONYMOUS_ID_KEY);
+
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(ANONYMOUS_ID_KEY, id);
+  }
+
+  return id;
+}
+
+export interface AnonymousSession {
+  anonymousId: string;
+  email?: string;
+  emailVerified?: boolean;
+  builds: SavedBuild[];
+  sessionState: SessionState;
+  createdAt: Date;
+  lastActive: Date;
+}
+
+// Server-side API to get/create session
+export async function getOrCreateSession(
+  anonymousId: string,
+): Promise<AnonymousSession> {
+  const response = await fetch("/api/session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ anonymousId }),
+  });
+  return response.json();
+}
+
+// Email opt-in (FR-029c)
+export async function addEmailToSession(email: string): Promise<void> {
+  const anonymousId = getOrCreateAnonymousId();
+
+  // Validate email format
+  // Send verification email
+  // Store pending email in session
+
+  await fetch("/api/session/email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ anonymousId, email }),
+  });
+}
+```
+
+**Database Schema**:
+
+```typescript
+// drizzle schema
+export const anonymousSessions = sqliteTable("anonymous_sessions", {
+  anonymousId: text("anonymous_id").primaryKey(),
+  email: text("email"),
+  emailVerified: integer("email_verified", { mode: "boolean" }).default(false),
+  sessionState: text("session_state", { mode: "json" }).$type<SessionState>(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  lastActive: integer("last_active", { mode: "timestamp" }).defaultNow(),
+});
+
+export const savedBuilds = sqliteTable("saved_builds", {
+  id: text("id").primaryKey(),
+  anonymousId: text("anonymous_id").references(
+    () => anonymousSessions.anonymousId,
+  ),
+  name: text("name").notNull(),
+  gems: text("gems", { mode: "json" }).$type<EquippedGem[]>(),
+  resources: text("resources", { mode: "json" }).$type<Resources>(),
+  optimizationMode: text("optimization_mode", { mode: "json" }).$type<
+    "PVP" | "PVE"
+  >(),
+  notes: text("notes"),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).defaultNow(),
+});
+```
+
+**Edge Case Handling**:
+
+| Scenario                   | Solution                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| User clears localStorage   | Generate new anonymous ID, prompt "Returning user?" with email input to recover |
+| User uses multiple devices | Add email to link sessions across devices                                       |
+| localStorage unavailable   | Use server-side session ID (cookie-based)                                       |
+| Email already registered   | Prompt "Already have an account?" with merge option                             |
+| Private browsing           | Session works but not persisted; show one-time notice                           |
+
+**Comparison Summary**:
+
+| Criterion        | Fingerprinting   | Registration | Hybrid (Recommended)           |
+| ---------------- | ---------------- | ------------ | ------------------------------ |
+| Friction         | None             | High         | None (start), Optional (email) |
+| Stability        | 40-60% / 30 days | High         | High (with email)              |
+| Cross-device     | No               | Yes          | Yes (with email)               |
+| Privacy          | Concerns         | None         | None                           |
+| GDPR Compliant   | Requires consent | Yes          | Yes                            |
+| Implementation   | Medium           | High         | Medium                         |
+| Account Recovery | No               | Yes          | Yes (with email)               |
+
+**Spec Updates Required**:
+
+Update FR-029 to reflect simplified approach:
+
+> **FR-029 (Revised)**: System MUST provide anonymous session identification via localStorage-based anonymous ID:
+>
+> - Generate unique identifier (UUID) on first visit
+> - Store identifier in localStorage for returning user recognition
+> - Link session data to anonymous identifier in database
+> - Handle localStorage unavailability gracefully (server-side session)
+>
+> **FR-029c (Unchanged)**: System MUST provide opt-in email collection for notifications and account recovery.
+
+---
+
 ## Next Steps
 
 Proceed to Phase 1:
@@ -757,6 +1082,8 @@ Proceed to Phase 1:
 
 1. Update `data-model.md` with corrected resource types (gemPower + copies)
 2. Update `contracts/optimize-api.schema.json` with corrected resource schema
-3. Implement calculation functions (`src/lib/calculations/`)
-4. Implement optimization engine (`src/lib/optimization/`)
+3. ~~Implement calculation functions (`src/lib/calculations/`)~~ ✅ Complete
+4. ~~Implement optimization engine (`src/lib/optimization/`)~~ ✅ Complete
 5. Add testing framework configuration
+6. **NEW**: Update FR-029 to use localStorage anonymous ID (not fingerprinting)
+7. **NEW**: Implement anonymous session management

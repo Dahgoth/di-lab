@@ -81,7 +81,7 @@ As a returning player, I want to save my current build configuration so that I c
 2. **Given** user saves a build, **When** user navigates to the builds section, **Then** the saved build appears in the list with name, timestamp, and summary stats
 3. **Given** user has saved builds, **When** user clicks "Load" on a build, **Then** the interface restores all gem selections, qualities, ranks, and resource amounts
 4. **Given** user wants to remove a saved build, **When** user clicks delete on a build, **Then** a confirmation appears and upon confirmation the build is removed
-5. **Given** user is not authenticated, **When** user attempts to save a build, **Then** the interface indicates that authentication is required for cloud storage (or allows local-only save)
+5. **Given** user wants to save a build, **When** user clicks "Save Build", **Then** the build is saved to server-side database linked to their anonymous session (or authenticated account if opted-in)
 
 ---
 
@@ -150,6 +150,49 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 
 ---
 
+## First-Time User Journey
+
+The following flow documents the complete first-time user experience from landing to first optimization result:
+
+1. **Landing**: User arrives at optimizer page (`/optimize`)
+2. **Empty State Display**: User sees empty equipped gems panel with guidance message "Select gems from the catalog to start your build" and gem catalog with 5-star tab selected by default
+3. **Gem Selection**: User browses gem catalog (tabs for 1-star, 2-star, 5-star), hovers/taps for quick info, clicks gem to open detail modal
+4. **Gem Configuration**: User clicks "Add to Build" in modal, gem appears in first available slot with default quality (1) and rank (1)
+5. **Quality/Rank Adjustment**: User uses dropdown selectors on equipped gem card to set quality (1-5) and rank (1-10)
+6. **Additional Gems**: User repeats selection process for additional gems (up to 8 base slots, plus resonance-unlocked slots)
+7. **Resource Input**: User enters available resources (Gem Power, Gem Copy Inventory) in resources panel with real-time validation
+8. **Mode Selection (Optional)**: User notes PVE mode is selected by default, can toggle to PVP if desired
+9. **Optimization Trigger**: User clicks "Optimize" button
+10. **Processing State**: Modal overlay appears with progress indicator, user can cancel if needed
+11. **Results Display**: Optimization results appear in results panel with ranked recommendations
+12. **Results Review**: User browses recommendations, expands for details, understands priority ranking
+
+**Success Metrics**: User completes flow in under 3 minutes (SC-001), 90% success rate for adding at least one gem (SC-003)
+
+---
+
+## Post-Optimization Iteration Flow
+
+After viewing optimization results, users typically iterate on their build. This flow documents the common modification patterns:
+
+1. **View Recommendations**: User reviews ranked recommendations with power gain and resource cost
+2. **Expand Details**: User clicks to expand a recommendation for reasoning and alternatives
+3. **Manual Gem Modification**: User returns to equipped gems panel and:
+   - Adjusts quality/rank on an existing gem
+   - Removes a gem and adds a different one
+   - Adds new gems to empty slots
+4. **Resource Adjustment**: User updates resource amounts based on remaining resources after hypothetical upgrade
+5. **Re-run Optimization**: User clicks "Optimize" again (previous results are replaced)
+6. **Compare Results**: User views new recommendations and compares to previous (note: spec does not include side-by-side comparison feature - this would require history feature in future version)
+
+**Key Implementation Notes**:
+
+- Previous optimization results are cleared when new optimization starts
+- Session state (gems, resources, mode) is auto-persisted to server database per FR-023a
+- User can cancel optimization at any time per FR-017
+
+---
+
 ## Requirements
 
 ### Functional Requirements
@@ -167,6 +210,10 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-008**: System MUST allow removal of equipped gems
 - **FR-008a**: System MUST provide optimistic UI updates for gem add/remove operations with automatic rollback on failure (optimistic update pattern: update UI immediately, revert if server operation fails)
 - **FR-009**: System MUST prevent duplicate gem selections in base 8 slots (same gem ID); duplicate gem IDs are allowed in resonance wing slots. Users may record multiple copies of identical gems in their inventory for quantity tracking.
+- **FR-009a**: System MUST display dedicated empty states for each panel with contextual messaging and guidance actions:
+  - **Empty Gem Catalog**: Display message "No gems match your filter" with "Clear filters" action button when search/filter returns no results
+  - **No Equipped Gems**: Display message "No gems equipped" with "Browse gems" action button and brief instruction "Select gems from the catalog to start your build"
+  - **No Recommendations**: Display message "No upgrades available" with contextual explanation (e.g., "Insufficient resources for any upgrades" or "All gems are at maximum rank") and "View resource requirements" action if applicable
 
 #### Resource Input
 
@@ -198,13 +245,25 @@ As a player using my phone during gameplay, I want the interface to work smoothl
   - After 30 seconds, automatically offer cancellation if still processing
   - On cancellation: abort the optimization request, close modal, restore form interactivity
   - Show toast notification confirming cancellation with retry option
+- **FR-022a**: System MUST handle concurrent optimization requests using cancel-and-replace pattern:
+  - If user triggers a new optimization while one is in progress, cancel the previous request
+  - Display a brief "Previous optimization cancelled" message before starting new request
+  - Use AbortController to cancel in-flight fetch requests
+  - This applies both to rapid button clicks within the same tab and optimization requests from different browser tabs
 - **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors)
 - **FR-021b**: System MUST implement single retry with fixed 1s delay for transient optimization API failures before displaying error to user (note: single retry only, not exponential backoff which would require multiple retries with increasing delays)
+- **FR-021c**: System MUST display toast notifications with the following specification:
+  - **Position**: Top-right corner of viewport
+  - **Layout**: Vertical stack, newest toast on top
+  - **Z-index**: 50 (below modals which use z-index 100)
+  - **Max visible**: 3 toasts simultaneously; older toasts auto-dismiss
+  - **Auto-dismiss**: 5 seconds with pause on hover
+  - **Mobile adaptation**: Full-width at top of screen on viewports < 640px
 
 #### Build Management
 
-- **FR-023**: System MUST restore the last session state (equipped gems, resources, optimization mode) from localStorage when the user loads the optimizer, providing continuity for returning users
-- **FR-023a**: System MUST auto-persist session state to localStorage on every change:
+- **FR-023**: System MUST restore the last session state (equipped gems, resources, optimization mode) from the server-side database when the user loads the optimizer, identified by anonymous session (device fingerprint) or authenticated account
+- **FR-023a**: System MUST auto-persist session state to server-side database on every change:
   - Auto-save applies to SessionState only (gems, resources, optimizationMode)
   - Auto-save occurs on every user action (gem add/remove, quality/rank change, resource input)
   - Auto-saved session is automatically restored on page load
@@ -220,20 +279,42 @@ As a player using my phone during gameplay, I want the interface to work smoothl
     - Already saved named builds (no modifications since save)
   - Dialog options: "Save", "Don't Save", "Cancel"
 - **FR-023c**: System MUST distinguish between session state and named builds:
-  - SessionState: Auto-persisted, restored on load, no confirmation on exit
+  - SessionState: Auto-persisted to server, restored on load, no confirmation on exit
   - SavedBuild: Explicit save required, confirmation on exit if modified
   - Transition from session to named build occurs when user clicks "Save Build"
-- **FR-024**: System MUST provide a "Save Build" action that captures current configuration
+- **FR-024**: System MUST provide a "Save Build" action that captures current configuration to server-side database
 - **FR-025**: System MUST prompt for a unique build name when saving, rejecting duplicates with a clear error message
 - **FR-026**: System MUST display saved builds in a builds section with name and timestamp
 - **FR-027**: System MUST allow loading saved builds to restore configuration
 - **FR-028**: System MUST allow deletion of saved builds with confirmation
-- **FR-029**: System MUST indicate authentication requirement for cloud storage of builds
+- **FR-029**: System MUST provide anonymous session identification via localStorage-based anonymous ID:
+  - Generate unique identifier (UUID v4) on first visit
+  - Store identifier in localStorage for returning user recognition
+  - Link session data to anonymous identifier in database
+  - Handle localStorage unavailability gracefully (server-side session fallback)
+  - Note: Device fingerprinting was considered but rejected due to GDPR privacy concerns
 - **FR-029a**: System MUST enforce build capacity limits based on subscription tier (free tier: 5 builds maximum, paid tiers: higher limits) and display remaining capacity to the user
+- **FR-029b**: System MUST handle localStorage unavailability gracefully:
+  - Detect localStorage availability on page load
+  - If unavailable: use server-side session identification only (may lose returning user recognition)
+  - Session data still persisted to database via server-side session
+  - Display one-time info message "Session saving to cloud" instead of localStorage warning
+- **FR-029c**: System MUST provide opt-in email collection:
+  - Display optional "Add email for notifications" in user settings
+  - Email is optional and can be added/removed at any time
+  - Email enables: build reminders, optimization tips, account recovery
+  - Clear indication that email is optional (not required for core functionality)
+  - Email validation with confirmation flow
 
 #### Gem Information
 
 - **FR-030**: System MUST provide detailed view for each gem showing full effect description
+- **FR-030a**: System MUST implement accessible modal closing behavior for gem detail modals:
+  - ESC key closes the modal
+  - Click outside modal (on overlay) closes the modal
+  - Close button is visible and accessible
+  - Focus returns to the element that triggered the modal (gem card or catalog item)
+  - Modal implements focus trap (Tab cycles within modal content)
 - **FR-031**: System MUST categorize gem effects (OFF, DEF, ALL, DOT, LOC, etc.)
 - **FR-032**: System MUST display upgrade cost information for each rank
 - **FR-033**: System MUST display tier rankings (PVP and PVE) for each gem
@@ -252,6 +333,18 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - **FR-039**: System MUST provide touch-friendly interaction targets on mobile
 - **FR-040**: System MUST ensure all core functionality is accessible on mobile devices
 - **FR-041**: System MUST optimize scrolling performance for long lists on mobile
+- **FR-041a**: System MUST meet Core Web Vitals performance budgets for initial page load:
+  - First Contentful Paint (FCP) < 1.8 seconds
+  - Largest Contentful Paint (LCP) < 2.5 seconds
+  - Time to Interactive (TTI) < 3.8 seconds
+  - Cumulative Layout Shift (CLS) < 0.1
+  - Measured on mid-range mobile devices with 4G network simulation
+- **FR-041b**: System MUST implement progressive enhancement for slow networks and low-end devices:
+  - Display skeleton loaders for content areas while data loads
+  - Implement lazy loading for gem images with placeholder fallbacks
+  - Reduce or disable non-essential animations when `prefers-reduced-motion` is set
+  - Use Network Information API to detect slow connections (optional enhancement)
+  - Core functionality (gem selection, optimization) must work without images loaded
 
 #### Accessibility
 
@@ -322,11 +415,24 @@ Represents a single upgrade suggestion:
 
 Represents a persisted build configuration:
 
+- **Build ID**: Unique identifier
+- **Session ID**: Reference to owning session (anonymous or authenticated)
 - **Build Name**: User-provided identifier
 - **Equipped Gems**: List of configured gems
 - **Resources**: Resource amounts at save time
 - **Timestamp**: When the build was saved
 - **Notes**: Optional user notes
+
+### AnonymousSession
+
+Represents an anonymous user session:
+
+- **Anonymous ID**: UUID v4 stored in localStorage for identification
+- **Email**: Optional email address (if opted-in for notifications/recovery)
+- **Email Verified**: Whether email has been verified
+- **Created At**: Session creation timestamp
+- **Last Active**: Last activity timestamp
+- **Session State**: Current gems, resources, optimization mode
 
 ---
 
@@ -339,7 +445,7 @@ App Layout
 |-- Header
 |   |-- Logo
 |   |-- Navigation
-|   |-- User Menu (authenticated)
+|   |-- User Menu (anonymous session with opt-in email)
 |-- Main Content Area
 |   |-- Optimizer View
 |   |-- Builds View
@@ -470,9 +576,11 @@ The UI requires management of the following state:
 
 #### Build State
 
-- **Saved Builds**: List of persisted builds
+- **Saved Builds**: List of persisted builds (from server-side database)
 - **Current Build**: The active build being configured
 - **Is Saving**: Whether save operation is in progress
+- **Session ID**: Anonymous session identifier (from device fingerprint)
+- **Email Opt-in**: Whether user has opted-in to email notifications
 
 ---
 
@@ -535,7 +643,7 @@ The UI requires management of the following state:
 - **SC-004**: Mobile users can complete the optimization flow with no horizontal scrolling required
 - **SC-005**: All interactive elements have touch targets of at least 44x44 pixels on mobile
 - **SC-006**: Saved builds load in under 2 seconds
-- **SC-007**: Gem catalog scrolls smoothly at 60fps on mid-range mobile devices
+- **SC-007**: Gem catalog scrolls smoothly at 60fps on mid-range mobile devices (defined as: Snapdragon 665+ or equivalent, 4GB+ RAM, 2020+ release year; reference devices: Pixel 4a, Galaxy A52, Moto G Power)
 - **SC-008**: 95% of users understand optimization results without external documentation
 - **SC-009**: All form validation errors provide clear, actionable guidance
 - **SC-010**: Interface renders correctly on viewports from 320px to 1920px width
@@ -546,10 +654,10 @@ The UI requires management of the following state:
 
 1. **Gem Database Available**: The UI assumes a data source containing gem information (names, effects, costs, tier rankings) for approximately 50-100 gems
 2. **Optimization Algorithm Exists**: The UI assumes an optimization engine is available to process inputs and return recommendations (out of scope for this spec)
-3. **Local Storage for Builds**: Free tier builds are stored in browser localStorage as JSON structure (array of build objects) until authentication is implemented
+3. **Anonymous Session Storage**: User sessions and builds are stored in a server-side database with anonymous identification via device fingerprinting. Users can optionally opt-in to provide email for notifications and account recovery. Battle.net account linking is a future enhancement.
 4. **Image Assets**: Gem icons/visuals are available or placeholder graphics are acceptable initially
 5. **Single-Language Support**: Initial implementation targets English-only; localization is future work
-6. **No Offline Mode**: Application requires network connectivity for optimization calculations
+6. **No Offline Mode**: Application requires network connectivity for optimization calculations and session persistence
 
 ---
 
@@ -558,10 +666,10 @@ The UI requires management of the following state:
 The following items are explicitly out of scope for this UI specification:
 
 1. **Optimization Algorithm**: The calculation engine itself is separate from UI
-2. **Battle.net Authentication**: Authentication flow is deferred to a later phase
+2. **Battle.net Authentication**: Battle.net account linking is deferred to a later phase (anonymous sessions + opt-in email are in scope)
 3. **Screenshot OCR**: Screenshot upload and gem detection is a future feature
-4. **Backend APIs**: Server-side endpoints for optimization and data storage
-5. **Database Schema**: Data persistence layer design
+4. **Backend APIs**: Server-side endpoints for optimization and data storage (but requirements specify what UI expects)
+5. **Database Schema**: Data persistence layer design (but requirements specify expected behavior)
 6. **Payment Integration**: Monetization features are future work
 7. **DI Days Integration**: External event data integration
 8. **Build Sharing**: Sharing builds with other users is future work
@@ -571,6 +679,46 @@ The following items are explicitly out of scope for this UI specification:
 ---
 
 ## Clarifications
+
+### Session 2026-02-17 (Continued)
+
+- Q: Should the application use device fingerprinting or registration form for user identification?
+  A: **LocalStorage anonymous ID with optional email opt-in**. Device fingerprinting was considered but rejected due to: (1) GDPR/ePrivacy concerns requiring explicit consent, (2) 40-60% stability over 30 days causing data loss, (3) Implementation complexity for fingerprint change handling. Registration form was rejected due to: (1) High friction causing 20-30% abandonment, (2) Similar complexity to Battle.net auth which is out of scope. The chosen approach provides zero-friction start (localStorage UUID) with optional email for account recovery and notifications.
+
+### Session 2026-02-17
+
+- Q: How should empty states be handled for optimizer panels (empty gem catalog, no equipped gems, no recommendations)?
+  A: Add dedicated empty state for each panel with contextual messaging and guidance actions - Comprehensive empty states provide better UX guidance and reduce user confusion, especially for first-time users. Each panel should have contextual messaging and actionable guidance.
+
+- Q: What closing behavior should the gem detail modal support?
+  A: ESC key + Close button + Click outside + Focus returns to trigger (full accessibility) - Standard modal accessibility patterns require multiple closing methods for WCAG compliance and better UX. Users should have keyboard, mouse, and visual close options.
+
+- Q: How should concurrent optimization requests be handled when user clicks rapidly or uses multiple tabs?
+  A: Cancel previous request, process only the latest (cancel-and-replace pattern) - Most user-friendly pattern where users get the latest result without managing multiple pending requests or seeing stale results.
+
+- Q: What page load performance budgets (FCP, LCP, TTI) should be targeted?
+  A: FCP < 1.8s, LCP < 2.5s, TTI < 3.8s (Google "Good" thresholds) - Standard web performance targets aligned with Google's Core Web Vitals thresholds. These are achievable with Next.js and provide good UX without over-optimizing.
+
+- Q: How should the UI handle performance degradation on slow networks or low-end devices?
+  A: Skeleton loaders, delayed image loading, reduced animations on slow connections (progressive enhancement) - Ensures core functionality works on slower connections while providing enhanced experience for capable connections. This aligns with the mobile-first use case.
+
+- Q: What positioning and behavior should toast notifications use?
+  A: Top-right, vertical stack, newest at top, z-index: 50 (below modals) - Top-right positioning keeps toasts visible without blocking key action areas (bottom is typically for mobile navigation or fixed action buttons). Stacking vertically with newest on top matches common UX patterns.
+
+- Q: What defines a "mid-range mobile device" for performance testing?
+  A: Snapdragon 665+ or equivalent, 4GB+ RAM, 2020+ release year (devices: Pixel 4a, Galaxy A52, Moto G Power) - The recommended specs match real-world mid-range devices commonly used for testing. This provides clear, testable criteria without requiring the latest flagship devices.
+
+- Q: What should happen when localStorage is unavailable (disabled, quota exceeded, private browsing)?
+  A: Use server-side session identification only - Session data still persisted to database. Display one-time info message "Session saving to cloud". localStorage only stores device fingerprint for returning user recognition; session data is server-side.
+
+- Q: Should the spec include an explicit first-time user flow narrative?
+  A: Add explicit first-time user flow section with numbered steps from landing to first optimization result - An explicit flow narrative ensures all transitions and states are covered during implementation. It's low-effort to document but high-value for completeness.
+
+- Q: Should the spec document the post-optimization modification flow?
+  A: Add explicit post-optimization flow: view recommendation → apply/modify gems → re-run optimization → compare results - This is a core iterative workflow that most users will follow. Clear documentation prevents implementation gaps and ensures the "re-optimize" experience is smooth.
+
+- Q: What storage architecture should the application use?
+  A: Database with anonymous sessions (device fingerprinting) + optional opt-in email. localStorage used only for device fingerprint storage and offline fallback. Server-side database stores all session state and builds. Battle.net linking is future work (out of scope for this version). This provides persistent data across devices while maintaining low-friction anonymous usage.
 
 ### Session 2026-02-14
 
@@ -592,8 +740,8 @@ The following items are explicitly out of scope for this UI specification:
 - Q: What defines a "duplicate" gem for FR-009?  
   A: Base 8 slots: only one gem ID allowed (duplicates ignored in calculation). Resonance wing slots: duplicate gem IDs allowed. This matches game behavior where multiple same gems can be equipped but only one activates in base slots. Note: Players can own unlimited copies of the same gem type and rank in-game; the app requires users to explicitly specify each gem in their inventory (quantity tracking). "Duplicate" in FR-009 refers to equipping restrictions, not inventory limitations—the app should allow users to record multiple copies of identical gems they own, even though only one can occupy a base slot during optimization.
 
-- Q: What storage format should be used for local build persistence?  
-  A: JSON structure in localStorage (array of build objects)
+- Q: What storage format should be used for session and build persistence?  
+  A: Server-side database with JSON API. Session state stored in database keyed by anonymous identifier (device fingerprint). localStorage only stores device fingerprint for returning user recognition.
 
 - Q: How is resonance determined?  
   A: Resonance is calculated automatically from equipped legendary gems; no manual input required. Legendary gems are the sole source of Resonance.
@@ -629,7 +777,7 @@ The following items are explicitly out of scope for this UI specification:
   A: React useState/useContext - Sufficient for P1-P3 scope without over-engineering; avoids adding complexity without clear benefit
 
 - Q: What should be the initial state when a user loads the optimizer?  
-  A: Restore last session - Load previous gems/resources from localStorage for returning users, providing continuity and reducing friction
+  A: Restore last session - Load previous gems/resources from server-side database for returning users, providing continuity and reducing friction
 
 - Q: What should happen if a user navigates away from the optimizer with unsaved changes?  
   A: Show confirmation dialog - Prevent accidental data loss when user attempts to close tab or navigate away with unsaved changes
@@ -657,4 +805,4 @@ The following items are explicitly out of scope for this UI specification:
 
 ---
 
-**Version**: 1.0.0 | **Last Updated**: 2026-02-14
+**Version**: 1.2.0 | **Last Updated**: 2026-02-17

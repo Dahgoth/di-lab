@@ -34,15 +34,11 @@ TypeScript 5.9.x with Bun runtime: Follow standard conventions
 
 ## Recent Changes
 
+- feature/PROJ-002-optimizer-ui: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+
 - 001-workflow-foundation: Added TypeScript 5.9.x with Bun runtime
 
 - 002-optimizer-ui: Added React 19 with Client Components
-
-- 002-optimizer-ui: Added Zod for runtime validation
-
-- 002-optimizer-ui: Added localStorage for client-side persistence
-
-- 002-optimizer-ui: Added Next.js Server Actions and API routes
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

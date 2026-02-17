@@ -131,10 +131,27 @@ naming:
 ### Tech Stack
 
 - **Framework**: Next.js 16 with App Router
-- **Auth**: next-auth with Battle.net OAuth provider (deferred to P4)
-- **Database**: Drizzle ORM + better-sqlite3 (SQLite)
+- **Auth**: Anonymous sessions (localStorage UUID) + optional email opt-in; Battle.net OAuth deferred
+- **Database**: Drizzle ORM + better-sqlite3 (SQLite) for server-side session persistence
 - **UI**: Tailwind CSS 4 + lucide-react icons
 - **Validation**: Zod schemas
+
+### Anonymous Session Strategy (2026-02-17)
+
+After research, chose **localStorage UUID with optional email opt-in**:
+
+| Option                    | Pros                                 | Cons                                | Decision    |
+| ------------------------- | ------------------------------------ | ----------------------------------- | ----------- |
+| Device Fingerprinting     | Zero friction                        | 40-60% stability, GDPR concerns     | ❌ Rejected |
+| Registration Form         | Stable ID, recovery                  | 20-30% abandonment, high complexity | ❌ Rejected |
+| localStorage UUID + Email | Zero friction start, recovery option | Cross-device needs email            | ✅ Chosen   |
+
+**Implementation**:
+
+- UUID v4 stored in localStorage for identification
+- Server database stores session state keyed by anonymous ID
+- Optional email for notifications and account recovery
+- Fallback: server-side session cookie if localStorage unavailable
 
 ## External APIs
 
@@ -146,28 +163,30 @@ naming:
 
 ## Session History
 
-| Date       | Changes                                                                 |
-| ---------- | ----------------------------------------------------------------------- |
-| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm          |
-| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format |
-| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc     |
-| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks      |
-| 2026-02-14 | Implemented template-based naming system with configurable formats      |
-| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done        |
-| 2026-02-14 | Updated Husky hooks to use bun commands                                 |
-| 2026-02-14 | Added release-please workflow documentation to commit.md                |
-| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix  |
-| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                      |
-| 2026-02-14 | Added enhanced quality commands to specs README                         |
-| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)     |
-| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md     |
-| 2026-02-13 | Created PR template with spec reference checklist                       |
-| 2026-02-13 | Created agent commit instructions with failure scenarios                |
-| 2026-02-13 | Created specs/README.md with SDD workflow documentation                 |
-| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)         |
-| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                 |
-| 2026-02-13 | Memory bank updated with DI-Lab project brief                           |
-| Initial    | Template created with base Next.js setup                                |
+| Date       | Changes                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------ |
+| 2026-02-17 | Researched anonymous session strategy - chose localStorage UUID over fingerprinting/registration |
+| 2026-02-17 | Updated spec FR-029 and data-model for server-side session persistence                           |
+| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm                                   |
+| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format                          |
+| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc                              |
+| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks                               |
+| 2026-02-14 | Implemented template-based naming system with configurable formats                               |
+| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done                                 |
+| 2026-02-14 | Updated Husky hooks to use bun commands                                                          |
+| 2026-02-14 | Added release-please workflow documentation to commit.md                                         |
+| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix                           |
+| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                                               |
+| 2026-02-14 | Added enhanced quality commands to specs README                                                  |
+| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)                              |
+| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md                              |
+| 2026-02-13 | Created PR template with spec reference checklist                                                |
+| 2026-02-13 | Created agent commit instructions with failure scenarios                                         |
+| 2026-02-13 | Created specs/README.md with SDD workflow documentation                                          |
+| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)                                  |
+| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                                          |
+| 2026-02-13 | Memory bank updated with DI-Lab project brief                                                    |
+| Initial    | Template created with base Next.js setup                                                         |
 
 ## Spec-Kit Workflow Reference
 
