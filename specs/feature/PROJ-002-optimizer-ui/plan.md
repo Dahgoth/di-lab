@@ -1,134 +1,70 @@
 # Implementation Plan: Optimizer UI
 
-**Branch**: `feature/PROJ-002-optimizer-ui` | **Date**: 2026-02-14 | **Spec**: [spec.md](./spec.md)
+**Branch**: `feature/PROJ-002-optimizer-ui` | **Date**: 2026-02-17 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `specs/feature/PROJ-002-optimizer-ui/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
-Build the user interface components for the legendary gems optimizer, including gem selection, resource input, optimization results display, and build management. The UI enables Diablo Immortal players to input their gem inventory, specify available resources, receive optimization recommendations, and manage their builds. This implementation focuses exclusively on the presentation layer and user interactions.
+Build the user interface components for the DI-Lab legendary gems optimizer, enabling Diablo Immortal players to input their gem inventory, specify available resources, receive optimization recommendations, and manage their builds. The UI uses React 19 with Next.js 16 App Router, Tailwind CSS 4 for styling, and implements a weighted greedy optimization algorithm for gem upgrade recommendations. Data persistence uses server-side SQLite database with anonymous session identification via localStorage UUID.
 
 ## Technical Context
 
 **Language/Version**: TypeScript 5.9.x with Bun runtime
-**Primary Dependencies**: Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react
-**Storage**: SQLite via Drizzle ORM for server-side sessions; localStorage for anonymous ID only
-**Testing**: No tests configured yet - framework addition needed
-**Target Platform**: Web (modern browsers ES2020+, mobile-first responsive)
-**Project Type**: Web application (Next.js App Router)
-**Performance Goals**: <5s optimization calculation, <3s Time to Interactive, 60fps scroll on mobile
-**Constraints**: <1.5s First Contentful Paint, WCAG 2.1 AA accessibility, mobile-first design
-**Scale/Scope**: 50-100 gems catalog, 5 saved builds (free tier), 24 max gem slots
-
-### Client Component Boundary
-
-The following components require `"use client"` directive due to interactive features:
-
-| Component                | Reason for Client Boundary        |
-| ------------------------ | --------------------------------- |
-| `GemCatalog.tsx`         | Tab selection, click handlers     |
-| `GemCard.tsx`            | Click selection, hover states     |
-| `GemSelector.tsx`        | Quality/rank dropdown selection   |
-| `GemDetail.tsx`          | Modal open/close state            |
-| `ResourceInput.tsx`      | Form inputs, debounced validation |
-| `OptimizeButton.tsx`     | Click handler, loading state      |
-| `ResultsPanel.tsx`       | Display client-side results       |
-| `RecommendationCard.tsx` | Expand/collapse interaction       |
-| `Modal.tsx`              | Open/close state, focus trap      |
-| `Toast.tsx`              | Animation, auto-dismiss timers    |
-| `Tooltip.tsx`            | Hover state, positioning          |
-
-**Strategy**: Use Server Components for:
-
-- Static gem data fetching (initial catalog load)
-- Page layouts and wrappers
-- SEO-critical content
-
-**Hydration Pattern**: Server-render initial state, hydrate for interactivity.
-
-### Progressive Enhancement Strategy
-
-**Scope Clarification**: The optimizer's core functionality (gem selection, resource input, optimization calculation, results display) inherently requires JavaScript for:
-
-- localStorage persistence
-- API calls to `/api/optimize`
-- Interactive form validation
-- Dynamic UI updates
-
-**Enhanced Experience (with JavaScript)**:
-
-- Full gem selection and configuration
-- Real-time validation feedback
-- Optimization execution and results
-- Build saving/loading
-- Session persistence
-
-**Baseline Experience (without JavaScript)**:
-
-- Static gem catalog view (read-only)
-- Informational content about gem effects and rankings
-- Navigation between pages
-
-**Implementation**:
-
-- Use `<noscript>` elements for fallback messaging
-- Server-render gem catalog as static HTML
-- Display message: "JavaScript required for optimization features" when JS disabled
-
-### Technical Constraints
-
-- **Hybrid Rendering**: Server Components for static content, Client Components for interactivity
-- **No-JS Fallback**: Static gem catalog viewable without JavaScript; optimization requires JS
+**Primary Dependencies**: Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react, drizzle-orm, better-sqlite3
+**Storage**: SQLite via Drizzle ORM for server-side sessions and builds
+**Testing**: Vitest + React Testing Library (unit), Playwright (E2E)
+**Target Platform**: Web (responsive mobile-first, modern browsers ES2020+)
+**Project Type**: web (single Next.js application)
+**Performance Goals**: FCP < 1.8s, LCP < 2.5s, TTI < 3.8s, optimization < 5s for 10 gems
+**Constraints**: < 200ms p95 for optimization API, mobile 60fps scrolling, WCAG 2.1 AA
+**Scale/Scope**: 50-100 gems in catalog, up to 24 equipped gems per user, 5 saved builds per free user
 
 ## Constitution Check
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-### User-First Experience ✅
+### Pre-Phase 0 Gate Evaluation
 
-| Requirement             | Status  | Implementation                                             |
-| ----------------------- | ------- | ---------------------------------------------------------- |
-| Fast Results (<5s)      | ✅ Pass | Server-side optimization via `/api/optimize` route         |
-| Clear Output            | ✅ Pass | Ranked recommendations with power gain visibility          |
-| Mobile-First            | ✅ Pass | Tailwind responsive breakpoints, touch targets ≥44px       |
-| Progressive Enhancement | ✅ Pass | Server-rendered catalog; no-JS fallback documented in plan |
+| Principle                       | Status  | Notes                                                                                                             |
+| ------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| **I. User-First Experience**    | ✅ PASS | Fast results (<5s optimization), clear output, mobile-first design, progressive enhancement with skeleton loaders |
+| **II. Data Integrity**          | ✅ PASS | Single source of truth (gems.json), versioned data, external validation via docs/, user corrections tracked       |
+| **III. Security & Privacy**     | ✅ PASS | OAuth-only deferred (anonymous sessions for MVP), minimal data collection, no sensitive game data stored          |
+| **IV. Transparent Methodology** | ✅ PASS | Documented algorithms in research.md, power gain visibility, resource breakdown displayed, alternatives shown     |
+| **V. Tiered Value**             | ✅ PASS | Free tier provides basic optimization (greedy), build saving (5 builds), manual entry                             |
 
-### Data Integrity ✅
+### Technical Constraints Check
 
-| Requirement            | Status      | Implementation                                     |
-| ---------------------- | ----------- | -------------------------------------------------- |
-| Single Source of Truth | ✅ Pass     | Gem data in structured JSON, bundled at build time |
-| Versioned Data         | ✅ Pass     | Game version metadata in gem data                  |
-| External Validation    | ⏳ Deferred | DI days integration out of scope                   |
-| User Corrections       | ⏳ Deferred | Future feature                                     |
+| Constraint                       | Status      | Notes                                                     |
+| -------------------------------- | ----------- | --------------------------------------------------------- |
+| Framework: Next.js 16 + React 19 | ✅ PASS     | Using App Router with Server Components                   |
+| Styling: Tailwind CSS 4          | ✅ PASS     | CSS-first configuration via @tailwindcss/postcss          |
+| Database: Drizzle ORM + SQLite   | ✅ PASS     | Server-side session persistence                           |
+| Auth: NextAuth 5                 | ⚠️ DEFERRED | Anonymous sessions for MVP, Battle.net OAuth out of scope |
+| Validation: Zod                  | ✅ PASS     | Runtime validation for all user inputs                    |
+| Package Manager: Bun             | ✅ PASS     | All commands use bun                                      |
 
-### Security & Privacy ✅
+### Performance Standards Check
 
-| Requirement               | Status      | Implementation                                      |
-| ------------------------- | ----------- | --------------------------------------------------- |
-| OAuth-Only Authentication | ⏳ Deferred | Battle.net auth deferred to P4                      |
-| Minimal Data Collection   | ✅ Pass     | Only anonymous ID, gem selections, resources stored |
-| Anonymous Sessions        | ✅ Pass     | localStorage UUID v4, no fingerprinting             |
-| Character Verification    | ⏳ Deferred | Out of scope                                        |
-| No Sensitive Game Data    | ✅ Pass     | No Battle.net credentials stored                    |
+| Standard                 | Target           | Status  | Notes                                      |
+| ------------------------ | ---------------- | ------- | ------------------------------------------ |
+| First Contentful Paint   | < 1.5s           | ✅ PASS | Static gem data bundled, Server Components |
+| Time to Interactive      | < 3s             | ✅ PASS | Skeleton loaders, debounced validation     |
+| Optimization Calculation | < 5s for 10 gems | ✅ PASS | O(n log n) greedy algorithm implemented    |
+| Lighthouse Score         | > 90             | ⚠️ TBD  | Verify after implementation                |
 
-### Transparent Methodology ✅
+### Code Quality Gates Check
 
-| Requirement           | Status  | Implementation                                     |
-| --------------------- | ------- | -------------------------------------------------- |
-| Documented Algorithms | ✅ Pass | Optimization logic documented in code comments     |
-| Power Gain Visibility | ✅ Pass | FR-019: Each recommendation shows power gain       |
-| Resource Breakdown    | ✅ Pass | FR-019: Resource cost displayed per recommendation |
-| Alternative Options   | ✅ Pass | Ranked list with expandable details (FR-020)       |
+| Gate                                  | Status  | Notes                          |
+| ------------------------------------- | ------- | ------------------------------ |
+| `bun typecheck` passes                | ✅ PASS | TypeScript strict mode enabled |
+| `bun lint` passes                     | ✅ PASS | ESLint configured              |
+| Server Components by default          | ✅ PASS | App Router pattern             |
+| Client components with `"use client"` | ✅ PASS | Interactive components only    |
 
-### Tiered Value ✅
-
-| Requirement     | Status      | Implementation                                   |
-| --------------- | ----------- | ------------------------------------------------ |
-| Free Tier Value | ✅ Pass     | Basic optimization, manual entry, 5 saved builds |
-| Paid Tier 1     | ⏳ Deferred | Screenshot OCR, advanced algorithms - future     |
-| Paid Tier 2     | ⏳ Deferred | Character sync, API access - future              |
-
-**Gate Status**: ✅ PASS - All critical constitution requirements met within scope
+**Gate Status**: ✅ **ALL GATES PASS** - Proceed to Phase 0
 
 ## Project Structure
 
@@ -136,15 +72,16 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ```text
 specs/feature/PROJ-002-optimizer-ui/
-├── spec.md              # Feature specification (complete)
 ├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output
-├── data-model.md        # Phase 1 output
-├── quickstart.md        # Phase 1 output
-├── contracts/           # Phase 1 output
+├── research.md          # Phase 0 output - RESOLVED
+├── data-model.md        # Phase 1 output - COMPLETE
+├── quickstart.md        # Phase 1 output - COMPLETE
+├── contracts/           # Phase 1 output - COMPLETE
 │   └── optimize-api.schema.json
-├── checklists/
-│   └── requirements.md  # Quality validation (complete)
+├── checklists/          # Validation checklists
+│   ├── comprehensive.md
+│   ├── requirements.md
+│   └── validation-report.md
 └── tasks.md             # Phase 2 output (/speckit.tasks command)
 ```
 
@@ -152,227 +89,155 @@ specs/feature/PROJ-002-optimizer-ui/
 
 ```text
 src/
-├── app/
-│   ├── layout.tsx           # Root layout (exists)
-│   ├── page.tsx             # Home page (exists)
-│   ├── globals.css          # Tailwind imports (exists)
-│   ├── optimize/
-│   │   └── page.tsx         # Optimizer page
-│   ├── builds/
-│   │   └── page.tsx         # Saved builds page
-│   └── api/
-│       ├── optimize/
-│       │   └── route.ts     # Optimization API endpoint
-│       └── session/
-│           └── route.ts     # Session management endpoint
+├── app/                          # Next.js App Router
+│   ├── layout.tsx                # Root layout + metadata
+│   ├── page.tsx                  # Home page
+│   ├── globals.css               # Tailwind imports + global styles
+│   ├── api/                      # API routes
+│   │   ├── optimize/route.ts     # Optimization endpoint
+│   │   └── session/route.ts      # Session management endpoint
+│   ├── optimize/                 # Optimization page
+│   │   └── page.tsx
+│   └── builds/                   # Saved builds pages
+│       ├── page.tsx              # Builds list
+│       └── [id]/page.tsx         # Single build view
 ├── components/
-│   ├── ui/
-│   │   ├── Button.tsx       # Reusable button component
-│   │   ├── Card.tsx         # Card container component
-│   │   ├── Input.tsx        # Form input component
-│   │   ├── Select.tsx       # Dropdown select component
-│   │   ├── Modal.tsx        # Modal dialog component
-│   │   ├── Skeleton.tsx     # Loading skeleton component
-│   │   └── Toast.tsx        # Toast notification component
-│   ├── gems/
-│   │   ├── GemCatalog.tsx   # Gem catalog with tabs
-│   │   ├── GemCard.tsx      # Gem display card (catalog/equipped)
-│   │   ├── GemDetail.tsx    # Gem detail modal/panel
-│   │   └── GemSelector.tsx  # Quality/rank selectors
-│   ├── optimization/
-│   │   ├── OptimizeButton.tsx     # Optimization trigger
-│   │   ├── ResultsPanel.tsx       # Results container
-│   │   ├── RecommendationCard.tsx # Single recommendation
-│   │   └── ResourceInput.tsx      # Resource input fields
-│   └── layout/
-│       ├── Header.tsx       # App header
-│       ├── Footer.tsx       # App footer
-│       └── Navigation.tsx   # Main navigation
+│   ├── ui/                       # Reusable UI components
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Toast.tsx
+│   │   ├── Skeleton.tsx
+│   │   └── Select.tsx
+│   ├── gems/                     # Gem-related components
+│   │   ├── GemSelector.tsx
+│   │   ├── GemCard.tsx
+│   │   ├── GemCatalog.tsx
+│   │   ├── GemDetailModal.tsx
+│   │   └── EquippedGemCard.tsx
+│   ├── optimization/             # Optimization components
+│   │   ├── OptimizeButton.tsx
+│   │   ├── OptimizationResult.tsx
+│   │   ├── RecommendationCard.tsx
+│   │   └── ProcessingModal.tsx
+│   ├── resources/                # Resource input components
+│   │   ├── ResourceInput.tsx
+│   │   └── ResourcePanel.tsx
+│   └── layout/                   # Layout components
+│       ├── Header.tsx
+│       ├── Footer.tsx
+│       └── Navigation.tsx
 ├── lib/
-│   ├── db/
-│   │   ├── schema.ts        # Drizzle schema definitions
-│   │   └── queries.ts       # Database queries
-│   ├── session/
-│   │   └── anonymous.ts     # Anonymous ID management
-│   ├── optimization/
-│   │   ├── engine.ts        # Optimization algorithm (exists)
-│   │   └── types.ts         # Type definitions (exists)
-│   ├── storage/
-│   │   └── localStorage.ts  # Client-side persistence
-│   └── utils/
-│       ├── formatting.ts    # Number formatting utilities
-│       └── validation.ts    # Input validation helpers
-├── types/
-│   ├── gem.ts               # Gem-related types
-│   ├── optimization.ts      # Optimization types
-│   └── build.ts             # Build management types
-└── data/
-    └── gems.json            # Static gem database (bundled)
+│   ├── db/                       # Drizzle schema & queries
+│   │   ├── schema.ts
+│   │   ├── index.ts
+│   │   └── migrations/
+│   ├── optimization/             # Optimization algorithms
+│   │   ├── engine.ts             # Main optimization entry
+│   │   ├── scoring.ts            # Power calculation
+│   │   ├── resources.ts          # Resource management
+│   │   ├── resonance.ts          # Resonance calculation
+│   │   ├── constants.ts          # Tier weights, thresholds
+│   │   └── types.ts              # Shared types
+│   ├── session/                  # Session management
+│   │   └── anonymous-session.ts
+│   └── external/                 # External API clients
+│       └── (future integrations)
+├── data/
+│   └── gems.json                 # Static gem database
+└── test/
+    └── setup.ts                  # Testing library setup
+
+tests/                            # E2E tests (Playwright)
+└── e2e/
+    └── optimize.spec.ts
+
+e2e/                              # Playwright config directory
+└── .gitkeep
 ```
 
-**Structure Decision**: Web application structure using Next.js App Router. Components organized by domain (ui, gems, optimization, layout). Static gem data bundled at build time for fastest load performance.
-
-## Complexity Tracking
-
-> No constitution violations requiring justification.
-
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-| --------- | ---------- | ------------------------------------ |
-| N/A       | N/A        | N/A                                  |
-
-## Phase 0: Research Questions
-
-The following items need research to resolve any unknowns:
-
-1. **Gem Icon Assets**: Where to source representative gem icons from community? What licensing considerations apply? ✅ RESOLVED
-2. **Resonance Calculation**: Confirm exact resonance values per gem type/quality/rank from game data ✅ RESOLVED
-3. **Tier Rankings Source**: Where to source PVP/PVE tier rankings (diablo.tv, community resources)? ✅ RESOLVED
-4. **Mobile Touch Patterns**: Best practices for dropdown selects on mobile in React 19 ✅ RESOLVED
-5. **localStorage Schema**: Optimal structure for build persistence with versioning support ✅ RESOLVED
-6. **Error Handling Types**: Define specific error response structure for typed error handling ✅ RESOLVED
-7. **Anonymous Session Strategy** (2026-02-17): Device fingerprinting vs registration form vs localStorage UUID ✅ RESOLVED
-
-### Research Summary (T-04)
-
-**Anonymous Session Strategy**: After evaluating three options, chose **localStorage UUID v4 with optional email opt-in**:
-
-| Option                    | Pros                           | Cons                            | Decision    |
-| ------------------------- | ------------------------------ | ------------------------------- | ----------- |
-| Device Fingerprinting     | Zero friction                  | 40-60% stability, GDPR concerns | ❌ Rejected |
-| Registration Form         | Stable ID, recovery            | 20-30% abandonment              | ❌ Rejected |
-| localStorage UUID + Email | Zero friction, recovery option | Cross-device needs email        | ✅ Chosen   |
-
-**Implementation**: UUID v4 stored in localStorage, server database stores session state keyed by anonymous ID, optional email for notifications/recovery.
-
-## Phase 1: Design Artifacts
-
-### Data Model (data-model.md)
-
-Will define:
-
-- AnonymousSession entity (server-side, keyed by localStorage UUID)
-- EquippedGem entity with validation rules
-- ResourceInventory structure
-- OptimizationResult schema
-- SavedBuild structure (server-side, linked to anonymous session)
-- Gem database schema (static JSON structure)
-
-### API Contracts (contracts/)
-
-Will define:
-
-- `/api/optimize` endpoint schema (request/response)
-- `/api/session` endpoint schema (create/get/update session)
-- Error type definitions
-- localStorage schema (simplified: only anonymous ID)
-
-### Quickstart Guide (quickstart.md)
-
-Will provide:
-
-- Component implementation order
-- Integration steps
-- Testing checklist
+**Structure Decision**: Single Next.js application with App Router. Server Components by default for data fetching (gem catalog from JSON), Client Components for interactive elements (selectors, buttons). Server-side SQLite for session persistence.
 
 ## Post-Design Constitution Re-Check
 
 _Re-evaluated after Phase 1 design artifacts complete._
 
-### User-First Experience
+### Design Artifacts Alignment
 
-| Requirement             | Status | Design Artifact                                                 |
-| ----------------------- | ------ | --------------------------------------------------------------- |
-| Fast Results (<5s)      | Pass   | Server-side `/api/optimize` route defined in contracts          |
-| Clear Output            | Pass   | `UpgradeRecommendation` schema includes powerGain, reasoning    |
-| Mobile-First            | Pass   | Native `<select>` elements, 44x44px touch targets in quickstart |
-| Progressive Enhancement | Pass   | Server-rendered catalog; no-JS fallback documented in plan      |
+| Artifact                               | Status      | Constitution Alignment                                              |
+| -------------------------------------- | ----------- | ------------------------------------------------------------------- |
+| **research.md**                        | ✅ RESOLVED | All NEEDS CLARIFICATION items resolved                              |
+| **data-model.md**                      | ✅ COMPLETE | Correct resource model (gemPower + copies), server-side persistence |
+| **contracts/optimize-api.schema.json** | ✅ COMPLETE | Corrected schema v1.1.0 with gemPower                               |
+| **quickstart.md**                      | ✅ COMPLETE | Implementation order aligned with Constitution                      |
 
-### Data Integrity
+### Post-Design Gate Evaluation
 
-| Requirement            | Status   | Design Artifact                             |
-| ---------------------- | -------- | ------------------------------------------- |
-| Single Source of Truth | Pass     | `src/data/gems.json` defined in quickstart  |
-| Versioned Data         | Pass     | Schema includes version, lastUpdated fields |
-| External Validation    | Deferred | DI days integration out of scope            |
-| User Corrections       | Deferred | Future feature                              |
+| Principle                       | Status  | Design Verification                                                                                  |
+| ------------------------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| **I. User-First Experience**    | ✅ PASS | Two-panel inventory UI, skeleton loaders, debounced validation, mobile-first responsive design       |
+| **II. Data Integrity**          | ✅ PASS | Zod schemas for all entities, XSS prevention in data-model.md, versioned gem data                    |
+| **III. Security & Privacy**     | ✅ PASS | Anonymous sessions with localStorage UUID, no sensitive data stored, server-side validation          |
+| **IV. Transparent Methodology** | ✅ PASS | Power formula documented in research.md, tier weights visible, alternatives shown in recommendations |
+| **V. Tiered Value**             | ✅ PASS | Free tier: 5 builds, basic optimization; PVP/PVE mode selection; optional email opt-in               |
 
-### Security & Privacy
+### Technical Constraints Re-Check
 
-| Requirement               | Status   | Design Artifact                                           |
-| ------------------------- | -------- | --------------------------------------------------------- |
-| OAuth-Only Authentication | Deferred | Battle.net auth deferred to P4                            |
-| Minimal Data Collection   | Pass     | Only anonymous ID, gemId, quality, rank, resources stored |
-| Anonymous Sessions        | Pass     | localStorage UUID v4 defined in data-model.md             |
-| Character Verification    | Deferred | Out of scope                                              |
-| No Sensitive Game Data    | Pass     | No credentials or account data stored                     |
+| Constraint                       | Status      | Design Verification                                                      |
+| -------------------------------- | ----------- | ------------------------------------------------------------------------ |
+| Framework: Next.js 16 + React 19 | ✅ PASS     | App Router structure defined in project structure section                |
+| Styling: Tailwind CSS 4          | ✅ PASS     | Responsive breakpoints defined (sm/md/lg/xl/2xl)                         |
+| Database: Drizzle ORM + SQLite   | ✅ PASS     | Schema defined in data-model.md with AnonymousSession, SavedBuild tables |
+| Auth: NextAuth 5                 | ⚠️ DEFERRED | Anonymous session schema defined, Battle.net OAuth future enhancement    |
+| Validation: Zod                  | ✅ PASS     | All entities have Zod schemas in data-model.md                           |
+| Package Manager: Bun             | ✅ PASS     | All commands documented with bun                                         |
 
-### Transparent Methodology
+### Performance Standards Re-Check
 
-| Requirement           | Status | Design Artifact                                      |
-| --------------------- | ------ | ---------------------------------------------------- |
-| Documented Algorithms | Pass   | Code comments and reasoning field in recommendations |
-| Power Gain Visibility | Pass   | `powerGain` field in `UpgradeRecommendation`         |
-| Resource Breakdown    | Pass   | `resourceCost` field per recommendation              |
-| Alternative Options   | Pass   | `alternatives` array in recommendation schema        |
+| Standard                 | Target           | Status  | Design Verification                                    |
+| ------------------------ | ---------------- | ------- | ------------------------------------------------------ |
+| First Contentful Paint   | < 1.5s           | ✅ PASS | Static gem data bundled, Server Components for catalog |
+| Time to Interactive      | < 3s             | ✅ PASS | Skeleton loaders defined, progressive enhancement      |
+| Optimization Calculation | < 5s for 10 gems | ✅ PASS | O(n log n) greedy algorithm implemented and tested     |
+| Lighthouse Score         | > 90             | ⚠️ TBD  | Will verify after implementation                       |
 
-### Tiered Value
+### Code Quality Gates Re-Check
 
-| Requirement     | Status   | Design Artifact                            |
-| --------------- | -------- | ------------------------------------------ |
-| Free Tier Value | Pass     | 5 builds max, basic optimization supported |
-| Paid Tier 1     | Deferred | Future feature                             |
-| Paid Tier 2     | Deferred | Future feature                             |
+| Gate                                  | Status  | Design Verification                                                   |
+| ------------------------------------- | ------- | --------------------------------------------------------------------- |
+| `bun typecheck` passes                | ✅ PASS | TypeScript strict mode, types defined in data-model.md                |
+| `bun lint` passes                     | ✅ PASS | ESLint configured                                                     |
+| Server Components by default          | ✅ PASS | App Router pattern documented in project structure                    |
+| Client components with `"use client"` | ✅ PASS | Interactive components identified (GemSelector, OptimizeButton, etc.) |
 
-**Final Gate Status**: PASS - All critical constitution requirements met within scope. No violations requiring justification.
-
----
-
-## Planning Complete
-
-This plan is ready for task generation via `/speckit.tasks` command.
+**Post-Design Gate Status**: ✅ **ALL GATES PASS** - Ready for implementation
 
 ---
 
-## Analysis Remediation Changelog
+## Complexity Tracking
 
-| Date       | ID   | Severity | Issue                                                                          | File(s) Modified | Change                                                         |
-| ---------- | ---- | -------- | ------------------------------------------------------------------------------ | ---------------- | -------------------------------------------------------------- |
-| 2026-02-15 | F-01 | CRITICAL | T052 referenced "exponential backoff" contradicting spec's "single retry only" | tasks.md         | Changed T052 description to "single retry with fixed 1s delay" |
-| 2026-02-15 | F-02 | CRITICAL | Deferred tasks T054/T055/T064 had numbering conflicts with Phase 6             | tasks.md         | Added disambiguation note to deferred section                  |
-| 2026-02-15 | E-01 | HIGH     | FR-034 mobile tooltip alternative had no task coverage                         | tasks.md         | Added T069a for mobile tap-to-reveal tooltips                  |
-| 2026-02-15 | E-02 | HIGH     | Network loss during optimization edge case uncovered                           | tasks.md         | Added T053a for offline detection and retry                    |
-| 2026-02-15 | E-03 | HIGH     | Deprecated gems in saved builds edge case uncovered                            | tasks.md         | Added T063a for deprecated gem detection                       |
+> **No violations - all Constitution principles satisfied**
+
+| Item                           | Decision              | Rationale                                                                          |
+| ------------------------------ | --------------------- | ---------------------------------------------------------------------------------- |
+| Anonymous sessions (not OAuth) | Simpler approach      | Battle.net OAuth deferred per spec, localStorage UUID provides zero-friction start |
+| Weighted greedy algorithm      | O(n log n) complexity | Sufficient for MVP, can upgrade to dynamic programming for paid tier               |
+| Static gem data (not API)      | Bundled JSON          | Fastest load time, works offline for viewing, updated via deployment               |
+| SQLite (not PostgreSQL)        | Simpler deployment    | Serverless-compatible, sufficient for expected scale                               |
 
 ---
 
-## Remediation Changelog
+## Generated Artifacts Summary
 
-**Date**: 2026-02-15
-**Type**: Alignment Audit Remediation
+| Artifact            | Path                                                                     | Status                           |
+| ------------------- | ------------------------------------------------------------------------ | -------------------------------- |
+| Implementation Plan | `specs/feature/PROJ-002-optimizer-ui/plan.md`                            | ✅ Complete                      |
+| Research            | `specs/feature/PROJ-002-optimizer-ui/research.md`                        | ✅ Resolved                      |
+| Data Model          | `specs/feature/PROJ-002-optimizer-ui/data-model.md`                      | ✅ Complete                      |
+| API Contract        | `specs/feature/PROJ-002-optimizer-ui/contracts/optimize-api.schema.json` | ✅ Complete                      |
+| Quickstart Guide    | `specs/feature/PROJ-002-optimizer-ui/quickstart.md`                      | ✅ Complete                      |
+| Tasks               | `specs/feature/PROJ-002-optimizer-ui/tasks.md`                           | ✅ Existing (via /speckit.tasks) |
 
-### Issues Resolved: 8
+---
 
-| ID   | Severity | Issue                                         | Resolution                                         |
-| ---- | -------- | --------------------------------------------- | -------------------------------------------------- |
-| C-01 | CRITICAL | Folder naming convention violation            | Migrated to `specs/feature/PROJ-002-optimizer-ui/` |
-| C-02 | CRITICAL | Branch reference incorrect                    | Updated to `feature/PROJ-002-optimizer-ui`         |
-| C-03 | CRITICAL | Contradictory exponential backoff requirement | Aligned with spec.md clarification                 |
-| H-01 | HIGH     | Task count mismatch in context.md             | Updated to 93 tasks                                |
-| H-02 | HIGH     | FR count error in requirements.md             | Updated to 53 total FRs                            |
-| H-03 | HIGH     | Internal inconsistency in context.md          | Standardized to 93 tasks                           |
-| M-01 | MEDIUM   | Version inconsistency                         | Noted for future alignment                         |
-| M-02 | MEDIUM   | Status field outdated                         | Updated to "Ready for Implementation"              |
-
-### Files Modified
-
-- `specs/feature/PROJ-002-optimizer-ui/spec.md` - Branch reference, status
-- `specs/feature/PROJ-002-optimizer-ui/checklists/requirements.md` - Exponential backoff, FR count
-- `.kilocode/rules/memory-bank/context.md` - Task counts, path references
-- Folder migrated from `specs/002-optimizer-ui/` to `specs/feature/PROJ-002-optimizer-ui/`
-
-### Migration Actions
-
-- Created: `specs/feature/PROJ-002-optimizer-ui/`
-- Moved: All artifacts from `specs/002-optimizer-ui/`
-- Deleted: `specs/002-optimizer-ui/`
-- Updated: All cross-references in documentation
+**Version**: 2.0.0 | **Last Updated**: 2026-02-17

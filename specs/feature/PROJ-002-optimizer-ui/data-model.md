@@ -206,30 +206,75 @@ const SLOT_CONFIG = {
 
 Represents the user's available upgrade resources.
 
-> **⚠️ Data Model Correction (2026-02-15)**
+> **⚠️ Resource Model Update (2026-02-17)**
 >
-> The original specification incorrectly used `platinum` and `telluricPearls` as resources.
-> Research findings (T-02) revealed the actual game uses:
+> The resource model has been expanded to include all in-game resources for comprehensive optimization:
 >
 > - **Gem Power (GP)**: Primary upgrade currency accumulated from various sources
-> - **Gem Copies**: R1 copies of specific gems used for rank upgrades
->
-> This correction aligns with the optimization engine implementation in `src/lib/optimization/`.
+> - **Inventory Gems**: Gems owned but not equipped (can be used as upgrade material)
+> - **Telluric Pearls**: Used to craft 5-star gems and event-exclusive 2-star gems
+> - **Telluric Fragments**: Used to craft 1-star or 2-star gems
+> - **Fading Embers**: Used for gem crafting and Eternal Legendary Crests
+> - **Platinum**: Currency for market purchases and slot awakening
+> - **Crests**: Eternal Legendary, Legendary, and Rare crests for Elder Rifts
+> - **Dawning Echoes**: For awakened slot capacity tracking
 
 ```typescript
 interface ResourceInventory {
-  gemPower: number; // Primary upgrade currency
-  copyInventory: Record<string, number>; // gemId → count of R1 copies
+  // Primary upgrade currency
+  gemPower: number;
+
+  // Inventory gems - gems owned but not equipped
+  // Each gem instance has: gemId, quality (for 5★), rank
+  inventoryGems: InventoryGem[];
+
+  // Crafting materials
+  telluricPearls: number; // For 5-star and event-exclusive 2-star gem crafting
+  telluricFragments: number; // For 1-star and 2-star gem crafting
+  fadingEmbers: number; // For gem crafting and Eternal Crests
+
+  // Currency
+  platinum: number; // For market purchases and awakening
+
+  // Crests for Elder Rifts
+  crestCounts: {
+    eternal: number; // Eternal Legendary Crests (guaranteed 1-star+ drop, sellable)
+    legendary: number; // Legendary Crests (guaranteed 1-star+ drop, bound)
+    rare: number; // Rare Crests (5% chance for 1-star gem)
+  };
+
+  // Awakening resources
+  dawningEchoes: number; // For awakened slot tracking (10,000 Platinum or 1,000 Orbs each)
+}
+
+// Represents a gem instance in inventory (not equipped)
+interface InventoryGem {
+  id: string; // Unique instance ID
+  gemId: string; // Reference to LegendaryGem.id
+  quality: 1 | 2 | 3 | 4 | 5; // Quality rating (meaningful for 5-star gems only)
+  rank: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10; // Current rank
 }
 ```
 
 **Validation Rules**:
 
-- `gemPower` must be non-negative integer
-- `copyInventory` keys must be valid gem IDs
-- `copyInventory` values must be non-negative integers
+- All numeric fields must be non-negative integers
+- `inventoryGems` must be an array of valid InventoryGem objects
+- Each InventoryGem must have a valid `gemId` referencing an existing LegendaryGem
 - Maximum value: 2,147,483,647 (32-bit integer max)
 - Values above 1,000,000 should display with M suffix (e.g., "1.2M")
+- Values above 10,000 should display with K suffix (e.g., "15.3K")
+
+**Platinum-Equivalent Values** (for cost comparison, per FR-010a):
+
+| Resource                | Platinum Equivalent | Notes                                 |
+| ----------------------- | ------------------- | ------------------------------------- |
+| Gem Power               | Varies by source    | See docs/currencies-and-materials.csv |
+| Telluric Pearl          | ~1,000 Platinum     | Craft 5-star gems                     |
+| Telluric Fragment       | ~50 Platinum        | Craft 1-star gems                     |
+| Fading Ember            | ~100 Platinum       | Craft gems or save for Eternal Crest  |
+| Eternal Legendary Crest | ~1,600 Platinum     | 320 Fading Embers                     |
+| Dawning Echo            | 10,000 Platinum     | Awaken equipment slot                 |
 
 ---
 
@@ -384,6 +429,78 @@ If localStorage is unavailable (private browsing, disabled, quota exceeded):
 
 ---
 
+### 8. AwakenedSlot (User Data)
+
+Represents an awakened equipment slot that provides additional resonance capacity.
+
+```typescript
+interface AwakenedSlot {
+  slotPosition: number; // Which gear slot is awakened (1-12 possible slots)
+  isAwakened: boolean; // Whether this slot has been awakened
+  dawningEchoCost: number; // 10,000 Platinum or 1,000 Orbs per awakening
+  resonanceBonus: number; // Additional resonance from awakened gem in this slot
+}
+```
+
+**Validation Rules**:
+
+- `slotPosition` must be 1-12 (game has 12 equipment slots that can be awakened)
+- `dawningEchoCost` is always 10,000 Platinum equivalent
+- Only awakened slots can hold dormant 5-star gems for infusion
+
+**State Transitions**:
+
+```
+[Not Awakened] → Purchase Dawning Echo → [Awakened]
+[Awakened] → Socket dormant 5-star gem → [Can Infuse]
+```
+
+**Relationship to Wing Slots**:
+
+Awakened slots with dormant 5-star gems can contribute additional resonance through the infusion mechanic, potentially affecting wing slot availability. The optimizer can recommend awakening slots when the resonance gains justify the 10,000 Platinum cost (per FR-047 to FR-050).
+
+---
+
+### 9. AcquisitionPath (Optimization Output)
+
+Represents different ways to acquire or upgrade a gem, for cost comparison.
+
+```typescript
+interface AcquisitionPath {
+  type:
+    | "gem-power-upgrade"
+    | "craft-pearl"
+    | "craft-fragment"
+    | "craft-ember"
+    | "market-buy"
+    | "crest-run";
+  description: string;
+  resourceCost: Partial<ResourceInventory>;
+  platinumEquivalent: number; // For cost comparison
+  expectedOutcome: {
+    gemId: string;
+    rank: number;
+    quality?: number;
+  };
+  runRequirements?: {
+    crestType: "eternal" | "legendary" | "rare";
+    runsNeeded: number;
+    expectedGems: number;
+  };
+}
+```
+
+**Crafting Conversion Rates** (per FR-054):
+
+| Input                 | Output                    | Notes                                   |
+| --------------------- | ------------------------- | --------------------------------------- |
+| 20 Telluric Fragments | 1-star legendary gem      | 1 Gem Power as fodder                   |
+| 80 Telluric Fragments | 2-star legendary gem      | 4 Gem Power as fodder                   |
+| 320 Fading Embers     | 1 Eternal Legendary Crest | Best value for Embers                   |
+| 5 Fading Embers       | 1 Telluric Pearl          | Suboptimal vs. saving for Eternal Crest |
+
+---
+
 ## Derived/Calculated Data
 
 ### Total Resonance
@@ -465,7 +582,8 @@ type OptimizationErrorType =
   | "validation"
   | "insufficient-resources"
   | "timeout"
-  | "server-error";
+  | "server-error"
+  | "rate-limited";
 
 interface OptimizationError {
   type: OptimizationErrorType;
@@ -492,31 +610,32 @@ interface OptimizationError {
 └───────────┬─────────────┘
             │ owns
             ▼
-┌─────────────────────────┐
-│      SavedBuild         │ (Server database)
-│  - id (PK)              │
-│  - anonymousId (FK)     │
-│  - name                 │
-│  - gems[]               │
-│  - resources            │
-│  - optimizationMode     │
+┌─────────────────────────┐         ┌─────────────────────────┐
+│      SavedBuild         │         │     AwakenedSlot        │
+│  - id (PK)              │         │  - slotPosition         │
+│  - anonymousId (FK)     │         │  - isAwakened           │
+│  - name                 │         │  - dawningEchoCost      │
+│  - gems[]               │         │  - resonanceBonus       │
+│  - resources            │         └─────────────────────────┘
+│  - optimizationMode     │                    │
+│  - awakenedSlots[]?     │◄───────────────────┘
 │  - notes?               │
 │  - createdAt/updatedAt  │
 └───────────┬─────────────┘
             │ contains
             ▼
-┌─────────────────┐         ┌──────────────────────┐
-│  EquippedGem    │         │  ResourceInventory   │
-│  - gemId ───────┼────────►│  - gemPower          │
-│  - quality      │    refs │  - copyInventory     │
-│  - rank         │         │    (gemId → count)   │
-│  - slotPosition │         └──────────────────────┘
-└────────┬────────┘
-         │ references
-         ▼
-┌─────────────────┐
-│  LegendaryGem   │ (Static data, ~100 records)
-│  - id           │
+┌─────────────────┐         ┌──────────────────────────────────────┐
+│  EquippedGem    │         │        ResourceInventory             │
+│  - gemId ───────┼────────►│  - gemPower                          │
+│  - quality      │    refs │  - inventoryGems: InventoryGem[]     │
+│  - rank         │         │  - telluricPearls                    │
+│  - slotPosition │         │  - telluricFragments                 │
+└────────┬────────┘         │  - fadingEmbers                      │
+         │ references       │  - platinum                          │
+         ▼                  │  - crestCounts {eternal/legendary/   │
+┌─────────────────┐         │                      rare}           │
+│  LegendaryGem   │         │  - dawningEchoes                     │
+│  - id           │         └──────────────────────────────────────┘
 │  - name         │
 │  - starRating   │
 │  - effects[]    │
@@ -525,12 +644,43 @@ interface OptimizationError {
 └─────────────────┘
 ```
 
-**Key Changes from localStorage Architecture**:
+**Key Entity Relationships**:
 
-1. **AnonymousSession** is now the root entity in server database
+1. **AnonymousSession** is the root entity in server database
 2. **SavedBuild** references `anonymousId` as foreign key
-3. **localStorage** only stores `anonymousId` for lookups
-4. **Session state** is persisted to server, enabling cross-device access (with email)
+3. **AwakenedSlot** is stored as part of SavedBuild (embedded array)
+4. **localStorage** only stores `anonymousId` for lookups
+5. **Session state** is persisted to server, enabling cross-device access (with email)
+
+---
+
+## Terminology Convention
+
+To ensure consistency across code and user interfaces:
+
+| Code (camelCase)      | User-Facing (Title Case) | Description                                               |
+| --------------------- | ------------------------ | --------------------------------------------------------- |
+| `gemPower`            | Gem Power                | Primary upgrade currency                                  |
+| `inventoryGems`       | Inventory Gems           | Gems owned but not equipped (right panel in two-panel UI) |
+| `equippedGems`        | Equipped Gems            | Gems currently in slots (left panel in two-panel UI)      |
+| `telluricPearls`      | Telluric Pearls          | 5-star gem crafting material                              |
+| `telluricFragments`   | Telluric Fragments       | 1-star/2-star gem crafting material                       |
+| `fadingEmbers`        | Fading Embers            | Gem crafting and crest material                           |
+| `platinum`            | Platinum                 | In-game currency                                          |
+| `crestCounts`         | Crest Counts             | Elder Rift crest inventory                                |
+| `dawningEchoes`       | Dawning Echoes           | Awakening material                                        |
+| `pvpTier` / `pveTier` | PVP Tier / PVE Tier      | Gem rankings                                              |
+| `slotPosition`        | Slot Position            | Position in gem grid (1-24)                               |
+| `slotType`            | Slot Type                | "base" or "wing" slot                                     |
+
+**Rule**: Use camelCase in all code (TypeScript, JSON, database). Use Title Case in UI labels, documentation headings, and user-facing text.
+
+**Two-Panel Inventory UI Design**:
+
+- **Left Panel (Equipped)**: 24 slots max (8 base + 16 wing), shows socketed gems
+- **Right Panel (Inventory)**: Unlimited slots, auto-ordered by Star (5★ > 2★ > 1★) → Rank → Quality → Name
+
+**Gem Instance Concept**: Multiple gems with the same name are different instances, not duplicates. For 5-star gems, any quality can be used to upgrade another (higher quality upgrades lower quality).
 
 ---
 
@@ -573,9 +723,60 @@ const EquippedGemSchema = z.object({
   quantity: z.number().int().min(1).optional(),
 });
 
+// Inventory gem schema - represents a gem instance owned but not equipped
+const InventoryGemSchema = z.object({
+  id: z.string().min(1), // Unique instance ID
+  gemId: z.string().min(1), // Reference to LegendaryGem.id
+  quality: z.number().int().min(1).max(5),
+  rank: z.number().int().min(1).max(10),
+});
+
 const ResourceInventorySchema = z.object({
   gemPower: z.number().int().min(0),
-  copyInventory: z.record(z.string(), z.number().int().min(0)),
+  inventoryGems: z.array(InventoryGemSchema), // Gems owned but not equipped
+  telluricPearls: z.number().int().min(0),
+  telluricFragments: z.number().int().min(0),
+  fadingEmbers: z.number().int().min(0),
+  platinum: z.number().int().min(0),
+  crestCounts: z.object({
+    eternal: z.number().int().min(0),
+    legendary: z.number().int().min(0),
+    rare: z.number().int().min(0),
+  }),
+  dawningEchoes: z.number().int().min(0),
+});
+
+const AwakenedSlotSchema = z.object({
+  slotPosition: z.number().int().min(1).max(12),
+  isAwakened: z.boolean(),
+  dawningEchoCost: z.number().int().min(0),
+  resonanceBonus: z.number().int().min(0),
+});
+
+const AcquisitionPathSchema = z.object({
+  type: z.enum([
+    "gem-power-upgrade",
+    "craft-pearl",
+    "craft-fragment",
+    "craft-ember",
+    "market-buy",
+    "crest-run",
+  ]),
+  description: z.string(),
+  resourceCost: ResourceInventorySchema.partial(),
+  platinumEquivalent: z.number().int().min(0),
+  expectedOutcome: z.object({
+    gemId: z.string(),
+    rank: z.number().int().min(1).max(10),
+    quality: z.number().int().min(1).max(5).optional(),
+  }),
+  runRequirements: z
+    .object({
+      crestType: z.enum(["eternal", "legendary", "rare"]),
+      runsNeeded: z.number().int().min(0),
+      expectedGems: z.number().int().min(0),
+    })
+    .optional(),
 });
 
 // XSS sanitization helpers
@@ -633,6 +834,7 @@ const OptimizationErrorSchema = z.object({
     "insufficient-resources",
     "timeout",
     "server-error",
+    "rate-limited",
   ]),
   title: z.string(),
   message: z.string(),
@@ -708,4 +910,12 @@ Example structure for `gems.json`:
     }
   ]
 }
+```
+
+---
+
+**Version**: 2.0.0 | **Last Updated**: 2026-02-17
+
+```
+
 ```

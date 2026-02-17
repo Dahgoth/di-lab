@@ -38,9 +38,9 @@
 
 ### Type Definitions
 
-- [ ] T003 Create `src/types/gem.ts` with StarRating, Quality, Rank, TierRanking, EffectCategory, EffectType, SlotType, OptimizationMode types and LegendaryGem, GemEffect, EquippedGem interfaces
+- [ ] T003 Create `src/types/gem.ts` with StarRating, Quality, Rank, TierRanking, EffectCategory, EffectType, SlotType, OptimizationMode types and LegendaryGem, GemEffect, EquippedGem, InventoryGem interfaces
 - [ ] T004 [P] Create `src/types/optimization.ts` with OptimizationResult, UpgradeRecommendation, AlternativeUpgrade, OptimizationError, OptimizationErrorType interfaces
-- [ ] T005 [P] Create `src/types/build.ts` with SavedBuild, SessionState, ResourceInventory interfaces
+- [ ] T005 [P] Create `src/types/build.ts` with SavedBuild, SessionState, ResourceInventory interfaces (including inventoryGems array, telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts, dawningEchoes per data-model.md)
 
 ### Static Data
 
@@ -49,13 +49,13 @@
 ### Utility Functions
 
 - [ ] T007 [P] Create `src/lib/utils/formatting.ts` with formatNumber (K suffix >=10,000, M suffix >=1,000,000), formatGemPower, formatDate utilities
-- [ ] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild, and validation helpers
+- [ ] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild, InventoryGem, and validation helpers
 - [ ] T009 [P] Create `src/lib/utils/sanitization.ts` with stripHtmlTags, escapeSpecialChars, hasDangerousUrlScheme, sanitizeUserContent functions for XSS prevention (FR-046)
 
 ### Session Management (Server-Side)
 
 - [ ] T010 Create `src/lib/db/schema.ts` with Drizzle SQLite schema for anonymousSessions and savedBuilds tables per data-model.md
-- [ ] T011 Create `src/lib/session/anonymous.ts` with getOrCreateAnonymousId (UUID v4), localStorage fallback detection, server-side session sync functions (FR-029, FR-029b)
+- [ ] T011 Create `src/lib/session/anonymous-session.ts` with getOrCreateAnonymousId (UUID v4), localStorage fallback detection, server-side session sync functions (FR-029, FR-029b)
 
 ### Storage Layer
 
@@ -88,7 +88,7 @@
 
 ### Slot Management Logic
 
-- [ ] T022 [US1] Create `src/lib/utils/slots.ts` with SLOT_CONFIG constants (8 base, 16 wing, 24 max), slot type derivation, and position validation (FR-006)
+- [ ] T022 [US1] Create `src/lib/utils/slots.ts` with SLOT_CONFIG constants (8 base, 16 wing, 24 max per FR-006), slot type derivation, and position validation. Note: Constants should reference FR-006 thresholds (6000=4 slots, 7000=8, 8000=12, 8500+=16) to avoid hardcoding.
 - [ ] T023 [US1] Implement base slot duplicate prevention logic in `src/lib/utils/slots.ts` (positions 1-8: no duplicate gemId allowed) (FR-009)
 - [ ] T024 [US1] Implement wing slot duplicate allowance logic in `src/lib/utils/slots.ts` (positions 9-24: duplicates allowed) (FR-009)
 - [ ] T025 [US1] Create resonance calculation in `src/lib/utils/resonance.ts` with calculateTotalResonance, getResonanceForGem functions using gem database (FR-007)
@@ -111,21 +111,23 @@
 
 **Goal**: Users can input available upgrade resources with validation and formatted display
 
-**Independent Test**: User can input amounts for gemPower and copyInventory, see totals displayed with formatting, and modify values with validation feedback
+**Independent Test**: User can input amounts for all resource types (gemPower, inventoryGems, telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts, dawningEchoes), see totals displayed with formatting, and modify values with validation feedback
 
 ### Resource Input Components
 
-- [ ] T033 [US2] Create `src/components/optimization/ResourceInput.tsx` with gemPower number input and copy inventory management UI (FR-010)
-- [ ] T034 [US2] Add debounced validation (300-500ms delay) for resource inputs with non-negative integer validation (FR-011)
+- [ ] T033 [US2] Create `src/components/optimization/ResourceInput.tsx` with all resource input fields per FR-010: gemPower, inventoryGems (two-panel UI: Left=equipped, Right=inventory), telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts (eternal/legendary/rare), dawningEchoes. Note: Awakened slots panel is created separately in T069a-T069d.
+- [ ] T034 [US2] Add debounced validation (300-500ms delay) for all resource inputs with non-negative integer validation (FR-011)
 - [ ] T035 [US2] Add number formatting display with commas for thousands, K suffix >=10,000, M suffix >=1,000,000 (FR-012)
-- [ ] T036 [US2] Create resource summary panel showing gemPower total and copy inventory counts per gem (FR-013)
-- [ ] T037 [US2] Add clear/reset functionality for resource values (FR-014)
+- [ ] T036 [US2] Create resource summary panel showing totals for all resource types and inventory gems counts per gem (FR-013)
+- [ ] T036a [US2] [DEFERRED] Add platinum-equivalent cost display to resource summary panel using values from docs/currencies-and-materials.csv (FR-010a - Out of Scope for MVP)
+- [ ] T037 [US2] Add clear/reset functionality for all resource values (FR-014)
 
 ### Session Persistence
 
 - [ ] T038 [US2] Create `src/app/api/session/route.ts` GET endpoint to restore session state from server database (FR-023)
 - [ ] T039 [US2] Create `src/app/api/session/route.ts` POST endpoint to auto-persist session state on every change (FR-023a)
 - [ ] T040 [US2] Integrate resource state with session auto-persistence in `src/app/optimize/page.tsx`
+- [ ] T040a [US2] Implement session invalidation handling: detect 404/410 from session endpoint, show "Session expired" toast, auto-create new session with new UUID, preserve local UI state, sync to new session (FR-029d)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - gem selection and resource input complete
 
@@ -150,8 +152,8 @@
 ### API Endpoint
 
 - [ ] T048 [US3] Create `src/app/api/optimize/route.ts` POST endpoint per contracts/optimize-api.schema.json
-- [ ] T049 [US3] Add request validation with Zod schemas from `src/lib/utils/validation.ts`
-- [ ] T050 [US3] Add typed error responses: validation (400), insufficient-resources (422), timeout (408), server-error (500) per FR-021
+- [ ] T049 [US3] Add request validation with Zod schemas from `src/lib/utils/validation.ts` using corrected resource model (gemPower + inventoryGems)
+- [ ] T050 [US3] Add typed error responses: validation (400), insufficient-resources (422), timeout (408), server-error (500), rate-limited (429 with Retry-After header) per FR-021
 - [ ] T051 [US3] Add 30-second timeout with AbortController for optimization requests (FR-022)
 
 ### Optimization UI Components
@@ -168,11 +170,11 @@
 ### Error Handling
 
 - [ ] T060 [US3] Create `src/components/ui/Toast.tsx` with top-right positioning, vertical stack, z-index 50, max 3 visible, 5s auto-dismiss with pause on hover, mobile full-width adaptation (FR-021c)
-- [ ] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a)
+- [ ] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a), including rate-limited countdown display
 - [ ] T062 [US3] Create error display for insufficient-resources with "Add more resources" guidance (FR-021, FR-021a)
 - [ ] T063 [US3] Create error display for timeout with retry option (FR-021, FR-021a)
 - [ ] T064 [US3] Implement single retry with fixed 1s delay for transient API failures (FR-021b)
-- [ ] T065 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option
+- [ ] T065 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option (FR-021d)
 - [ ] T066 [US3] Implement cancel-and-replace pattern for concurrent optimization requests using AbortController (FR-022a)
 
 ### Timeout Enhancement
@@ -183,6 +185,20 @@
 
 - [ ] T068 [US3] Add aria-live="polite" region for optimization completion and cancellation announcements (FR-044a)
 - [ ] T069 [US3] Add aria-live="assertive" region for optimization error announcements (FR-044a)
+
+### Awakening Management
+
+- [ ] T069a [US3] Create `src/components/optimization/AwakenedSlotsPanel.tsx` with slot toggle UI (up to 12 slots) (FR-047)
+- [ ] T069b [US3] Add awakened slot toggle functionality with Dawning Echo cost display (10,000 Platinum) (FR-048, FR-049)
+- [ ] T069c [US3] Implement awakened slot resonance impact calculation in `src/lib/utils/resonance.ts` (FR-050)
+- [ ] T069d [US3] Add awakened slots to SessionState and SavedBuild schemas (FR-047)
+
+### Resource Deficit & Acquisition
+
+- [ ] T069e [US3] Add GP deficit display in `src/components/optimization/ResultsPanel.tsx` when resources insufficient (FR-051)
+- [ ] T069f [US3] Create `src/components/optimization/AcquisitionPaths.tsx` showing concise three-path overview (Farming Elder Rifts, Market Purchases, Hybrid) per FR-052 - informational descriptions only, no guides/links
+- [ ] T069g [US3] Add run requirements calculator in `src/lib/utils/acquisition.ts` showing "X runs needed to craft Y gems" (FR-053)
+- [ ] T069h [US3] Implement crafting conversion rates in `src/lib/utils/acquisition.ts` (20 Fragments=1-star, 80=2-star, 320 Embers=Eternal Crest, 5 Embers=1 Pearl) (FR-054)
 
 **Checkpoint**: At this point, MVP is complete - users can select gems, input resources, and receive optimization recommendations
 
@@ -254,7 +270,8 @@
 
 - [ ] T088 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px) per FR-038
 - [ ] T089 [US7] Ensure 44x44px minimum touch targets for all interactive elements (FR-039, SC-005)
-- [ ] T090 [US7] Optimize scroll performance with CSS `will-change` and virtualization if needed for 60fps on mid-range mobile devices (FR-041, SC-007)
+- [ ] T090 [US7] Optimize scroll performance with CSS `will-change` and virtualization if needed for 60fps on mid-range mobile devices (Snapdragon 665+, 4GB+ RAM, 2020+ release year; reference devices: Pixel 4a, Galaxy A52, Moto G Power) (FR-041, SC-007)
+- [ ] T090a [US7] Manual performance validation on reference devices (Pixel 4a, Galaxy A52, Moto G Power) to verify 60fps scroll and touch responsiveness (SC-007)
 - [ ] T091 [US7] Test and fix horizontal scroll prevention on narrow viewports (320px minimum) (SC-004)
 - [ ] T092 [US7] Add full-width mobile adaptation for toast notifications on viewports < 640px (FR-021c)
 
@@ -284,6 +301,12 @@
 
 - [ ] T099 [US6] Add optional maximum resource budget constraint input in `src/components/optimization/ResourceInput.tsx` (FR-037a)
 - [ ] T100 [US6] Update optimization engine to respect resource budget constraints when generating recommendations
+
+### Advanced Strategies
+
+- [ ] T100a [US6] Add "Advanced Strategies" toggle (default: off) to optimization controls in `src/app/optimize/page.tsx` (FR-037b)
+- [ ] T100b [US6] Implement dormant 5-star gem infusion recommendations when Advanced Strategies is enabled in `src/lib/optimization/engine.ts` (FR-037b)
+- [ ] T100c [US6] Add infusion path display in recommendation cards showing source gem and GP requirements (FR-037b)
 
 **Checkpoint**: At this point, User Story 6 is complete - advanced optimization features available
 
@@ -402,7 +425,7 @@ Task: "Create src/components/gems/GemCard.tsx"
 1. Complete Phase 1: Setup (2 tasks)
 2. Complete Phase 2: Foundational (10 tasks)
 3. Complete Phase 3: User Story 1 (20 tasks)
-4. Complete Phase 4: User Story 2 (8 tasks)
+4. Complete Phase 4: User Story 2 (10 tasks)
 5. Complete Phase 5: User Story 3 (29 tasks, 7 already done = 22 remaining)
 6. **STOP and VALIDATE**: Test complete optimization flow independently
 7. Deploy/demo MVP
@@ -411,11 +434,11 @@ Task: "Create src/components/gems/GemCard.tsx"
 
 1. Complete Setup + Foundational (12 tasks) - Foundation ready
 2. Add User Story 1 (20 tasks) - Gem selection working - Deploy/Demo
-3. Add User Story 2 (8 tasks) - Resources working - Deploy/Demo
+3. Add User Story 2 (10 tasks) - Resources working - Deploy/Demo
 4. Add User Story 3 (22 remaining tasks) - Full optimization - Deploy/Demo (MVP!)
 5. Add User Story 4 (12 tasks) - Build management - Deploy/Demo
-6. Add User Stories 5, 7 (11 tasks) - Enhanced UX - Deploy/Demo
-7. Add User Story 6 (5 tasks) - Advanced features - Deploy/Demo
+6. Add User Stories 5, 7 (14 tasks) - Enhanced UX - Deploy/Demo
+7. Add User Story 6 (8 tasks) - Advanced features - Deploy/Demo
 8. Polish (14 tasks) - Production ready
 
 ---
@@ -437,9 +460,11 @@ The Minimum Viable Product delivers the core optimization flow:
 | Phase 1: Setup        | 2      | 0                | 2         |
 | Phase 2: Foundational | 10     | 0                | 10        |
 | Phase 3: US1          | 20     | 0                | 20        |
-| Phase 4: US2          | 8      | 0                | 8         |
-| Phase 5: US3          | 29     | 7                | 22        |
-| **MVP Total**         | **69** | **7**            | **62**    |
+| Phase 4: US2          | 10     | 0                | 10        |
+| Phase 5: US3          | 37     | 7                | 30        |
+| **MVP Total**         | **79** | **7**            | **72**    |
+
+> **Note**: Tasks T069f-T069h (FR-052-054: acquisition paths and crafting rates) are now in MVP scope per spec.md clarification (lines 877-880).
 
 ### MVP Success Criteria
 
@@ -458,16 +483,18 @@ The Minimum Viable Product delivers the core optimization flow:
 | Phase 1: Setup        | 2                    |
 | Phase 2: Foundational | 10                   |
 | Phase 3: US1 (P1)     | 20                   |
-| Phase 4: US2 (P1)     | 8                    |
-| Phase 5: US3 (P1)     | 29 (7 complete)      |
+| Phase 4: US2 (P1)     | 10                   |
+| Phase 5: US3 (P1)     | 37 (7 complete)      |
 | Phase 6: US4 (P2)     | 12                   |
 | Phase 7: US5 (P2)     | 6                    |
-| Phase 8: US7 (P2)     | 8                    |
-| Phase 9: US6 (P3)     | 5                    |
+| Phase 8: US7 (P2)     | 9                    |
+| Phase 9: US6 (P3)     | 8                    |
 | Phase 10: Polish      | 14                   |
-| Phase 11: Deferred    | 3                    |
-| **Total**             | **117** (7 complete) |
-| **Remaining**         | **110**              |
+| Phase 11: Deferred    | 3 (T115-T117)        |
+| **Total**             | **131** (7 complete) |
+| **Remaining**         | **124**              |
+
+> **Note**: T036a (FR-010a platinum-equivalent display) remains DEFERRED. T069f-T069h (FR-052-054) are now in MVP scope.
 
 ---
 
@@ -493,9 +520,14 @@ The following optimization engine files exist and are complete:
 - **Database**: Drizzle + SQLite schema defined in data-model.md, implemented in Phase 2
 - **Tests**: Vitest configured with 15 tests passing for optimization engine
 - **Icons**: Placeholder graphics acceptable; representative icons can be added later
-- **Data Model**: Resources use `gemPower` and `copyInventory`, NOT platinum/telluricPearls
+- **Data Model**: Full resource model per data-model.md: gemPower, inventoryGems (array of InventoryGem objects), telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts (eternal/legendary/rare), dawningEchoes
 - **Session**: Server-side persistence with anonymous ID (localStorage UUID v4)
+- **Awakening**: Awakened slots tracked per build (up to 12 slots, 10,000 Platinum cost each)
+- **Terminology**: camelCase in code (gemPower, inventoryGems), Title Case in UI (Gem Power, Inventory Gems)
+- **Two-Panel UI**: Left panel = Equipped Gems (24 slots: 8 base + 16 wing), Right panel = Inventory Gems (unlimited, auto-ordered by star > rank > quality > name)
+- **Error Types**: FR-021 includes rate-limited (HTTP 429) with Retry-After header support
+- **Acquisition Paths**: FR-052-054 (three-path overview, run calculator, crafting rates) are MVP scope per spec.md clarification
 
 ---
 
-**Version**: 3.0.0 | **Last Updated**: 2026-02-17
+**Version**: 2.0.0 | **Last Updated**: 2026-02-17

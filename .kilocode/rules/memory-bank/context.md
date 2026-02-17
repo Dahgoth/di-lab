@@ -163,30 +163,33 @@ After research, chose **localStorage UUID with optional email opt-in**:
 
 ## Session History
 
-| Date       | Changes                                                                                          |
-| ---------- | ------------------------------------------------------------------------------------------------ |
-| 2026-02-17 | Researched anonymous session strategy - chose localStorage UUID over fingerprinting/registration |
-| 2026-02-17 | Updated spec FR-029 and data-model for server-side session persistence                           |
-| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm                                   |
-| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format                          |
-| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc                              |
-| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks                               |
-| 2026-02-14 | Implemented template-based naming system with configurable formats                               |
-| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done                                 |
-| 2026-02-14 | Updated Husky hooks to use bun commands                                                          |
-| 2026-02-14 | Added release-please workflow documentation to commit.md                                         |
-| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix                           |
-| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                                               |
-| 2026-02-14 | Added enhanced quality commands to specs README                                                  |
-| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)                              |
-| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md                              |
-| 2026-02-13 | Created PR template with spec reference checklist                                                |
-| 2026-02-13 | Created agent commit instructions with failure scenarios                                         |
-| 2026-02-13 | Created specs/README.md with SDD workflow documentation                                          |
-| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)                                  |
-| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                                          |
-| 2026-02-13 | Memory bank updated with DI-Lab project brief                                                    |
-| Initial    | Template created with base Next.js setup                                                         |
+| Date       | Changes                                                                                                                                                                                                                                                                            |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-02-17 | Cross-checked and updated tasks.md: Added rate-limited (429) to FR-021 error types, moved FR-052-054 tasks to MVP scope per spec clarification, added acquisition paths note                                                                                                       |
+| 2026-02-17 | Resolved 12 analysis findings via clarification session: A1 (FR-019 scope), A2 (K suffix threshold), C1 (FR-010a deferred), C2 (T033 scope), D1 (T022 constants), T1 (terminology), U1 (HTTP 429 coverage), U2 (mobile QA task), U3 (FR-050 alignment), I1-I3 (consistency checks) |
+| 2026-02-17 | Resolved 8 specification alignment findings: C1 (inventoryGems terminology), T1 (entity diagram), U1 (FR-019 scope), U2 (ResourceInventorySchema), C2 (T033 awakened slots), U3 (rate-limited error), A1 (FR-008a reference)                                                       |
+| 2026-02-17 | Researched anonymous session strategy - chose localStorage UUID over fingerprinting/registration                                                                                                                                                                                   |
+| 2026-02-17 | Updated spec FR-029 and data-model for server-side session persistence                                                                                                                                                                                                             |
+| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm                                                                                                                                                                                                                     |
+| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format                                                                                                                                                                                                            |
+| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc                                                                                                                                                                                                                |
+| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks                                                                                                                                                                                                                 |
+| 2026-02-14 | Implemented template-based naming system with configurable formats                                                                                                                                                                                                                 |
+| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done                                                                                                                                                                                                                   |
+| 2026-02-14 | Updated Husky hooks to use bun commands                                                                                                                                                                                                                                            |
+| 2026-02-14 | Added release-please workflow documentation to commit.md                                                                                                                                                                                                                           |
+| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix                                                                                                                                                                                                             |
+| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                                                                                                                                                                                                                                 |
+| 2026-02-14 | Added enhanced quality commands to specs README                                                                                                                                                                                                                                    |
+| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)                                                                                                                                                                                                                |
+| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md                                                                                                                                                                                                                |
+| 2026-02-13 | Created PR template with spec reference checklist                                                                                                                                                                                                                                  |
+| 2026-02-13 | Created agent commit instructions with failure scenarios                                                                                                                                                                                                                           |
+| 2026-02-13 | Created specs/README.md with SDD workflow documentation                                                                                                                                                                                                                            |
+| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)                                                                                                                                                                                                                    |
+| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                                                                                                                                                                                                                            |
+| 2026-02-13 | Memory bank updated with DI-Lab project brief                                                                                                                                                                                                                                      |
+| Initial    | Template created with base Next.js setup                                                                                                                                                                                                                                           |
 
 ## Spec-Kit Workflow Reference
 
@@ -220,7 +223,7 @@ After research, chose **localStorage UUID with optional email opt-in**:
 | Plan          | `specs/feature/PROJ-002-optimizer-ui/plan.md`                            | 11 implementation phases            |
 | Data Model    | `specs/feature/PROJ-002-optimizer-ui/data-model.md`                      | Entity definitions with Zod schemas |
 | API Contract  | `specs/feature/PROJ-002-optimizer-ui/contracts/optimize-api.schema.json` | API schema                          |
-| Tasks         | `specs/feature/PROJ-002-optimizer-ui/tasks.md`                           | 93 implementation tasks             |
+| Tasks         | `specs/feature/PROJ-002-optimizer-ui/tasks.md`                           | 135 implementation tasks            |
 
 **Analysis Status**: All 14 findings resolved (2 CRITICAL, 4 HIGH, 4 MEDIUM, 4 LOW)
 

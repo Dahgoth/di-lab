@@ -4,6 +4,12 @@ Auto-generated from all feature plans. Last updated: 2026-02-14
 
 ## Active Technologies
 
+- TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react, drizzle-orm, better-sqlite3 (feature/PROJ-002-optimizer-ui)
+- SQLite via Drizzle ORM for server-side sessions and builds (feature/PROJ-002-optimizer-ui)
+
+- TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react (feature/PROJ-002-optimizer-ui)
+- SQLite via Drizzle ORM for server-side sessions; localStorage for anonymous ID only (feature/PROJ-002-optimizer-ui)
+
 - N/A (configuration files only) (001-workflow-foundation)
 
 - TypeScript 5.9.x with Bun runtime (001-workflow-foundation)
@@ -34,11 +40,11 @@ TypeScript 5.9.x with Bun runtime: Follow standard conventions
 
 ## Recent Changes
 
+- feature/PROJ-002-optimizer-ui: Added TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react, drizzle-orm, better-sqlite3
+
+- feature/PROJ-002-optimizer-ui: Added TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react
+
 - feature/PROJ-002-optimizer-ui: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-
-- 001-workflow-foundation: Added TypeScript 5.9.x with Bun runtime
-
-- 002-optimizer-ui: Added React 19 with Client Components
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

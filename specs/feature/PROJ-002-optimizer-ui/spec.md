@@ -41,7 +41,7 @@ As a player, I want to input my available upgrade resources so that the optimize
 
 **Acceptance Scenarios**:
 
-1. **Given** the resource input panel is displayed, **When** user enters platinum amount, **Then** the value is validated as a positive integer and displayed with formatting (commas for thousands)
+1. **Given** the resource input panel is displayed, **When** user enters gemPower amount, **Then** the value is validated as a positive integer and displayed with formatting (commas for thousands)
 2. **Given** user enters resource amounts, **When** user views the resources summary, **Then** all resource types are displayed with their current values and visual indicators
 3. **Given** user has entered resource values, **When** user modifies a value to zero or empty, **Then** the interface accepts the input and indicates the resource is unavailable
 4. **Given** resource input is complete, **When** user proceeds to optimization, **Then** the resources are validated and passed to the optimization engine
@@ -145,8 +145,8 @@ As a player using my phone during gameplay, I want the interface to work smoothl
 - What happens when optimization takes longer than expected? The interface should show a progress indicator and allow cancellation if processing exceeds a reasonable time.
 - What happens when a user loses network connection during optimization? The interface should handle errors gracefully and allow retry when connection is restored.
 - What happens when a user's saved build contains gems that have been removed from the database? The interface should indicate the deprecated gems and allow removal.
-- What happens when a user has very high resource amounts that exceed display formatting? The interface should format numbers >= 1,000,000 with M suffix (e.g., "1.2M platinum"), numbers >= 1,000 with K suffix (e.g., "15.3K platinum"); exact thresholds: >= 1,000,000 uses M, >= 10,000 uses K.
-- What happens when a user has DI-Lab open in multiple browser tabs and makes conflicting build changes? The interface should allow concurrent edits but show a non-blocking toast warning (auto-dismiss after 5 seconds with pause on hover) when changes are detected from another tab (optimistic UI pattern).
+- What happens when a user has very high resource amounts that exceed display formatting? The interface should format numbers >= 1,000,000 with M suffix (e.g., "1.2M gemPower"), numbers >= 10,000 with K suffix (e.g., "15.3K gemPower"); exact thresholds: >= 1,000,000 uses M, >= 10,000 uses K. Numbers below 10,000 display with comma formatting only (e.g., "9,500").
+- What happens when a user has DI-Lab open in multiple browser tabs and makes conflicting build changes? The interface should allow concurrent edits but show a non-blocking toast warning (auto-dismiss after 5 seconds with pause on hover) when changes are detected from another tab (optimistic UI pattern per FR-008a).
 
 ---
 
@@ -160,7 +160,7 @@ The following flow documents the complete first-time user experience from landin
 4. **Gem Configuration**: User clicks "Add to Build" in modal, gem appears in first available slot with default quality (1) and rank (1)
 5. **Quality/Rank Adjustment**: User uses dropdown selectors on equipped gem card to set quality (1-5) and rank (1-10)
 6. **Additional Gems**: User repeats selection process for additional gems (up to 8 base slots, plus resonance-unlocked slots)
-7. **Resource Input**: User enters available resources (Gem Power, Gem Copy Inventory) in resources panel with real-time validation
+7. **Resource Input**: User enters available resources (Gem Power, Gem Copy Inventory, Telluric Pearls, Telluric Fragments, Fading Embers, Platinum, Crest counts, Dawning Echoes) in resources panel with real-time validation
 8. **Mode Selection (Optional)**: User notes PVE mode is selected by default, can toggle to PVP if desired
 9. **Optimization Trigger**: User clicks "Optimize" button
 10. **Processing State**: Modal overlay appears with progress indicator, user can cancel if needed
@@ -217,7 +217,8 @@ After viewing optimization results, users typically iterate on their build. This
 
 #### Resource Input
 
-- **FR-010**: System MUST provide input fields for upgrade resources (Gem Power and Gem Copy Inventory). Note: Resonance is NOT a manual input; it is auto-calculated from equipped legendary gems.
+- **FR-010**: System MUST provide input fields for upgrade resources: Gem Power, Gem Copy Inventory, Telluric Pearls, Telluric Fragments, Fading Embers, Platinum, and Crest counts (Eternal Legendary Crests, Legendary Crests, Rare Crests). Note: Resonance is NOT a manual input; it is auto-calculated from equipped legendary gems.
+- **FR-010a**: System MUST display platinum-equivalent costs for all resources based on values from currencies-and-materials.csv for cost comparison purposes. **[DEFERRED - Requires external market data integration]**
 - **FR-011**: System MUST validate resource inputs as non-negative integers with debounced feedback (300-500ms delay after user stops typing)
 - **FR-012**: System MUST display resource values with appropriate number formatting
 - **FR-013**: System MUST show a resources summary panel with all configured values
@@ -236,9 +237,10 @@ After viewing optimization results, users typically iterate on their build. This
   - Prevents all form interactions (clicks, keyboard navigation) on the underlying UI
   - Allows cancellation via the Cancel button or Escape key
 - **FR-018**: System MUST display optimization results as prioritized recommendations
-- **FR-019**: System MUST show for each recommendation: target gem, upgrade path, resource cost, expected power gain
+- **FR-019**: System MUST show for each recommendation: target gem, upgrade path (rank progression), resource cost, and expected power gain. **[ADVANCED]** Acquisition paths (how to obtain gems/resources) are a nice-to-have feature showing methods like Elder Rift farming, market purchases, or crafting. Note: FR-052-054 (resource deficit display and acquisition options) are separate in-scope MVP requirements, not part of this advanced feature.
 - **FR-020**: System MUST allow users to expand recommendations for additional details
-- **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), and server-error (backend failure)
+- **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), server-error (backend failure), and rate-limited (HTTP 429 with retry-after guidance showing wait time)
+- **FR-021d**: System MUST handle network connection loss during optimization: detect offline status via navigator.onLine or fetch failure, display "Connection lost" error with retry-when-online option, and queue retry when connection is restored
 - **FR-022**: System MUST handle optimization timeout gracefully:
   - Display a timeout warning after 20 seconds with "Still processing..." message
   - Enable cancellation at any time via Cancel button in the modal overlay
@@ -250,7 +252,7 @@ After viewing optimization results, users typically iterate on their build. This
   - Display a brief "Previous optimization cancelled" message before starting new request
   - Use AbortController to cancel in-flight fetch requests
   - This applies both to rapid button clicks within the same tab and optimization requests from different browser tabs
-- **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors)
+- **FR-021a**: System MUST provide actionable guidance for each error type (e.g., "Add more resources" for insufficient-resources, "Check your gem configuration" for validation errors, "Too many requests - please wait X seconds" for rate-limited with countdown from Retry-After header)
 - **FR-021b**: System MUST implement single retry with fixed 1s delay for transient optimization API failures before displaying error to user (note: single retry only, not exponential backoff which would require multiple retries with increasing delays)
 - **FR-021c**: System MUST display toast notifications with the following specification:
   - **Position**: Top-right corner of viewport
@@ -305,6 +307,14 @@ After viewing optimization results, users typically iterate on their build. This
   - Email enables: build reminders, optimization tips, account recovery
   - Clear indication that email is optional (not required for core functionality)
   - Email validation with confirmation flow
+  - **[DEFERRED - Moved to Out of Scope for MVP, see tasks T115-T116]**
+- **FR-029d**: System MUST handle session invalidation gracefully:
+  - Detect session invalidation when server returns 404/410 for session endpoint
+  - Display "Session expired" toast notification
+  - Automatically create new session with new UUID
+  - Preserve local UI state (gems, resources currently displayed)
+  - Sync preserved state to new session
+  - No data loss for user's current work
 
 #### Gem Information
 
@@ -325,7 +335,29 @@ After viewing optimization results, users typically iterate on their build. This
 - **FR-035**: System MUST provide optimization mode selection (PVP/PVE) with PVE as the default selection
 - **FR-036**: System MUST apply selected mode to optimization algorithm
 - **FR-037**: System MUST display the currently active optimization mode
-- **FR-037a**: System MUST allow optional maximum resource budget constraint input that limits optimization recommendations to a user-specified platinum/pearls ceiling
+- **FR-037a**: System MUST allow optional maximum resource budget constraint input that limits optimization recommendations to a user-specified gemPower ceiling
+- **FR-037b**: System MUST provide an "Advanced Strategies" toggle (default: off) that, when enabled, shows additional optimization paths including Dormant 5-Star Gem Infusion recommendations
+
+#### Awakening Management
+
+- **FR-047**: System MUST track awakened equipment slots (up to 12 slots)
+- **FR-048**: System MUST allow users to toggle awakened status per slot
+- **FR-049**: System MUST include Dawning Echo cost (10,000 Platinum equivalent) in optimization when recommending slot awakening
+- **FR-050**: System MUST calculate resonance impact of awakened slots on wing slot availability
+
+#### Resource Deficit & Acquisition
+
+- **FR-051**: System MUST display GP deficit when resources are insufficient for recommended upgrades
+- **FR-052**: System MUST present three acquisition options when deficit exists:
+  - **Farming Elder Rifts** - Earning rewards through gameplay by running Elder Rifts content
+  - **Market Purchases** - Acquiring items directly from the Market using Platinum currency
+  - **Hybrid Approach** - Combining both farming and market strategies based on availability and efficiency
+- **FR-053**: System MUST show run requirements for crafting paths (e.g., "X runs needed to craft Y gems")
+- **FR-054**: System MUST use the following crafting conversion rates:
+  - 20 Telluric Fragments = 1-star legendary gem = 1 Gem Power when used as fodder
+  - 80 Telluric Fragments = 2-star legendary gem = 4 Gem Power when used as fodder
+  - 320 Fading Embers = 1 Eternal Legendary Crest
+  - 5 Fading Embers = 1 Telluric Pearl (suboptimal vs. saving for Eternal Crest, but viable for minor deficits)
 
 #### Responsive Design
 
@@ -387,9 +419,38 @@ Represents a gem selected by the user with specific configuration:
 
 Represents the user's available upgrade resources:
 
-- **Platinum**: Amount of platinum currency available
-- **Telluric Pearls**: Amount of Telluric Pearls available
-- **Additional Resources**: Other upgrade materials as needed
+- **Gem Power**: Amount of gem power available for upgrades
+- **Gem Instances (Inventory)**: Gems owned but not currently equipped - these can be used as "copies" for rank upgrades (for 5-star gems, any quality counts)
+- **Telluric Pearls**: Used to craft 5-star gems and specific 2-star gems (limited-time event exclusives)
+- **Telluric Fragments**: Used to craft 1-star or 2-star gems
+- **Fading Embers**: Used to craft selected 1-star and 2-star gems, random 1-star and 2-star gems, and Eternal Legendary Crests
+- **Platinum**: Currency for purchasing Legendary gems from the market and Awakening slots (10,000 Platinum per Dawning Echo)
+- **Eternal Legendary Crests**: Guarantees 1-star+ gem drop (can be sold), yields 1 Fading Ember + 1 Telluric Fragment per run
+- **Legendary Crests**: Guarantees 1-star+ gem drop (bound), yields 1 Fading Ember + 1 Telluric Fragment per run
+- **Rare Crests**: 5% chance for 1-star gem, yields 1 Fading Ember + 4 Telluric Fragments per run
+- **Dawning Echoes**: Optional; if user has purchased any, track count for awakened slot capacity
+
+### Gem Inventory (Two-Panel UI Design)
+
+The gem management UI uses a two-panel design similar to the in-game interface:
+
+**Left Panel - Equipped Gems:**
+
+- 24 slots maximum (8 base gear slots + 16 resonance wing slots)
+- Shows gems currently socketed in equipment
+- Click gem to unequip and move to inventory panel
+
+**Right Panel - Inventory Gems:**
+
+- Unlimited slots for owned but unequipped gems
+- Auto-ordered by: Star Rating (5★ > 2★ > 1★) primary, then Rank > Quality > Name secondary
+- Click gem to equip (if slot available)
+
+**Gem Instance Concept:**
+
+- Multiple gems with the same name are different instances, not duplicates
+- For 5-star gems, any quality can be used as upgrade material
+- Higher quality gems can upgrade lower quality gems (e.g., R1 Q4 + R3 Q2 → R4 Q4)
 
 ### OptimizationResult
 
@@ -404,12 +465,23 @@ Represents the output of an optimization calculation:
 
 Represents a single upgrade suggestion:
 
-- **Target Gem**: The gem to upgrade
-- **Current Rank**: Starting rank
+- **Target Gem**: The gem to upgrade or acquire
+- **Current Rank**: Starting rank (for upgrades) or 0 (for new acquisitions)
 - **Target Rank**: Destination rank
-- **Resource Cost**: Resources required for this upgrade
+- **Acquisition Path**: One of: gem-power-upgrade (using Gem Power + Copies), craft-pearl (using Telluric Pearls), craft-fragment (using Telluric Fragments), craft-ember (using Fading Embers), market-buy (using Platinum), crest-run (potential drop from crests)
+- **Resource Cost**: Resources required for this upgrade/acquisition with platinum-equivalent value
+- **Alternative Paths**: Other viable acquisition methods with their costs (for cost comparison)
 - **Power Gain**: Expected improvement in combat rating/resonance
 - **Priority Rank**: Position in the recommendation list
+
+### AwakenedSlot
+
+Represents an awakened equipment slot:
+
+- **Slot Position**: Which gear slot is awakened (1-12 possible slots)
+- **Awakened Status**: Boolean indicating if slot is awakened
+- **Dawning Echo Cost**: 10,000 Platinum or 1,000 Orbs per awakening
+- **Resonance Benefit**: Additional resonance capacity from having this slot awakened
 
 ### SavedBuild
 
@@ -433,6 +505,8 @@ Represents an anonymous user session:
 - **Created At**: Session creation timestamp
 - **Last Active**: Last activity timestamp
 - **Session State**: Current gems, resources, optimization mode
+
+> **Terminology Convention**: Code uses camelCase (e.g., `gemPower`, `inventoryGems`), while UI displays use Title Case (e.g., "Gem Power", "Inventory Gems"). The UI uses a two-panel design: Left (Equipped Gems) and Right (Inventory Gems). See [`data-model.md`](./data-model.md#terminology-convention) for the complete terminology mapping table.
 
 ---
 
@@ -474,8 +548,14 @@ Optimizer Page
 |   |-- Summary Stats (auto-calculated resonance total, CR totals, unlocked wing slots indicator)
 |-- Resources Panel
 |   |-- Resource Input Fields
-|   |   |-- Platinum Input
+|   |   |-- Gem Power Input
+|   |   |-- Gem Copy Inventory (per gem)
 |   |   |-- Telluric Pearls Input
+|   |   |-- Telluric Fragments Input
+|   |   |-- Fading Embers Input
+|   |   |-- Platinum Input
+|   |   |-- Crest Inputs (Eternal, Legendary, Rare)
+|   |   |-- Dawning Echoes Input
 |   |-- Resources Summary Display
 |   |-- Note: Resonance displayed in Equipped Gems Panel, not here
 |-- Optimization Controls
@@ -555,8 +635,14 @@ The UI requires management of the following state:
 
 #### Resource State
 
-- **Platinum Amount**: User-entered platinum value
-- **Pearls Amount**: User-entered Telluric Pearls value
+- **Gem Power**: Amount of gem power available for upgrades
+- **Gem Copy Inventory**: Map of gem IDs to quantities for rank upgrades via copies
+- **Telluric Pearls**: Amount available for 5-star and event-exclusive 2-star gem crafting
+- **Telluric Fragments**: Amount available for 1-star and 2-star gem crafting
+- **Fading Embers**: Amount available for gem crafting and Eternal Crest purchases
+- **Platinum Amount**: User-entered platinum value for market purchases and awakening
+- **Crest Counts**: Eternal Legendary Crests, Legendary Crests, Rare Crests counts
+- **Dawning Echoes**: Count of purchased Dawning Echoes (for awakened slot tracking)
 - **Validation State**: Whether inputs are valid
 
 #### Optimization State
@@ -675,10 +761,73 @@ The following items are explicitly out of scope for this UI specification:
 8. **Build Sharing**: Sharing builds with other users is future work
 9. **Analytics Dashboard**: Historical tracking and analytics are future work
 10. **Localization**: Multi-language support is future work
+11. **Platinum-Equivalent Cost Display (FR-010a)**: External market data integration exceeds MVP complexity - deferred to future version
+12. **Email Opt-in Feature (FR-029c)**: Email collection and verification flow deferred to future implementation (see tasks T115-T116)
 
 ---
 
 ## Clarifications
+
+### Session 2026-02-17 (Artifact Alignment Remediation)
+
+- Q: Should FR-010a (Platinum-Equivalent Costs) be included in MVP?
+  A: **Moved to Out of Scope** - External market data integration exceeds MVP complexity. Task T036a marked as DEFERRED.
+
+- Q: How should gems be organized in the UI?
+  A: **Two-panel inventory design** - Left panel shows equipped gems (24 slots: 8 base + 16 wing), right panel shows inventory gems (unlimited slots, auto-ordered by: 5-star > 2-star > 1-star primary, Rank > Quality > Name secondary). Users can click to equip/unequip gems between panels.
+
+- Q: What are "gem copies" in the context of rank upgrades?
+  A: **Gem instances, not duplicates** - Multiple gems with the same name are different instances. For 5-star gems, any quality can be used as upgrade material. Higher quality gems can upgrade lower quality gems (e.g., R1 Q4 + R3 Q2 → R4 Q4). Renamed `copyInventory` to `inventoryGems` to reflect this.
+
+- Q: What about acquisition paths in FR-019?
+  A: **Advanced feature** - Acquisition paths (how to obtain gems: Elder Rift, market, crafting) are nice-to-have, not MVP. Tasks T069f-T069h marked as DEFERRED.
+
+- Q: Should FR-029c (Email Opt-in) be active or deferred?
+  A: **Confirmed as DEFERRED** - FR-029c marked with DEFERRED tag pointing to tasks T115-T116. Added to Out of Scope section for clarity.
+
+- Q: Should artifact versions be synchronized?
+  A: **Yes, unified to v2.0.0** - All artifacts (spec.md, tasks.md, data-model.md, plan.md) now use version 2.0.0.
+
+### Session 2026-02-17 (Resource System Expansion)
+
+- Q: What should the optimization scope include for resources?
+  A: **Full resource model** - All resources: Gem Power, Gem Copies, Telluric Pearls, Telluric Fragments, Fading Embers, Platinum, Crest counts. Optimizer considers both crafting and upgrading paths. The interconnected mechanics (Crests → Embers/Fragments → Gems → Upgrades) should be modeled for accurate recommendations.
+
+- Q: Should the optimizer include Crest run planning/simulation as an optimization path?
+  A: **Crest as resource input only** - Users input crest counts as resources. Optimizer shows potential gem drops from crest runs, but doesn't simulate specific run schedules or slot mechanics. Full Crest simulation with slot batching and pity tracking is deferred to a future version.
+
+- Q: Should the optimizer include Awakened slot management?
+  A: **Full Awakening support** - Track awakened slots (purchased with Dawning Echoes), include 10,000 Platinum cost as optimization constraint, model resonance gains from awakening. Each awakened slot costs 1 Dawning Echo (1,000 Orbs or 10,000 Platinum). Optimizer can recommend awakening slots as part of optimization strategy when resonance gains justify the cost.
+
+- Q: Should the optimizer track weekly caps and pity progress?
+  A: **No tracking** - Don't track weekly caps or pity. Users manually enter their crest counts, optimizer shows expected outcomes without state tracking. Weekly cap and pity tracking would require persistent state across sessions, significantly increasing complexity. Users can manually adjust crest inputs based on their in-game progress.
+
+- Q: How should the optimizer prioritize crafting vs. market buying for gems?
+  A: **Cost-based comparison** - Compare platinum-equivalent costs of crafting vs. buying, recommend the cheaper path. Show both options with costs for user decision. The currencies-and-materials.csv provides exact Platinum values for all materials, enabling accurate cost comparison between crafting paths and market purchases.
+
+### Session 2026-02-17 (Resource Calculation Mechanics)
+
+- Q: How should the optimizer present crafting vs. upgrade recommendations when Gems can be crafted and used as fodder?
+  A: **Unified crafting-upgrade path** - Show combined recommendations like "Craft 1-star gem (20 Fragments) → Use as fodder for +1 GP" as part of upgrade recommendations when Fragment resources are available. Users with spare Fragments want to know the optimal path to power gain, whether it's direct upgrade or craft-then-fodder.
+
+- Q: Should the optimizer include Dormant 5-Star Gem Infusion recommendations?
+  A: **Infusion as advanced option** - Add an "Advanced Strategies" toggle. When enabled, show infusion recommendations for dormant 5-star gems. Default off to avoid overwhelming new users. The infusion mechanic allows dormant 5-star gems in awakened slots to gain additional resonance by socketing source gems and infusing with GP. This provides an alternative to traditional extraction/upgrade paths.
+
+- Q: What acquisition guidance should the optimizer provide when resources are insufficient?
+  A: **Three-path acquisition overview** - When GP deficit exists, present three acquisition options with concise descriptions:
+  1. **Farming Elder Rifts** - Earning rewards through gameplay by running Elder Rifts content
+  2. **Market Purchases** - Acquiring items directly from the Market using Platinum currency
+  3. **Hybrid Approach** - Combining both farming and market strategies based on availability and efficiency
+     No guides, no references, no external links. Keep descriptions concise and informational only.
+
+- Q: Should the optimizer include weekly resource projections based on typical play patterns?
+  A: **Run calculator only** - Show "X runs needed to craft Y gems" without weekly projections. Let users map runs to their own play schedule. Different players have different weekly capacities; showing run requirements lets them plan according to their own situation.
+
+- Q: Should the optimizer integrate with or reference diablo.tv's Builder tool?
+  A: **No integration** - Keep spec as-is with diablo.tv mentioned in documentation only. Focus on DI-Lab's optimization features independently. Build import would add API dependency on an external service. Starting with manual gem entry keeps DI-Lab self-contained.
+
+- Q: What is the Telluric Pearl conversion rate from Fading Embers?
+  A: **5 Fading Embers = 1 Telluric Pearl** - This exchange is suboptimal compared to the player-preferred strategy of saving 320 Fading Embers for an Eternal Legendary Crest, but it remains a viable option for bridging minor resource deficits. The optimizer should show this conversion when Telluric Pearls are the bottleneck resource.
 
 ### Session 2026-02-17 (Continued)
 
@@ -719,6 +868,39 @@ The following items are explicitly out of scope for this UI specification:
 
 - Q: What storage architecture should the application use?
   A: Database with anonymous sessions (device fingerprinting) + optional opt-in email. localStorage used only for device fingerprint storage and offline fallback. Server-side database stores all session state and builds. Battle.net linking is future work (out of scope for this version). This provides persistent data across devices while maintaining low-friction anonymous usage.
+
+### Session 2026-02-17 (Rate Limiting)
+
+- Q: Should FR-021 include rate limiting (HTTP 429) as an error type?
+  A: **Add rate-limited error type** - FR-021 now includes "rate-limited" error with retry-after guidance showing wait time. Rate limiting is a common API protection pattern and including it provides graceful degradation during high-traffic periods.
+
+### Session 2026-02-17 (Analysis Findings Resolution)
+
+- Q: FR-019 states "Acquisition paths...are a nice-to-have feature" but also mentions FR-052-054 as in-scope MVP requirements - is this a scope conflict?
+  A: **No conflict - different features** - FR-019 "acquisition paths" (Elder Rift farming guides, market purchase strategies) are advanced/nice-to-have. FR-052-054 (resource deficit display with three-path overview) are MVP scope. Tasks T069f-h correctly marked DEFERRED for acquisition paths.
+
+- Q: Line 148 shows inconsistent K suffix thresholds (">= 1,000" vs ">= 10,000") - which is correct?
+  A: **K suffix applies >= 10,000** - The correct thresholds are: >= 1,000,000 uses M suffix, >= 10,000 uses K suffix. Numbers below 10,000 display with comma formatting only (e.g., "9,500" not "9.5K"). Tasks T007 and T035 correctly implement this threshold. The ">= 1,000 with K suffix" in line 148 was a typo; corrected to ">= 10,000 uses K suffix".
+
+- Q: Does T033 (ResourceInput) include awakened slots panel?
+  A: **No, separate tasks** - T033 creates ResourceInput for gemPower, inventoryGems, telluric materials, platinum, crestCounts, and dawningEchoes. Awakened slots panel is T069a-T069d (separate component). This separation is correct - ResourceInput handles resources, AwakenedSlotsPanel handles slot management.
+
+- Q: Is T022 duplication of FR-006 slot configuration a problem?
+  A: **No, implementation reference** - T022 creates `SLOT_CONFIG` constant derived from FR-006 thresholds. This is proper implementation practice - code should define constants that spec references. T022 should import/use FR-006 values to avoid hardcoding. Documented in task notes.
+
+- Q: Is "inventoryGems" (code) vs "Gem Copy Inventory" (UI) terminology inconsistent?
+  A: **Intentional convention** - Code uses camelCase (`inventoryGems`), UI displays Title Case ("Gem Power", "Inventory Gems"). This is documented in spec.md:509 and tasks.md:521. Consistent with project conventions.
+
+- Q: Does FR-021 rate-limited error have implementation task coverage?
+  A: **Covered by T060-T061** - Toast component (T060) and error display component (T061) handle all FR-021 error types including rate-limited. No additional task needed. HTTP 429 handling with retry-after countdown is in scope.
+
+- Q: SC-007 defines mid-range mobile devices but no device-specific testing task exists - should one be added?
+  A: **Add manual QA task** - Reference devices (Pixel 4a, Galaxy A52, Moto G Power) should be tested during Phase 10 Polish. Added as T090a for manual performance validation on reference devices.
+
+### Session 2026-02-17 (Session Invalidation)
+
+- Q: What should happen when the server cannot find or validate a user's session (server restart, database cleanup, corrupted session ID)?
+  A: **Graceful degradation with transparent recreation** - Show "Session expired" toast notification, create new session automatically, preserve local state (gems, resources from current UI state). Users shouldn't lose work or see cryptic errors. Added FR-029d to specify this behavior.
 
 ### Session 2026-02-14
 
@@ -805,4 +987,4 @@ The following items are explicitly out of scope for this UI specification:
 
 ---
 
-**Version**: 1.2.0 | **Last Updated**: 2026-02-17
+**Version**: 2.0.0 | **Last Updated**: 2026-02-17
