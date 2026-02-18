@@ -338,7 +338,7 @@
 ### Integration Testing
 
 - [ ] T111 Manual usability validation for SC-003 (90% gem addition success rate)
-- [ ] T112 Manual usability validation for SC-008 (95% result comprehension)
+- [ ] T112 Manual usability validation for SC-008 via task-based assessment: user correctly identifies (1) top priority recommendation, (2) why it's ranked first, and (3) which resources consumed. Conduct moderated testing with 20+ participants.
 - [ ] T113 Final integration testing and bug fixes
 
 ### CSP and Security
@@ -527,7 +527,10 @@ The following optimization engine files exist and are complete:
 - **Two-Panel UI**: Left panel = Equipped Gems (24 slots: 8 base + 16 wing), Right panel = Inventory Gems (unlimited, auto-ordered by star > rank > quality > name)
 - **Error Types**: FR-021 includes rate-limited (HTTP 429) with Retry-After header support
 - **Acquisition Paths**: FR-052-054 (three-path overview, run calculator, crafting rates) are MVP scope per spec.md clarification
+- **Visual Hierarchy (FR-002a)**: Uniform card size (120x160px minimum), 16px gap, 5-star gems with gold border (2px), tier badges with color coding (S=gold #FFD700, A=silver #C0C0C0, B=bronze #CD7F32, C/D=gray #808080)
+- **Interaction States (FR-016b)**: All interactive elements must define hover (+10% bg-opacity, scale 1.02), focus (2px ring outline), active (scale 0.98), disabled (opacity 50%), loading (spinner + disabled)
+- **Color Contrast (FR-045)**: Normal text 4.5:1, large text 3:1, UI components 3:1 minimum. Error states use #DC2626 with white text for 4.8:1 contrast
 
 ---
 
-**Version**: 2.0.0 | **Last Updated**: 2026-02-17
+**Version**: 2.2.0 | **Last Updated**: 2026-02-18

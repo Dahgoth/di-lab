@@ -1,6 +1,6 @@
 # di-lab Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-02-14
+Auto-generated from all feature plans. Last updated: 2026-02-18
 
 ## Active Technologies
 
@@ -41,10 +41,6 @@ TypeScript 5.9.x with Bun runtime: Follow standard conventions
 ## Recent Changes
 
 - feature/PROJ-002-optimizer-ui: Added TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react, drizzle-orm, better-sqlite3
-
-- feature/PROJ-002-optimizer-ui: Added TypeScript 5.9.x with Bun runtime + Next.js 16, React 19, Tailwind CSS 4, Zod 4, lucide-react
-
-- feature/PROJ-002-optimizer-ui: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
