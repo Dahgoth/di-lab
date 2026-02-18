@@ -151,10 +151,10 @@
 
 ### API Endpoint
 
-- [ ] T048 [US3] Create `src/app/api/optimize/route.ts` POST endpoint per contracts/optimize-api.schema.json
-- [ ] T049 [US3] Add request validation with Zod schemas from `src/lib/utils/validation.ts` using corrected resource model (gemPower + inventoryGems)
-- [ ] T050 [US3] Add typed error responses: validation (400), insufficient-resources (422), timeout (408), server-error (500), rate-limited (429 with Retry-After header) per FR-021
-- [ ] T051 [US3] Add 30-second timeout with AbortController for optimization requests (FR-022)
+- [x] T048 [US3] Create `src/app/api/optimize/route.ts` POST endpoint per contracts/optimize-api.schema.json
+- [x] T049 [US3] Add request validation with Zod schemas from `src/lib/utils/validation.ts` using corrected resource model (gemPower + inventoryGems)
+- [x] T050 [US3] Add typed error responses: validation (400), insufficient-resources (422), timeout (408), server-error (500), rate-limited (429 with Retry-After header) per FR-021
+- [x] T051 [US3] Add 30-second timeout with AbortController for optimization requests (FR-022)
 
 ### Optimization UI Components
 
