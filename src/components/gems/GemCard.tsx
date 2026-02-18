@@ -1,12 +1,14 @@
 /**
  * GemCard component for DI-Lab
  * Displays a single gem in the catalog grid with visual hierarchy (FR-002, FR-002a, FR-003)
+ * Enhanced with tooltip support for quick gem summaries (FR-034)
  */
 
 "use client";
 
 import type { LegendaryGem, TierRanking } from "@/types";
 import { Plus, Info } from "lucide-react";
+import { GemSummaryTooltip } from "@/components/ui";
 
 // ============================================================================
 // Types
@@ -25,6 +27,10 @@ export interface GemCardProps {
   selected?: boolean;
   /** Show add button */
   showAddButton?: boolean;
+  /** Show tooltip on hover/tap */
+  showTooltip?: boolean;
+  /** Short description for tooltip */
+  shortDescription?: string;
   /** Additional className */
   className?: string;
 }
@@ -77,6 +83,8 @@ export default function GemCard({
   compact = false,
   selected = false,
   showAddButton = true,
+  showTooltip = false,
+  shortDescription,
   className = "",
 }: GemCardProps) {
   // Handle 5-star gold border (FR-002a)
@@ -88,27 +96,24 @@ export default function GemCard({
   // Star display
   const starDisplay = "★".repeat(gem.starRating);
 
-  if (compact) {
-    return (
-      <div
-        onClick={onClick}
-        className={`
-          flex items-center gap-2 p-2 rounded-lg
-          ${borderStyle}
-          ${selected ? "ring-2 ring-blue-500" : ""}
-          ${onClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""}
-          ${className}
-        `
-          .replace(/\s+/g, " ")
-          .trim()}
-      >
-        <span className="text-xs font-medium truncate">{gem.name}</span>
-        <span className="text-yellow-500 text-xs">{starDisplay}</span>
-      </div>
-    );
-  }
-
-  return (
+  // Card content without tooltip wrapper
+  const cardContent = compact ? (
+    <div
+      onClick={onClick}
+      className={`
+        flex items-center gap-2 p-2 rounded-lg
+        ${borderStyle}
+        ${selected ? "ring-2 ring-blue-500" : ""}
+        ${onClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""}
+        ${className}
+      `
+        .replace(/\s+/g, " ")
+        .trim()}
+    >
+      <span className="text-xs font-medium truncate">{gem.name}</span>
+      <span className="text-yellow-500 text-xs">{starDisplay}</span>
+    </div>
+  ) : (
     <div
       onClick={onClick}
       className={`
@@ -224,4 +229,22 @@ export default function GemCard({
       </div>
     </div>
   );
+
+  // Wrap with tooltip if enabled
+  if (showTooltip && !compact) {
+    return (
+      <GemSummaryTooltip
+        name={gem.name}
+        starRating={gem.starRating}
+        pvpTier={gem.pvpTier}
+        pveTier={gem.pveTier}
+        shortDescription={shortDescription}
+        source={gem.source}
+      >
+        {cardContent}
+      </GemSummaryTooltip>
+    );
+  }
+
+  return cardContent;
 }

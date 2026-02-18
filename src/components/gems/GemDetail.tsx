@@ -1,13 +1,29 @@
 /**
  * GemDetail component for DI-Lab
  * Modal showing full gem information with close button, ESC key support, click-outside close (FR-030, FR-030a)
+ * Enhanced with upgrade costs (FR-032), tier rankings (FR-033), and resonance values (T082-T084)
  */
 
 "use client";
 
-import type { LegendaryGem, TierRanking, GemEffect } from "@/types";
+import type {
+  LegendaryGem,
+  TierRanking,
+  GemEffect,
+  StarRating,
+  Quality,
+} from "@/types";
 import { Modal } from "@/components/ui";
 import { formatStarRating } from "@/lib/utils/formatting";
+import {
+  ONE_STAR_RESONANCE,
+  TWO_STAR_RESONANCE,
+  FIVE_STAR_RESONANCE,
+  ONE_STAR_CR,
+  TWO_STAR_CR,
+  FIVE_STAR_CR,
+  GEM_POWER_COSTS,
+} from "@/lib/optimization/constants";
 
 // ============================================================================
 // Types
@@ -46,6 +62,59 @@ const effectCategoryColors: Record<string, string> = {
   LOC: "bg-pink-100 text-pink-800 border-pink-300",
   TLOC: "bg-pink-100 text-pink-800 border-pink-300",
 };
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Get resonance value for a gem at a specific rank and quality
+ */
+function getResonanceValue(
+  starRating: StarRating,
+  rank: number,
+  quality?: number,
+): number {
+  switch (starRating) {
+    case 1:
+      return ONE_STAR_RESONANCE[rank] ?? 0;
+    case 2:
+      return TWO_STAR_RESONANCE[rank] ?? 0;
+    case 5:
+      const q = (quality ?? 2) as 2 | 3 | 4 | 5;
+      return FIVE_STAR_RESONANCE[q]?.[rank] ?? 0;
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Get CR value for a gem at a specific rank and quality
+ */
+function getCRValue(
+  starRating: StarRating,
+  rank: number,
+  quality?: number,
+): number {
+  switch (starRating) {
+    case 1:
+      return ONE_STAR_CR[rank] ?? 0;
+    case 2:
+      return TWO_STAR_CR[rank] ?? 0;
+    case 5:
+      const q = (quality ?? 2) as 2 | 3 | 4 | 5;
+      return FIVE_STAR_CR[q]?.[rank] ?? 0;
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Get gem power cost for upgrading to next rank
+ */
+function getGemPowerCost(starRating: StarRating, fromRank: number): number {
+  return GEM_POWER_COSTS[starRating]?.[fromRank] ?? 0;
+}
 
 // ============================================================================
 // Component
@@ -147,6 +216,22 @@ export default function GemDetail({
           </div>
         </div>
 
+        {/* Resonance Values Table (T084) */}
+        <div>
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+            Resonance Values by Rank
+          </h4>
+          <ResonanceTable starRating={gem.starRating} />
+        </div>
+
+        {/* Upgrade Costs Table (T082) */}
+        <div>
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+            Gem Power Upgrade Costs
+          </h4>
+          <UpgradeCostTable starRating={gem.starRating} />
+        </div>
+
         {/* Info Box */}
         {gem.starRating === 5 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -217,6 +302,162 @@ function EffectCard({ effect }: EffectCardProps) {
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Resonance Table Component (T084)
+// ============================================================================
+
+interface ResonanceTableProps {
+  starRating: StarRating;
+}
+
+function ResonanceTable({ starRating }: ResonanceTableProps) {
+  const ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  if (starRating === 5) {
+    // 5-star gems have different resonance per quality
+    const qualities: Quality[] = [2, 3, 4, 5];
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm border border-gray-200 rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+                Rank
+              </th>
+              {qualities.map((q) => (
+                <th
+                  key={q}
+                  className="px-3 py-2 text-center font-medium text-gray-600 border-b"
+                >
+                  Q{q}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {ranks.map((rank, idx) => (
+              <tr
+                key={rank}
+                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="px-3 py-2 font-medium text-gray-700 border-b">
+                  {rank}
+                </td>
+                {qualities.map((q) => (
+                  <td
+                    key={q}
+                    className="px-3 py-2 text-center text-gray-600 border-b"
+                  >
+                    {getResonanceValue(5, rank, q).toLocaleString()}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  // 1-star and 2-star gems have flat resonance per rank
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+              Rank
+            </th>
+            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+              Resonance
+            </th>
+            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+              CR
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {ranks.map((rank, idx) => (
+            <tr
+              key={rank}
+              className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+            >
+              <td className="px-3 py-2 font-medium text-gray-700 border-b">
+                {rank}
+              </td>
+              <td className="px-3 py-2 text-center text-gray-600 border-b">
+                {getResonanceValue(starRating, rank).toLocaleString()}
+              </td>
+              <td className="px-3 py-2 text-center text-gray-600 border-b">
+                {getCRValue(starRating, rank).toLocaleString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ============================================================================
+// Upgrade Cost Table Component (T082)
+// ============================================================================
+
+interface UpgradeCostTableProps {
+  starRating: StarRating;
+}
+
+function UpgradeCostTable({ starRating }: UpgradeCostTableProps) {
+  const ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const costs = GEM_POWER_COSTS[starRating];
+
+  if (!costs) {
+    return (
+      <p className="text-sm text-gray-500">
+        Upgrade costs not available for this gem type.
+      </p>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+              From Rank
+            </th>
+            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+              To Rank
+            </th>
+            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+              Gem Power Cost
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {ranks.slice(0, -1).map((rank, idx) => (
+            <tr
+              key={rank}
+              className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+            >
+              <td className="px-3 py-2 font-medium text-gray-700 border-b">
+                {rank}
+              </td>
+              <td className="px-3 py-2 text-center text-gray-600 border-b">
+                {rank + 1}
+              </td>
+              <td className="px-3 py-2 text-center text-gray-600 border-b">
+                {(costs[rank] ?? 0).toLocaleString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

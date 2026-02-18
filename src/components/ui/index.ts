@@ -60,3 +60,9 @@ export {
   ScreenReaderAnnouncer,
   useScreenReader,
 } from "./ScreenReaderAnnouncer";
+export {
+  default as Tooltip,
+  GemSummaryTooltip,
+  type TooltipProps,
+  type GemSummaryTooltipProps,
+} from "./Tooltip";

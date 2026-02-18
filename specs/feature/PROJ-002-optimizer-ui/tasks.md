@@ -246,15 +246,15 @@
 
 ### Enhanced Gem Detail
 
-- [ ] T082 [US5] Add upgrade cost table to `src/components/gems/GemDetail.tsx` showing resource costs per rank (FR-032)
-- [ ] T083 [US5] Add tier ranking display (PVP and PVE: S/A/B/C/D) to `src/components/gems/GemDetail.tsx` (FR-033)
-- [ ] T084 [US5] Add resonance values display per quality/rank to `src/components/gems/GemDetail.tsx`
-- [ ] T085 [US5] Add categorized effects display (OFF, DEF, ALL, DOT, LOC, TLOC) with descriptions to `src/components/gems/GemDetail.tsx` (FR-031)
+- [x] T082 [US5] Add upgrade cost table to `src/components/gems/GemDetail.tsx` showing resource costs per rank (FR-032)
+- [x] T083 [US5] Add tier ranking display (PVP and PVE: S/A/B/C/D) to `src/components/gems/GemDetail.tsx` (FR-033)
+- [x] T084 [US5] Add resonance values display per quality/rank to `src/components/gems/GemDetail.tsx`
+- [x] T085 [US5] Add categorized effects display (OFF, DEF, ALL, DOT, LOC, TLOC) with descriptions to `src/components/gems/GemDetail.tsx` (FR-031)
 
 ### Tooltips
 
-- [ ] T086 [US5] Create `src/components/ui/Tooltip.tsx` for quick gem summaries on desktop hover (FR-034)
-- [ ] T087 [US5] Implement mobile tooltip alternative with tap-to-reveal info button for touch devices (FR-034)
+- [x] T086 [US5] Create `src/components/ui/Tooltip.tsx` for quick gem summaries on desktop hover (FR-034)
+- [x] T087 [US5] Implement mobile tooltip alternative with tap-to-reveal info button for touch devices (FR-034)
 
 **Checkpoint**: At this point, User Story 5 is complete - full gem information available
 
