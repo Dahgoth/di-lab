@@ -44,7 +44,10 @@ import {
   AlertCircle,
   Save,
   AlertTriangle,
+  Sword,
+  Shield,
 } from "lucide-react";
+import type { OptimizationMode } from "@/types/gem";
 
 // ============================================================================
 // Mock Gem Database (will be replaced with real data)
@@ -633,6 +636,16 @@ export default function OptimizePage() {
     [updateSessionState],
   );
 
+  // Handle optimization mode change (T096)
+  const handleOptimizationModeChange = useCallback(
+    (mode: OptimizationMode) => {
+      updateSessionState({
+        optimizationMode: mode,
+      });
+    },
+    [updateSessionState],
+  );
+
   // Handle viewing gem details
   const handleViewGemDetail = useCallback((gemId: string) => {
     setSelectedGemId(gemId);
@@ -783,6 +796,48 @@ export default function OptimizePage() {
               </div>
               <CardBody>
                 <div className="space-y-4">
+                  {/* Optimization Mode Toggle (T096) */}
+                  <div className="pb-3 border-b border-gray-200">
+                    <div className="text-sm text-gray-500 mb-2">
+                      Optimization Mode
+                    </div>
+                    <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => handleOptimizationModeChange("PVE")}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                          optimizationMode === "PVE"
+                            ? "bg-purple-600 text-white"
+                            : "bg-white text-gray-700 hover:bg-gray-50"
+                        }`}
+                        aria-pressed={optimizationMode === "PVE"}
+                        aria-label="PVE Mode"
+                      >
+                        <Shield className="w-4 h-4" />
+                        <span>PVE</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleOptimizationModeChange("PVP")}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+                          optimizationMode === "PVP"
+                            ? "bg-purple-600 text-white"
+                            : "bg-white text-gray-700 hover:bg-gray-50"
+                        }`}
+                        aria-pressed={optimizationMode === "PVP"}
+                        aria-label="PVP Mode"
+                      >
+                        <Sword className="w-4 h-4" />
+                        <span>PVP</span>
+                      </button>
+                    </div>
+                    <p className="mt-1.5 text-xs text-gray-400">
+                      {optimizationMode === "PVE"
+                        ? "Optimizing for dungeons and raids"
+                        : "Optimizing for battlegrounds and arenas"}
+                    </p>
+                  </div>
+
                   {/* Total Resonance */}
                   <div>
                     <div className="text-sm text-gray-500">Total Resonance</div>

@@ -29,6 +29,12 @@ export interface ResourceInputProps {
   debounceMs?: number;
   /** Show inventory gems panel */
   showInventoryGems?: boolean;
+  /** Optional maximum resource budget constraint (T099) */
+  maxBudget?: number;
+  /** Called when max budget changes */
+  onMaxBudgetChange?: (budget: number | undefined) => void;
+  /** Show advanced options */
+  showAdvancedOptions?: boolean;
 }
 
 // ============================================================================
@@ -105,9 +111,14 @@ export default function ResourceInput({
   gemDatabase,
   debounceMs = 300,
   showInventoryGems = true,
+  maxBudget,
+  onMaxBudgetChange,
+  showAdvancedOptions = false,
 }: ResourceInputProps) {
   // Local state for immediate display
   const [localResources, setLocalResources] = useState(resources);
+  const [localMaxBudget, setLocalMaxBudget] = useState(maxBudget ?? 0);
+  const [budgetEnabled, setBudgetEnabled] = useState(maxBudget !== undefined);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync with external state
@@ -330,6 +341,48 @@ export default function ResourceInput({
           </div>
         </div>
       </div>
+
+      {/* Advanced Options - Budget Constraint (T099) */}
+      {showAdvancedOptions && (
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium text-gray-700">
+              Budget Constraint
+            </h4>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={budgetEnabled}
+                onChange={(e) => {
+                  setBudgetEnabled(e.target.checked);
+                  if (!e.target.checked && onMaxBudgetChange) {
+                    setLocalMaxBudget(0);
+                    onMaxBudgetChange(undefined);
+                  }
+                }}
+                className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              />
+              <span className="text-sm text-gray-600">Enable</span>
+            </label>
+          </div>
+          {budgetEnabled && (
+            <ResourceField
+              label="Maximum Gem Power Budget"
+              value={localMaxBudget}
+              onChange={(value) => {
+                setLocalMaxBudget(value);
+                if (onMaxBudgetChange) {
+                  onMaxBudgetChange(value);
+                }
+              }}
+              placeholder="No limit"
+              helperText="Optimization will respect this budget limit"
+              min={0}
+              debounceMs={debounceMs}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

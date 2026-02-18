@@ -293,20 +293,20 @@
 
 ### Optimization Mode Selection
 
-- [ ] T096 [US6] Add PVP/PVE mode toggle to optimization controls in `src/app/optimize/page.tsx` with PVE default and active mode display (FR-035, FR-037)
-- [ ] T097 [US6] Update optimization engine in `src/lib/optimization/engine.ts` to respect mode selection when ranking recommendations (FR-036)
-- [ ] T098 [US6] Pass optimization mode to `/api/optimize` endpoint and include in response (FR-036)
+- [x] T096 [US6] Add PVP/PVE mode toggle to optimization controls in `src/app/optimize/page.tsx` with PVE default and active mode display (FR-035, FR-037)
+- [x] T097 [US6] Update optimization engine in `src/lib/optimization/engine.ts` to respect mode selection when ranking recommendations (FR-036)
+- [x] T098 [US6] Pass optimization mode to `/api/optimize` endpoint and include in response (FR-036)
 
 ### Resource Budget Constraints
 
-- [ ] T099 [US6] Add optional maximum resource budget constraint input in `src/components/optimization/ResourceInput.tsx` (FR-037a)
-- [ ] T100 [US6] Update optimization engine to respect resource budget constraints when generating recommendations
+- [x] T099 [US6] Add optional maximum resource budget constraint input in `src/components/optimization/ResourceInput.tsx` (FR-037a)
+- [x] T100 [US6] Update optimization engine to respect resource budget constraints when generating recommendations
 
 ### Advanced Strategies
 
-- [ ] T100a [US6] Add "Advanced Strategies" toggle (default: off) to optimization controls in `src/app/optimize/page.tsx` (FR-037b)
-- [ ] T100b [US6] Implement dormant 5-star gem infusion recommendations when Advanced Strategies is enabled in `src/lib/optimization/engine.ts` (FR-037b)
-- [ ] T100c [US6] Add infusion path display in recommendation cards showing source gem and GP requirements (FR-037b)
+- [ ] T100a [US6] [DEFERRED] Add "Advanced Strategies" toggle (default: off) to optimization controls in `src/app/optimize/page.tsx` (FR-037b) - Requires engine changes for infusion
+- [ ] T100b [US6] [DEFERRED] Implement dormant 5-star gem infusion recommendations when Advanced Strategies is enabled in `src/lib/optimization/engine.ts` (FR-037b) - Complex feature requiring engine refactoring
+- [ ] T100c [US6] [DEFERRED] Add infusion path display in recommendation cards showing source gem and GP requirements (FR-037b) - Depends on T100b
 
 **Checkpoint**: At this point, User Story 6 is complete - advanced optimization features available
 
