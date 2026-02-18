@@ -2,230 +2,121 @@
 
 ## Current State
 
-**Project Status**: 🔄 Optimization Engine Implemented - Core Algorithm Complete
+**Project Status**: ✅ MVP Complete - Optimization Flow Implemented
 
-The optimization engine has been implemented with the following components:
+The MVP (Phases 1-5) has been fully implemented with all core user stories:
 
-- **Weighted Greedy Algorithm** with O(n log n) complexity
-- **Power Formula**: `(Resonance × 1.0 + CR × 2.0) × tierMultiplier × thresholdBonus × diminishingFactor`
-- **Tier Weights**: S=1.5, A=1.3, B=1.1, C=0.9, D=0.7
-- **15 unit tests passing** for the optimization engine
+- **User Story 1 (P1)**: Gem Inventory Entry - Select, configure, and manage equipped gems
+- **User Story 2 (P1)**: Resource Specification - Input and validate upgrade resources
+- **User Story 3 (P1)**: Optimization Execution & Results - Run optimization and view recommendations
 
-The workflow foundation has been fully implemented with all 66 tasks complete:
+### Implemented Components
 
-- Conventional commit enforcement via commitlint
-- Pre-commit hooks for code quality (lint + typecheck)
-- Automated changelog via release-please-action
-- Complete project documentation (README, LICENSE, CHANGELOG)
+| Phase      | Description                                     | Status      |
+| ---------- | ----------------------------------------------- | ----------- |
+| Phase 1    | Setup - Directory structure, globals.css        | ✅ Complete |
+| Phase 2    | Foundational - Types, data, utilities, session  | ✅ Complete |
+| Phase 3    | User Story 1 - Gem Inventory Entry              | ✅ Complete |
+| Phase 4    | User Story 2 - Resource Specification           | ✅ Complete |
+| Phase 5    | User Story 3 - Optimization Execution & Results | ✅ Complete |
+| Phase 6-10 | P2/P3 Features (Build Management, Mobile, etc.) | ⏸️ Deferred |
 
-## Recently Completed
+## Recently Completed (2026-02-18)
 
-- [x] **Optimization Engine** - Weighted greedy algorithm with 15 passing tests
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
-- [x] Fixed blank home page - added welcome content
-- [x] Added dependencies: next-auth, drizzle-orm, better-sqlite3, lucide-react, zod
-- [x] **Workflow Foundation Spec** - 001-workflow-foundation specification complete
-- [x] **Issue Templates** - bug_report.md, feature_request.md, task.md
-- [x] **PR Template** - pull_request_template.md with spec reference checklist
-- [x] **Agent Commit Instructions** - .kilocode/rules/commit.md with failure scenarios
-- [x] **Specs README** - Documentation for spec-driven workflow
-- [x] **Spec-Kit Alignment** - Constitution updated with SDD principles
-- [x] **Path Migration** - Specs moved to `specs/` at project root
-- [x] **Workflow Foundation Implementation** - All 66 tasks complete (100%)
-- [x] **Husky Hooks** - pre-commit and commit-msg configured with bun
-- [x] **release-please-action** - Automated changelog and releases
-- [x] **Project Documentation** - README, LICENSE, CHANGELOG complete
+- [x] **API Endpoint** - `/api/optimize` with validation, timeout, error handling
+- [x] **UI Components** - Skeleton, OptimizeButton, Toast notifications
+- [x] **Optimization UI** - Modal, ResultsPanel, RecommendationCard
+- [x] **Error Handling** - Validation errors, timeout, retry logic, offline handling
+- [x] **Accessibility** - Screen reader announcer (aria-live regions)
+- [x] **Awakening Management** - AwakenedSlotsPanel, resonance bonus calculation
+- [x] **Acquisition Paths** - Three-path overview, run calculator, crafting rates
 
 ## Current Structure
 
-| File/Directory                                | Purpose                          | Status                |
-| --------------------------------------------- | -------------------------------- | --------------------- |
-| `.specify/memory/constitution.md`             | Foundational principles (v2.0.0) | ✅ Updated            |
-| `specs/feature/PROJ-001-workflow-foundation/` | Workflow foundation spec         | ✅ Complete           |
-| `specs/README.md`                             | SDD workflow documentation       | ✅ Complete           |
-| `.github/ISSUE_TEMPLATE/`                     | Issue templates                  | ✅ Complete           |
-| `.github/pull_request_template.md`            | PR template                      | ✅ Complete           |
-| `.github/workflows/release-please.yml`        | Release automation               | ✅ Complete           |
-| `.kilocode/rules/commit.md`                   | Agent commit instructions        | ✅ Complete           |
-| `.husky/pre-commit`                           | Lint + typecheck hook            | ✅ Complete           |
-| `.husky/commit-msg`                           | Commitlint hook                  | ✅ Complete           |
-| `commitlint.config.js`                        | Commit message rules             | ✅ Complete           |
-| `.lintstagedrc.json`                          | Lint-staged config               | ✅ Complete           |
-| `README.md`                                   | Project documentation            | ✅ Complete           |
-| `LICENSE`                                     | AGPL-3.0-or-later                | ✅ Complete           |
-| `CHANGELOG.md`                                | Change history                   | ✅ Complete           |
-| `src/lib/optimization/`                       | Optimization engine              | ✅ Implemented        |
-| `src/app/`                                    | Next.js application              | 🔄 Ready for features |
-
-## Current Focus
-
-**Workflow Foundation Complete** - Ready for feature implementation:
-
-| Component            | Status        | Purpose                            |
-| -------------------- | ------------- | ---------------------------------- |
-| Constitution         | ✅ v2.0.0     | SDD principles + human-in-the-loop |
-| Conventional Commits | ✅ Enforced   | commitlint configuration           |
-| Changelog Management | ✅ Automated  | release-please-action              |
-| Pre-commit Hooks     | ✅ Active     | lint + typecheck                   |
-| Commit-msg Hook      | ✅ Active     | commitlint validation              |
-| Issue Templates      | ✅ Created    | Bug reports, features, tasks       |
-| PR Template          | ✅ Created    | Spec reference checklist           |
-| Agent Instructions   | ✅ Created    | Commit failure recovery            |
-| Spec-Kit Commands    | ✅ Documented | clarify, analyze, checklist        |
+| File/Directory                  | Purpose                           | Status      |
+| ------------------------------- | --------------------------------- | ----------- |
+| `src/app/api/optimize/route.ts` | Optimization API endpoint         | ✅ Complete |
+| `src/app/api/session/route.ts`  | Session persistence API           | ✅ Complete |
+| `src/components/gems/`          | Gem selection components          | ✅ Complete |
+| `src/components/optimization/`  | Optimization UI components        | ✅ Complete |
+| `src/components/ui/`            | Base UI components                | ✅ Complete |
+| `src/lib/hooks/useOptimize.ts`  | Optimization hook with retry      | ✅ Complete |
+| `src/lib/utils/acquisition.ts`  | Crafting rates, run calculator    | ✅ Complete |
+| `src/lib/utils/resonance.ts`    | Resonance + awakened calculations | ✅ Complete |
+| `src/lib/optimization/`         | Optimization engine               | ✅ Complete |
+| `src/types/`                    | TypeScript type definitions       | ✅ Complete |
+| `src/data/gems.json`            | Static gem database               | ✅ Complete |
 
 ## Next Steps
 
-1. **Proceed with Feature 002** - Gem Optimizer implementation
-2. **Start with Phase 1: Setup** - Create directory structure and types
-3. **Complete Phase 2: Foundational** - Database schema and optimization engine
+1. **P2 Features** - Build Management (User Story 4)
+2. **P2 Features** - Gem Information Reference (User Story 5)
+3. **P2 Features** - Responsive Mobile Experience (User Story 7)
+4. **P3 Features** - Optimization Constraints & Goals (User Story 6)
+5. **Polish** - Accessibility, performance validation, integration testing
 
 ## Architecture Decisions
-
-### GitHub-Centric Spec Hierarchy
-
-- Parent Issues = PRD/Spec | Child Issues = Tasks
-- Bidirectional sync: task frontmatter stores issue URL, issue closure updates task checkbox
-
-### Spec Cycle Directory Structure
-
-```
-.specify/
-├── memory/
-│   └── constitution.md        # Foundational principles
-├── scripts/
-│   └── bash/                  # Automation scripts
-└── templates/                 # Document templates
-
-specs/
-├── feature/
-│   ├── PROJ-001-workflow-foundation/
-│   │   └── spec.md              # Master specification
-│   └── PROJ-002-optimizer-ui/
-│       └── ...
-└── README.md
-```
-
-### Branch Naming Convention
-
-Configured in `.specify/config.yaml` with template-based naming:
-
-```yaml
-naming:
-  branch_format: "{type}/{ticket}-{seq}-{kebab}"
-  folder_format: "specs/{branch}"
-```
-
-**Tokens:** `{type}`, `{ticket}`, `{seq}`, `{kebab}`, `{date}`, `{branch}`
-
-**Examples:**
-| Description | Branch | Folder |
-|-------------|--------|--------|
-| "Add user auth" | `feature/PROJ-001-user-auth` | `specs/feature/PROJ-001-user-auth/` |
-| "Fix login bug" | `fix/PROJ-002-login-bug` | `specs/fix/PROJ-002-login-bug/` |
 
 ### Tech Stack
 
 - **Framework**: Next.js 16 with App Router
-- **Auth**: Anonymous sessions (localStorage UUID) + optional email opt-in; Battle.net OAuth deferred
-- **Database**: Drizzle ORM + better-sqlite3 (SQLite) for server-side session persistence
+- **Auth**: Anonymous sessions (localStorage UUID) + optional email opt-in
+- **Database**: Drizzle ORM + better-sqlite3 (SQLite)
 - **UI**: Tailwind CSS 4 + lucide-react icons
 - **Validation**: Zod schemas
+- **Testing**: Vitest (15 tests passing)
 
-### Anonymous Session Strategy (2026-02-17)
+### Key Patterns
 
-After research, chose **localStorage UUID with optional email opt-in**:
+- **Client Components**: Interactive UI with `"use client"` directive
+- **Server Components**: Data fetching, static content
+- **API Routes**: REST endpoints for optimization and session management
+- **Type Safety**: Strict TypeScript with isolated modules
 
-| Option                    | Pros                                 | Cons                                | Decision    |
-| ------------------------- | ------------------------------------ | ----------------------------------- | ----------- |
-| Device Fingerprinting     | Zero friction                        | 40-60% stability, GDPR concerns     | ❌ Rejected |
-| Registration Form         | Stable ID, recovery                  | 20-30% abandonment, high complexity | ❌ Rejected |
-| localStorage UUID + Email | Zero friction start, recovery option | Cross-device needs email            | ✅ Chosen   |
+### Slot System
 
-**Implementation**:
-
-- UUID v4 stored in localStorage for identification
-- Server database stores session state keyed by anonymous ID
-- Optional email for notifications and account recovery
-- Fallback: server-side session cookie if localStorage unavailable
+- **Base Slots**: 8 slots (positions 1-8), no duplicate gems
+- **Wing Slots**: Up to 16 slots (positions 9-24), duplicates allowed
+- **Unlock Thresholds**: 6000=4, 7000=8, 8000=12, 8500+=16 wing slots
+- **Awakened Slots**: Up to 12 slots with 10% resonance bonus
 
 ## External APIs
 
-| API                      | Purpose                | Documentation               |
-| ------------------------ | ---------------------- | --------------------------- |
-| Battle.net OAuth         | User authentication    | https://develop.battle.net/ |
-| diablo.tv                | DI days/events data    | TBD                         |
-| diabloimmortalredeem.com | Character verification | Mock redemption API         |
+| API                      | Purpose                | Status    |
+| ------------------------ | ---------------------- | --------- |
+| Battle.net OAuth         | User authentication    | 🔮 Future |
+| diablo.tv                | DI days/events data    | 🔮 Future |
+| diabloimmortalredeem.com | Character verification | 🔮 Future |
 
 ## Session History
 
-| Date       | Changes                                                                                                                                                                                                                                                                            |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-02-17 | Cross-checked and updated tasks.md: Added rate-limited (429) to FR-021 error types, moved FR-052-054 tasks to MVP scope per spec clarification, added acquisition paths note                                                                                                       |
-| 2026-02-17 | Resolved 12 analysis findings via clarification session: A1 (FR-019 scope), A2 (K suffix threshold), C1 (FR-010a deferred), C2 (T033 scope), D1 (T022 constants), T1 (terminology), U1 (HTTP 429 coverage), U2 (mobile QA task), U3 (FR-050 alignment), I1-I3 (consistency checks) |
-| 2026-02-17 | Resolved 8 specification alignment findings: C1 (inventoryGems terminology), T1 (entity diagram), U1 (FR-019 scope), U2 (ResourceInventorySchema), C2 (T033 awakened slots), U3 (rate-limited error), A1 (FR-008a reference)                                                       |
-| 2026-02-17 | Researched anonymous session strategy - chose localStorage UUID over fingerprinting/registration                                                                                                                                                                                   |
-| 2026-02-17 | Updated spec FR-029 and data-model for server-side session persistence                                                                                                                                                                                                             |
-| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm                                                                                                                                                                                                                     |
-| 2026-02-15 | Remediated alignment issues and migrated spec folder to PROJ-002 format                                                                                                                                                                                                            |
-| 2026-02-15 | Refactored commitlint.config.js with comprehensive scopes and JSDoc                                                                                                                                                                                                                |
-| 2026-02-15 | Created tasks.md for 002-optimizer-ui with 93 implementation tasks                                                                                                                                                                                                                 |
-| 2026-02-14 | Implemented template-based naming system with configurable formats                                                                                                                                                                                                                 |
-| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done                                                                                                                                                                                                                   |
-| 2026-02-14 | Updated Husky hooks to use bun commands                                                                                                                                                                                                                                            |
-| 2026-02-14 | Added release-please workflow documentation to commit.md                                                                                                                                                                                                                           |
-| 2026-02-14 | Moved specs/ to project root, updated branch naming to feature/ prefix                                                                                                                                                                                                             |
-| 2026-02-14 | Updated constitution to v2.0.0 with SDD principles                                                                                                                                                                                                                                 |
-| 2026-02-14 | Added enhanced quality commands to specs README                                                                                                                                                                                                                                    |
-| 2026-02-13 | Created workflow foundation specification (000-workflow-foundation)                                                                                                                                                                                                                |
-| 2026-02-13 | Created issue templates: bug_report.md, feature_request.md, task.md                                                                                                                                                                                                                |
-| 2026-02-13 | Created PR template with spec reference checklist                                                                                                                                                                                                                                  |
-| 2026-02-13 | Created agent commit instructions with failure scenarios                                                                                                                                                                                                                           |
-| 2026-02-13 | Created specs/README.md with SDD workflow documentation                                                                                                                                                                                                                            |
-| 2026-02-13 | Created complete SDD planning artifacts for gem optimizer (001)                                                                                                                                                                                                                    |
-| 2026-02-13 | Spec Kit v0.1.0 installed and initialized for Kilo Code                                                                                                                                                                                                                            |
-| 2026-02-13 | Memory bank updated with DI-Lab project brief                                                                                                                                                                                                                                      |
-| Initial    | Template created with base Next.js setup                                                                                                                                                                                                                                           |
-
-## Spec-Kit Workflow Reference
-
-| Phase        | Command                 | Purpose                           | Required    |
-| ------------ | ----------------------- | --------------------------------- | ----------- |
-| Constitution | `/speckit.constitution` | Establish foundational principles | ✅ Yes      |
-| Specify      | `/speckit.specify`      | Create feature specification      | ✅ Yes      |
-| Clarify      | `/speckit.clarify`      | Resolve underspecified areas      | ⚪ Optional |
-| Plan         | `/speckit.plan`         | Create implementation plan        | ✅ Yes      |
-| Checklist    | `/speckit.checklist`    | Verify requirements completeness  | ⚪ Optional |
-| Tasks        | `/speckit.tasks`        | Generate actionable tasks         | ✅ Yes      |
-| Analyze      | `/speckit.analyze`      | Cross-artifact consistency check  | ⚪ Optional |
-| Implement    | `/speckit.implement`    | Execute implementation            | ✅ Yes      |
-
-## Workflow Foundation (001) Summary
-
-| Component       | File                                                 | Purpose                                    |
-| --------------- | ---------------------------------------------------- | ------------------------------------------ |
-| Spec            | `specs/feature/PROJ-001-workflow-foundation/spec.md` | 7 user stories, 30 functional requirements |
-| Issue Templates | `.github/ISSUE_TEMPLATE/`                            | Bug, feature, task templates               |
-| PR Template     | `.github/pull_request_template.md`                   | Spec reference checklist                   |
-| Commit Rules    | `.kilocode/rules/commit.md`                          | Agent failure recovery                     |
-| Spec README     | `specs/README.md`                                    | SDD workflow documentation                 |
-| Constitution    | `.specify/memory/constitution.md`                    | SDD principles + human checkpoints         |
+| Date       | Changes                                                                                                                 |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 2026-02-18 | Completed MVP implementation - All Phase 1-5 tasks done                                                                 |
+| 2026-02-18 | Implemented optimization UI components - Modal, ResultsPanel, RecommendationCard                                        |
+| 2026-02-18 | Added error handling - Validation, timeout, retry logic, offline handling                                               |
+| 2026-02-18 | Created accessibility components - Screen reader announcer                                                              |
+| 2026-02-18 | Implemented awakening management - AwakenedSlotsPanel, resonance bonus                                                  |
+| 2026-02-18 | Added acquisition paths - Three-path overview, run calculator, crafting rates                                           |
+| 2026-02-17 | Cross-checked and updated tasks.md: Added rate-limited (429) to FR-021 error types, moved FR-052-054 tasks to MVP scope |
+| 2026-02-17 | Resolved 12 analysis findings via clarification session                                                                 |
+| 2026-02-15 | Implemented optimization engine with weighted greedy algorithm                                                          |
+| 2026-02-14 | Completed workflow foundation implementation - all 66 tasks done                                                        |
 
 ## Optimizer UI (002) Summary
 
-| Artifact      | File                                                                     | Description                         |
-| ------------- | ------------------------------------------------------------------------ | ----------------------------------- |
-| Specification | `specs/feature/PROJ-002-optimizer-ui/spec.md`                            | 7 user stories (US1-US7), 47 FRs    |
-| Plan          | `specs/feature/PROJ-002-optimizer-ui/plan.md`                            | 11 implementation phases            |
-| Data Model    | `specs/feature/PROJ-002-optimizer-ui/data-model.md`                      | Entity definitions with Zod schemas |
-| API Contract  | `specs/feature/PROJ-002-optimizer-ui/contracts/optimize-api.schema.json` | API schema                          |
-| Tasks         | `specs/feature/PROJ-002-optimizer-ui/tasks.md`                           | 135 implementation tasks            |
-
-**Analysis Status**: All 14 findings resolved (2 CRITICAL, 4 HIGH, 4 MEDIUM, 4 LOW)
+| Component         | Status      | Description                                   |
+| ----------------- | ----------- | --------------------------------------------- |
+| Setup             | ✅ Complete | Directory structure, globals.css              |
+| Foundational      | ✅ Complete | Types, data, utilities, session               |
+| User Story 1 (P1) | ✅ Complete | Gem Inventory Entry                           |
+| User Story 2 (P1) | ✅ Complete | Resource Specification                        |
+| User Story 3 (P1) | ✅ Complete | Optimization Execution & Results              |
+| User Story 4 (P2) | ⏸️ Deferred | Build Management                              |
+| User Story 5 (P2) | ⏸️ Deferred | Gem Information Reference                     |
+| User Story 6 (P3) | ⏸️ Deferred | Optimization Constraints & Goals              |
+| User Story 7 (P2) | ⏸️ Deferred | Responsive Mobile Experience                  |
+| Polish            | ⏸️ Deferred | Accessibility, performance, integration tests |
 
 ## Quick Reference
 
