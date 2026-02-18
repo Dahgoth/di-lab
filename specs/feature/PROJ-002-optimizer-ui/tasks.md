@@ -25,8 +25,8 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create directory structure: `src/types/`, `src/components/ui/`, `src/components/gems/`, `src/components/optimization/`, `src/components/layout/`, `src/lib/utils/`, `src/lib/storage/`, `src/lib/db/`, `src/lib/session/`, `src/data/`
-- [ ] T002 Update `src/app/globals.css` with Tailwind base styles and custom properties for gem colors (1-star, 2-star, 5-star visual indicators)
+- [x] T001 Create directory structure: `src/types/`, `src/components/ui/`, `src/components/gems/`, `src/components/optimization/`, `src/components/layout/`, `src/lib/utils/`, `src/lib/storage/`, `src/lib/db/`, `src/lib/session/`, `src/data/`
+- [x] T002 Update `src/app/globals.css` with Tailwind base styles and custom properties for gem colors (1-star, 2-star, 5-star visual indicators)
 
 ---
 
@@ -38,28 +38,28 @@
 
 ### Type Definitions
 
-- [ ] T003 Create `src/types/gem.ts` with StarRating, Quality, Rank, TierRanking, EffectCategory, EffectType, SlotType, OptimizationMode types and LegendaryGem, GemEffect, EquippedGem, InventoryGem interfaces
-- [ ] T004 [P] Create `src/types/optimization.ts` with OptimizationResult, UpgradeRecommendation, AlternativeUpgrade, OptimizationError, OptimizationErrorType interfaces
-- [ ] T005 [P] Create `src/types/build.ts` with SavedBuild, SessionState, ResourceInventory interfaces (including inventoryGems array, telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts, dawningEchoes per data-model.md)
+- [x] T003 Create `src/types/gem.ts` with StarRating, Quality, Rank, TierRanking, EffectCategory, EffectType, SlotType, OptimizationMode types and LegendaryGem, GemEffect, EquippedGem, InventoryGem interfaces
+- [x] T004 [P] Create `src/types/optimization.ts` with OptimizationResult, UpgradeRecommendation, AlternativeUpgrade, OptimizationError, OptimizationErrorType interfaces
+- [x] T005 [P] Create `src/types/build.ts` with SavedBuild, SessionState, ResourceInventory interfaces (including inventoryGems array, telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts, dawningEchoes per data-model.md)
 
 ### Static Data
 
-- [ ] T006 Create `src/data/gems.json` with static gem database parsed from `docs/legendary-gems.csv` (include id, name, starRating, effects, pvpTier, pveTier, resonanceTable, upgradeCosts for ~50-100 gems)
+- [x] T006 Create `src/data/gems.json` with static gem database parsed from `docs/legendary-gems/*.md` (include id, name, starRating, effects, esonanceTable, upgradeCosts for ~50-100 gems)
 
 ### Utility Functions
 
-- [ ] T007 [P] Create `src/lib/utils/formatting.ts` with formatNumber (K suffix >=10,000, M suffix >=1,000,000), formatGemPower, formatDate utilities
-- [ ] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild, InventoryGem, and validation helpers
-- [ ] T009 [P] Create `src/lib/utils/sanitization.ts` with stripHtmlTags, escapeSpecialChars, hasDangerousUrlScheme, sanitizeUserContent functions for XSS prevention (FR-046)
+- [x] T007 [P] Create `src/lib/utils/formatting.ts` with formatNumber (K suffix >=10,000, M suffix >=1,000,000), formatGemPower, formatDate utilities
+- [x] T008 [P] Create `src/lib/utils/validation.ts` with Zod schemas for EquippedGem, ResourceInventory, SavedBuild, InventoryGem, and validation helpers
+- [x] T009 [P] Create `src/lib/utils/sanitization.ts` with stripHtmlTags, escapeSpecialChars, hasDangerousUrlScheme, sanitizeUserContent functions for XSS prevention (FR-046)
 
 ### Session Management (Server-Side)
 
-- [ ] T010 Create `src/lib/db/schema.ts` with Drizzle SQLite schema for anonymousSessions and savedBuilds tables per data-model.md
-- [ ] T011 Create `src/lib/session/anonymous-session.ts` with getOrCreateAnonymousId (UUID v4), localStorage fallback detection, server-side session sync functions (FR-029, FR-029b)
+- [x] T010 Create `src/lib/db/schema.ts` with Drizzle SQLite schema for anonymousSessions and savedBuilds tables per data-model.md
+- [x] T011 Create `src/lib/session/anonymous-session.ts` with getOrCreateAnonymousId (UUID v4), localStorage fallback detection, server-side session sync functions (FR-029, FR-029b)
 
 ### Storage Layer
 
-- [ ] T012 Create `src/lib/storage/localStorage.ts` with versioned storage helpers for anonymous ID only (session state persisted to server database)
+- [x] T012 Create `src/lib/storage/localStorage.ts` with versioned storage helpers for anonymous ID only (session state persisted to server database)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
