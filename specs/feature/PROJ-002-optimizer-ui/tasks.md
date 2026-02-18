@@ -88,11 +88,11 @@
 
 ### Slot Management Logic
 
-- [ ] T022 [US1] Create `src/lib/utils/slots.ts` with SLOT_CONFIG constants (8 base, 16 wing, 24 max per FR-006), slot type derivation, and position validation. Note: Constants should reference FR-006 thresholds (6000=4 slots, 7000=8, 8000=12, 8500+=16) to avoid hardcoding.
-- [ ] T023 [US1] Implement base slot duplicate prevention logic in `src/lib/utils/slots.ts` (positions 1-8: no duplicate gemId allowed) (FR-009)
-- [ ] T024 [US1] Implement wing slot duplicate allowance logic in `src/lib/utils/slots.ts` (positions 9-24: duplicates allowed) (FR-009)
-- [ ] T025 [US1] Create resonance calculation in `src/lib/utils/resonance.ts` with calculateTotalResonance, getResonanceForGem functions using gem database (FR-007)
-- [ ] T026 [US1] Create wing slot unlocking logic in `src/lib/utils/slots.ts` with threshold checks (6000=4 slots, 7000=8, 8000=12, 8500+=16) (FR-006)
+- [x] T022 [US1] Create `src/lib/utils/slots.ts` with SLOT_CONFIG constants (8 base, 16 wing, 24 max per FR-006), slot type derivation, and position validation. Note: Constants should reference FR-006 thresholds (6000=4 slots, 7000=8, 8000=12, 8500+=16) to avoid hardcoding.
+- [x] T023 [US1] Implement base slot duplicate prevention logic in `src/lib/utils/slots.ts` (positions 1-8: no duplicate gemId allowed) (FR-009)
+- [x] T024 [US1] Implement wing slot duplicate allowance logic in `src/lib/utils/slots.ts` (positions 9-24: duplicates allowed) (FR-009)
+- [x] T025 [US1] Create resonance calculation in `src/lib/utils/resonance.ts` with calculateTotalResonance, getResonanceForGem functions using gem database (FR-007)
+- [x] T026 [US1] Create wing slot unlocking logic in `src/lib/utils/slots.ts` with threshold checks (6000=4 slots, 7000=8, 8000=12, 8500+=16) (FR-006)
 
 ### Page Integration
 
