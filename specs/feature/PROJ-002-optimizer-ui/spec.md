@@ -27,7 +27,7 @@ As a player, I want to select and configure my legendary gems so that the optimi
 2. **Given** user has selected a gem, **When** user specifies quality (1-5) and rank (1-10), **Then** the gem card updates to show the configured state with appropriate visual feedback
 3. **Given** user has configured multiple gems, **When** user views the equipped gems section, **Then** all selected gems are displayed with their quality, rank, and effect summary
 4. **Given** user wants to remove a gem, **When** user clicks remove on a gem card, **Then** the gem is removed from the equipped list and returns to the available catalog
-5. **Given** user has filled all available slots (base 8 + resonance-unlocked up to 24 total), **When** user attempts to add another gem, **Then** the interface prevents selection and indicates maximum capacity reached
+5. **Given** user has filled all available slots (base 8 + resonance-unlocked up to 24 total), **When** user attempts to add another gem, **Then** the interface prevents selection and indicates maximum capacity reached via: (1) disabled state on remaining catalog gems with reduced opacity (opacity-50), (2) toast notification "All slots filled - upgrade resonance to unlock more", (3) tooltip on hover showing "No available slots"
 
 ---
 
@@ -201,6 +201,7 @@ After viewing optimization results, users typically iterate on their build. This
 
 - **FR-001**: System MUST display a gem catalog organized by star rating (1-star, 2-star, 5-star) using tabbed category selector, with 5-star category selected by default
 - **FR-002**: System MUST display each gem with its name, star rating, and visual icon/placeholder
+- **FR-002a**: System MUST display gem catalog with consistent visual hierarchy: uniform card size (120x160px minimum), 16px gap between cards, 5-star gems highlighted with gold border (2px), tier badges with color coding (S=gold #FFD700, A=silver #C0C0C0, B=bronze #CD7F32, C/D=gray #808080)
 - **FR-003**: System MUST allow users to select gems from the catalog for equipment
 - **FR-004**: System MUST provide quality selection (1-5) for each equipped gem
 - **FR-005**: System MUST provide rank selection (1-10) for each equipped gem
@@ -219,7 +220,7 @@ After viewing optimization results, users typically iterate on their build. This
 
 - **FR-010**: System MUST provide input fields for upgrade resources: Gem Power, Gem Copy Inventory, Telluric Pearls, Telluric Fragments, Fading Embers, Platinum, and Crest counts (Eternal Legendary Crests, Legendary Crests, Rare Crests). Note: Resonance is NOT a manual input; it is auto-calculated from equipped legendary gems.
 - **FR-010a**: System MUST display platinum-equivalent costs for all resources based on values from currencies-and-materials.csv for cost comparison purposes. **[DEFERRED - Requires external market data integration]**
-- **FR-011**: System MUST validate resource inputs as non-negative integers with debounced feedback (300-500ms delay after user stops typing)
+- **FR-011**: System MUST validate resource inputs as non-negative integers with debounced feedback (300-500ms delay after user stops typing). Validation errors use structured format: `{ "fields": [{ "field": "gemPower", "code": "INVALID_TYPE", "message": "Must be a positive integer" }] }` with error codes INVALID_TYPE (non-numeric), NEGATIVE_VALUE (negative number), EXCEEDS_MAX (overflow > 2,147,483,647). Errors displayed inline below each field with red border and error icon.
 - **FR-012**: System MUST display resource values with appropriate number formatting
 - **FR-013**: System MUST show a resources summary panel with all configured values
 - **FR-014**: System MUST allow clearing/resetting resource values
@@ -229,6 +230,7 @@ After viewing optimization results, users typically iterate on their build. This
 - **FR-015**: System MUST provide an "Optimize" button that triggers the optimization process via server-side API route (`/api/optimize`)
 - **FR-016**: System MUST display skeleton loaders (gray placeholder shapes mimicking content layout) during data fetching and optimization processing, replaced by actual content when data arrives
 - **FR-016a**: System MUST implement skeleton loaders for gem catalog grid (showing placeholder gem cards) and optimization results (showing placeholder recommendation cards)
+- **FR-016b**: System MUST define consistent interaction states for all interactive elements (buttons, cards, form inputs): hover (bg-opacity +10%, scale 1.02), focus (2px ring outline in accent color), active (scale 0.98), disabled (opacity 50%, cursor not-allowed), loading (spinner + disabled state)
 - **FR-017**: System MUST display a modal overlay during optimization processing that:
   - Shows a progress indicator (spinner or progress bar)
   - Displays elapsed time (optional, updates every second)
@@ -730,7 +732,7 @@ The UI requires management of the following state:
 - **SC-005**: All interactive elements have touch targets of at least 44x44 pixels on mobile
 - **SC-006**: Saved builds load in under 2 seconds
 - **SC-007**: Gem catalog scrolls smoothly at 60fps on mid-range mobile devices (defined as: Snapdragon 665+ or equivalent, 4GB+ RAM, 2020+ release year; reference devices: Pixel 4a, Galaxy A52, Moto G Power)
-- **SC-008**: 95% of users understand optimization results without external documentation
+- **SC-008**: 95% of users understand optimization results without external documentation, measured by task-based assessment: user correctly identifies (1) top priority recommendation, (2) why it's ranked first (cost vs power gain tradeoff), and (3) which resources would be consumed. Assessment via moderated user testing with 20+ participants. Success = all 3 tasks completed without external help.
 - **SC-009**: All form validation errors provide clear, actionable guidance
 - **SC-010**: Interface renders correctly on viewports from 320px to 1920px width
 
@@ -902,6 +904,23 @@ The following items are explicitly out of scope for this UI specification:
 - Q: What should happen when the server cannot find or validate a user's session (server restart, database cleanup, corrupted session ID)?
   A: **Graceful degradation with transparent recreation** - Show "Session expired" toast notification, create new session automatically, preserve local state (gems, resources from current UI state). Users shouldn't lose work or see cryptic errors. Added FR-029d to specify this behavior.
 
+### Session 2026-02-18 (Acceptance Criteria Measurability)
+
+- Q: How should "95% of users understand optimization results without external documentation" (SC-008) be objectively measured?
+  A: **Task-based assessment** - User must correctly: (1) identify the top priority recommendation, (2) explain why it's ranked first (cost vs power gain tradeoff), and (3) identify which resources would be consumed. Assessment conducted via moderated user testing with 20+ participants. Success = user completes all 3 tasks without external help. SC-008 updated with these criteria.
+
+- Q: What specific UI element/behavior indicates "maximum capacity reached" in US1-Acceptance-5?
+  A: **Toast notification + visual indicator** - When all slots are filled and user attempts to add another gem: (1) disabled state on remaining catalog gems with reduced opacity, (2) toast notification "All slots filled - upgrade resonance to unlock more", (3) tooltip on hover shows "No available slots". Updated US1-Acceptance-5 with these specifics.
+
+- Q: What visual hierarchy rules should the gem catalog grid follow for card sizing, spacing, and visual prominence?
+  A: **Consistent grid with star-based prominence** - Uniform card size (120x160px minimum touch target), 16px gap between cards, 5-star gems highlighted with gold border (2px), tier badges (S/A/B/C/D) with color coding (S=gold, A=silver, B=bronze, C/D=gray). Visual distinction through color and badges rather than size variations ensures consistent layout and mobile responsiveness.
+
+- Q: What interaction states should be defined for all interactive elements (buttons, cards, form inputs)?
+  A: **5-state model with measurable feedback** - All interactive elements must define: (1) hover - bg-opacity +10%, scale 1.02 transform, (2) focus - 2px ring outline in accent color, (3) active - scale 0.98 transform, (4) disabled - opacity 50%, cursor not-allowed, no pointer events, (5) loading - spinner icon + disabled state. These states ensure accessibility compliance and consistent UX across the application.
+
+- Q: What field-level error message format should FR-011 specify for resource input validation errors?
+  A: **Structured JSON with inline display** - Validation errors returned as `{ "fields": [{ "field": "gemPower", "code": "INVALID_TYPE", "message": "Must be a positive integer" }] }` with error codes: INVALID_TYPE (non-numeric), NEGATIVE_VALUE (negative number), EXCEEDS_MAX (overflow). Errors displayed inline below each field with red border and error icon for immediate user feedback.
+
 ### Session 2026-02-14
 
 - Q: Should we use placeholder graphics initially, or are official/representative gem icons available?  
@@ -987,4 +1006,4 @@ The following items are explicitly out of scope for this UI specification:
 
 ---
 
-**Version**: 2.0.0 | **Last Updated**: 2026-02-17
+**Version**: 2.1.0 | **Last Updated**: 2026-02-18
