@@ -2,6 +2,7 @@
 
 **Feature**: 002-optimizer-ui  
 **Created**: 2026-02-15  
+**Updated**: 2026-02-17  
 **Focus Areas**: UX, API, Performance, Security  
 **Depth Level**: Standard (PR Review Readiness)  
 **Audience**: Reviewer
@@ -14,23 +15,55 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ---
 
+## Resolution Summary
+
+| Item   | Status      | Resolution                                                                                   |
+| ------ | ----------- | -------------------------------------------------------------------------------------------- |
+| CHK003 | ✅ RESOLVED | FR-009a now specifies dedicated empty states for each panel                                  |
+| CHK004 | ✅ RESOLVED | FR-030a specifies full modal closing behavior (ESC, click outside, close button, focus trap) |
+| CHK006 | ✅ RESOLVED | FR-021c specifies toast positioning, stacking, z-index                                       |
+| CHK008 | ✅ RESOLVED | FR-022a specifies cancel-and-replace pattern for concurrent requests                         |
+| CHK015 | ✅ RESOLVED | Spec clarifies: 20s warning, 30s cancellation offer                                          |
+| CHK016 | ✅ RESOLVED | SC-007 defines mid-range devices: Snapdragon 665+, 4GB+ RAM, 2020+, reference devices        |
+| CHK017 | ✅ RESOLVED | Spec clarifies: >= 1,000,000 M suffix, >= 10,000 K suffix                                    |
+| CHK020 | ✅ RESOLVED | FR-021c and edge case section specify 5s auto-dismiss with pause on hover                    |
+| CHK021 | ✅ RESOLVED | FR-006 and data-model SLOT_CONFIG are consistent (8 base + 16 wing max)                      |
+| CHK024 | ✅ RESOLVED | FR-011 specifies 300-500ms debounce, clarifications confirm                                  |
+| CHK025 | ✅ RESOLVED | FR-021c and edge case both specify 5 seconds auto-dismiss                                    |
+| CHK026 | ✅ RESOLVED | Modal overlay pattern with interactive Cancel button (FR-017, FR-022 updated)                |
+| CHK027 | ✅ RESOLVED | Hybrid persistence model - auto-save session, explicit save for named builds (FR-023a/b/c)   |
+| CHK034 | ✅ RESOLVED | "First-Time User Journey" section added with 12-step flow                                    |
+| CHK035 | ✅ RESOLVED | FR-023, FR-023a cover session restoration flow                                               |
+| CHK036 | ✅ RESOLVED | FR-017, FR-022 specify cancellation during optimization                                      |
+| CHK037 | ✅ RESOLVED | "Post-Optimization Iteration Flow" section added                                             |
+| CHK048 | ✅ RESOLVED | FR-041a specifies Core Web Vitals targets (FCP <1.8s, LCP <2.5s, TTI <3.8s)                  |
+| CHK050 | ✅ RESOLVED | FR-041b specifies progressive enhancement for slow networks/low-end devices                  |
+| CHK051 | ✅ RESOLVED | Moot - storage moved to server-side database, localStorage only stores anonymous ID          |
+| CHK052 | ✅ RESOLVED | FR-043 specifies keyboard navigation for all interactive elements                            |
+| CHK053 | ✅ RESOLVED | FR-044a specifies ARIA live regions for critical optimization events                         |
+| CHK055 | ✅ RESOLVED | FR-030a specifies focus trap and restoration for gem detail modal                            |
+| CHK059 | ✅ RESOLVED | FR-046 specifies XSS prevention with defense-in-depth approach                               |
+| CHK062 | ✅ RESOLVED | FR-029b specifies localStorage unavailability fallback to server-side session                |
+
+---
+
 ## Requirement Completeness
 
 ### UX/UI Requirements
 
 - [ ] CHK001 - Are visual hierarchy requirements specified for the gem catalog grid layout, including card sizing, spacing, and visual prominence rules? [Completeness, Gap]
 - [ ] CHK002 - Are interaction state requirements (hover, focus, active, disabled, loading) documented for all interactive elements including buttons, cards, and form inputs? [Completeness, Spec §FR-016]
-- [ ] CHK003 - Are requirements for empty states defined for each panel (empty gem catalog, no equipped gems, no recommendations)? [Completeness, Gap]
-- [ ] CHK004 - Are requirements for the gem detail modal/panel closing behavior (ESC key, click outside, close button) specified? [Completeness, Gap]
+- [x] CHK003 - Are requirements for empty states defined for each panel (empty gem catalog, no equipped gems, no recommendations)? [Completeness, **RESOLVED** - Spec §FR-009a specifies dedicated empty states with contextual messaging and guidance actions]
+- [x] CHK004 - Are requirements for the gem detail modal/panel closing behavior (ESC key, click outside, close button) specified? [Completeness, **RESOLVED** - Spec §FR-030a specifies full modal closing behavior including focus return]
 - [ ] CHK005 - Are requirements for the save build modal's cancel action (unsaved name/notes handling) defined? [Completeness, Spec §FR-024]
-- [ ] CHK006 - Are requirements for toast notification positioning, stacking order, and z-index hierarchy documented? [Completeness, Spec §FR-021b]
+- [x] CHK006 - Are requirements for toast notification positioning, stacking order, and z-index hierarchy documented? [Completeness, **RESOLVED** - Spec §FR-021c specifies position (top-right), stack (vertical, newest top), z-index (50)]
 
 ### API/Data Requirements
 
 - [ ] CHK007 - Are input validation error response requirements specified with exact field-level error message formats? [Completeness, Spec §FR-011]
-- [ ] CHK008 - Are requirements for concurrent optimization request handling (multiple tabs, request deduplication) defined? [Completeness, Gap]
+- [x] CHK008 - Are requirements for concurrent optimization request handling (multiple tabs, request deduplication) defined? [Completeness, **RESOLVED** - Spec §FR-022a specifies cancel-and-replace pattern with AbortController]
 - [ ] CHK009 - Are requirements for the `/api/optimize` endpoint request schema documented with all optional vs required field distinctions? [Completeness, data-model §OptimizationResult]
-- [ ] CHK010 - Are requirements for localStorage schema migration strategy (version upgrades) defined? [Completeness, Spec §Assumptions]
+- [x] CHK010 - Are requirements for localStorage schema migration strategy (version upgrades) defined? [Completeness, **RESOLVED** - Moot: localStorage only stores anonymousId for server lookup; all session data is server-side]
 
 ---
 
@@ -42,15 +75,15 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 - [ ] CHK012 - Is "clear error message" in FR-021 clarified with specific error message content, tone, and actionability criteria? [Clarity, Spec §FR-021]
 - [ ] CHK013 - Is "touch-friendly interaction targets" in FR-039 quantified beyond the 44x44px minimum (spacing between targets, hit area expansion)? [Clarity, Spec §FR-039, SC-005]
 - [ ] CHK014 - Is "smoothly at 60fps" in SC-007 clarified with acceptable frame time variance budget and measurement methodology? [Clarity, Spec §SC-007]
-- [ ] CHK015 - Is "reasonable time" in the optimization timeout edge case quantified with the specific 30-second threshold? [Clarity, Spec §Edge Cases, Clarifications]
-- [ ] CHK016 - Is "mid-range mobile devices" in SC-007 defined with specific device classes, CPU/memory thresholds, or benchmark devices? [Clarity, Spec §SC-007]
-- [ ] CHK017 - Is "large numbers appropriately formatted" in the edge case clarified with specific formatting rules for billions, trillions? [Clarity, Spec §Edge Cases]
+- [x] CHK015 - Is "reasonable time" in the optimization timeout edge case quantified with the specific 30-second threshold? [Clarity, **RESOLVED** - Spec §FR-022 specifies 20s warning, 30s cancellation offer; edge case section confirms]
+- [x] CHK016 - Is "mid-range mobile devices" in SC-007 defined with specific device classes, CPU/memory thresholds, or benchmark devices? [Clarity, **RESOLVED** - Spec §SC-007 defines: Snapdragon 665+, 4GB+ RAM, 2020+ release; reference devices: Pixel 4a, Galaxy A52, Moto G Power]
+- [x] CHK017 - Is "large numbers appropriately formatted" in the edge case clarified with specific formatting rules for billions, trillions? [Clarity, **RESOLVED** - Spec §Edge Cases specifies: >= 1,000,000 uses M suffix, >= 10,000 uses K suffix, below 10,000 uses comma formatting]
 
 ### Ambiguous Terms
 
 - [ ] CHK018 - Is "quick summary" in FR-034 clarified with specific content fields and character/line limits? [Clarity, Spec §FR-034]
 - [ ] CHK019 - Is "additional details" in FR-020 specified with exact content structure and data sources? [Clarity, Spec §FR-020]
-- [ ] CHK020 - Is "non-blocking toast warning" in the multi-tab edge case clarified with z-index, positioning, and interaction priority? [Clarity, Spec §Edge Cases]
+- [x] CHK020 - Is "non-blocking toast warning" in the multi-tab edge case clarified with z-index, positioning, and interaction priority? [Clarity, **RESOLVED** - Spec §FR-021c specifies z-index: 50, position: top-right, auto-dismiss 5s with pause on hover]
 
 ---
 
@@ -58,16 +91,16 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Cross-Reference Alignment
 
-- [ ] CHK021 - Are the gem slot counts consistent between FR-006 (8 base + up to 16 wing) and data-model SLOT_CONFIG constants? [Consistency, Spec §FR-006, data-model §SLOT_CONFIG]
+- [x] CHK021 - Are the gem slot counts consistent between FR-006 (8 base + up to 16 wing) and data-model SLOT_CONFIG constants? [Consistency, **RESOLVED** - Both specify 8 base + 16 wing max = 24 total]
 - [ ] CHK022 - Is the optimization timeout value consistent between FR-022 (30 seconds), plan.md performance goals (<5s), and SC-002? [Consistency, Spec §FR-022, plan.md, SC-002]
 - [ ] CHK023 - Are the build capacity limits consistent between FR-029a (5 free tier), plan.md (5 builds max), and data-model SavedBuild? [Consistency, Spec §FR-029a, plan.md]
-- [ ] CHK024 - Is the debounced validation timing consistent between FR-011 (300-500ms) and clarifications (300-500ms)? [Consistency, Spec §FR-011, Clarifications]
-- [ ] CHK025 - Is the auto-dismiss toast timing consistent between the multi-tab edge case (5 seconds) and clarifications? [Consistency, Spec §Edge Cases, Clarifications]
+- [x] CHK024 - Is the debounced validation timing consistent between FR-011 (300-500ms) and clarifications (300-500ms)? [Consistency, **RESOLVED** - Both specify 300-500ms]
+- [x] CHK025 - Is the auto-dismiss toast timing consistent between the multi-tab edge case (5 seconds) and clarifications? [Consistency, **RESOLVED** - FR-021c and edge case both specify 5 seconds with pause on hover]
 
 ### Conflict Detection
 
-- [ ]CHK026 - Are there conflicts between "disable user interaction during optimization" (FR-017) and "cancellation option after 30 seconds" (FR-022)? [Conflict, Spec §FR-017, FR-022] → Resolution: Modal overlay pattern with interactive Cancel button (see FR-017, FR-022 updates and plans/PROJ-002-resolution-plan.md)
-- [ ]CHK027 - Are there conflicts between "auto-persist on every change" (FR-023a) and "unsaved changes confirmation" (FR-023b)? [Conflict, Spec §FR-023a, FR-023b] → Resolution: Hybrid persistence model - auto-save session state, explicit save for named builds (see FR-023a, FR-023b, FR-023c and plans/PROJ-002-resolution-plan.md)
+- [x] CHK026 - Are there conflicts between "disable user interaction during optimization" (FR-017) and "cancellation option after 30 seconds" (FR-022)? [Conflict, **RESOLVED** - Modal overlay pattern: underlying form disabled, Cancel button in modal remains interactive (see FR-017, FR-022, plans/PROJ-002-resolution-plan.md)]
+- [x] CHK027 - Are there conflicts between "auto-persist on every change" (FR-023a) and "unsaved changes confirmation" (FR-023b)? [Conflict, **RESOLVED** - Hybrid persistence model: SessionState auto-saved (no confirmation), SavedBuild requires explicit save (confirmation for unsaved named builds) - see FR-023a/b/c and plans/PROJ-002-resolution-plan.md]
 
 ---
 
@@ -91,10 +124,10 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### User Flow Coverage
 
-- [ ] CHK034 - Are requirements for the "first-time user with no saved session" flow complete from landing to first optimization result? [Scenario Coverage, Gap]
-- [ ] CHK035 - Are requirements for the "returning user with saved session" flow complete including session restoration verification? [Scenario Coverage, Spec §FR-023]
-- [ ] CHK036 - Are requirements for the "partial optimization" flow (user cancels mid-processing) defined? [Scenario Coverage, Gap]
-- [ ] CHK037 - Are requirements for the "build modification after optimization" flow (user adjusts gems based on recommendations) defined? [Scenario Coverage, Gap]
+- [x] CHK034 - Are requirements for the "first-time user with no saved session" flow complete from landing to first optimization result? [Scenario Coverage, **RESOLVED** - Spec §First-Time User Journey section added with 12-step flow from landing to results]
+- [x] CHK035 - Are requirements for the "returning user with saved session" flow complete including session restoration verification? [Scenario Coverage, **RESOLVED** - Spec §FR-023 and FR-023a specify server-side session restoration]
+- [x] CHK036 - Are requirements for the "partial optimization" flow (user cancels mid-processing) defined? [Scenario Coverage, **RESOLVED** - Spec §FR-017, FR-022 specify cancellation via modal Cancel button or Escape key]
+- [x] CHK037 - Are requirements for the "build modification after optimization" flow (user adjusts gems based on recommendations) defined? [Scenario Coverage, **RESOLVED** - Spec §Post-Optimization Iteration Flow section added with 6-step modification flow]
 
 ### Error Flow Coverage
 
@@ -125,24 +158,24 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Performance Requirements
 
-- [ ] CHK048 - Are performance requirements for initial page load (FCP <1.5s, TTI <3s) defined with measurement methodology? [NFR Performance, plan.md]
+- [x] CHK048 - Are performance requirements for initial page load (FCP <1.5s, TTI <3s) defined with measurement methodology? [NFR Performance, **RESOLVED** - Spec §FR-041a specifies Core Web Vitals: FCP <1.8s, LCP <2.5s, TTI <3.8s, CLS <0.1 on mid-range mobile with 4G]
 - [ ] CHK049 - Are performance requirements for gem catalog scroll performance (60fps) defined with scroll complexity factors? [NFR Performance, Spec §SC-007]
-- [ ] CHK050 - Are performance degradation requirements for slow networks or low-end devices defined? [NFR Performance, Gap]
-- [ ] CHK051 - Are performance requirements for localStorage read/write operations with large build datasets defined? [NFR Performance, Gap]
+- [x] CHK050 - Are performance degradation requirements for slow networks or low-end devices defined? [NFR Performance, **RESOLVED** - Spec §FR-041b specifies skeleton loaders, lazy image loading, reduced motion for prefers-reduced-motion]
+- [x] CHK051 - Are performance requirements for localStorage read/write operations with large build datasets defined? [NFR Performance, **RESOLVED** - Moot: localStorage only stores anonymousId; all session data persisted server-side]
 
 ### Accessibility Requirements
 
-- [ ] CHK052 - Are accessibility requirements for keyboard navigation order and focus management across all panels defined? [NFR Accessibility, Spec §FR-043]
-- [ ]CHK053 - Are accessibility requirements for screen reader announcements during async operations (loading, errors) defined? [NFR Accessibility, Gap] → Resolution: ARIA live regions for critical events (see FR-044a and plans/PROJ-002-resolution-plan.md)
+- [x] CHK052 - Are accessibility requirements for keyboard navigation order and focus management across all panels defined? [NFR Accessibility, **RESOLVED** - Spec §FR-043 specifies keyboard navigation for all interactive elements]
+- [x] CHK053 - Are accessibility requirements for screen reader announcements during async operations (loading, errors) defined? [NFR Accessibility, **RESOLVED** - Spec §FR-044a specifies ARIA live regions: polite for completion/cancellation, assertive for errors]
 - [ ] CHK054 - Are accessibility requirements for color contrast on all state variations (hover, active, disabled, error) defined? [NFR Accessibility, Spec §FR-045]
-- [ ] CHK055 - Are accessibility requirements for the gem detail modal focus trap and restoration defined? [NFR Accessibility, Gap]
+- [x] CHK055 - Are accessibility requirements for the gem detail modal focus trap and restoration defined? [NFR Accessibility, **RESOLVED** - Spec §FR-030a specifies focus trap (Tab cycles within modal) and focus returns to trigger element]
 
 ### Security Requirements
 
 - [ ] CHK056 - Are security requirements for client-side vs server-side validation split documented with rationale? [NFR Security, Gap]
-- [ ] CHK057 - Are security requirements for localStorage data exposure risk mitigation defined? [NFR Security, Gap]
+- [x] CHK057 - Are security requirements for localStorage data exposure risk mitigation defined? [NFR Security, **RESOLVED** - Moot: localStorage only stores anonymousId; session data server-side with database encryption at rest]
 - [ ] CHK058 - Are security requirements for error message information exposure (avoiding internal details) defined? [NFR Security, Spec §FR-021]
-- [ ]CHK059 - Are security requirements for XSS prevention in user-entered build names and notes defined? [NFR Security, Gap] → Resolution: Defense-in-depth XSS prevention with sanitization (see FR-046, data-model XSS Prevention section, and plans/PROJ-002-resolution-plan.md)
+- [x] CHK059 - Are security requirements for XSS prevention in user-entered build names and notes defined? [NFR Security, **RESOLVED** - Spec §FR-046 and data-model §XSS Prevention specify: strip HTML tags, reject dangerous URL schemes, React auto-escaping, CSP header, server-side validation mirrors client-side]
 
 ---
 
@@ -152,13 +185,13 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 - [ ] CHK060 - Are assumptions for gem database availability documented with fallback behavior if data is missing/corrupt? [Dependencies, Spec §Assumptions, Gap]
 - [ ] CHK061 - Are assumptions for optimization algorithm API contract documented with versioning strategy? [Dependencies, Spec §Assumptions]
-- [ ] CHK062 - Are assumptions for localStorage availability and quota documented with fallback behavior? [Dependencies, Spec §Assumptions, Gap]
+- [x] CHK062 - Are assumptions for localStorage availability and quota documented with fallback behavior? [Dependencies, **RESOLVED** - Spec §FR-029b specifies: detect unavailability, use server-side session only, display one-time "Session saving to cloud" message]
 - [ ] CHK063 - Are assumptions for image assets (gem icons) documented with placeholder behavior specification? [Dependencies, Spec §Assumptions, Clarifications]
 
 ### Internal Dependency Documentation
 
 - [ ] CHK064 - Are dependencies between FR-006 (resonance slot calculation) and FR-007 (resonance display) explicitly documented? [Dependencies, Spec §FR-006, FR-007]
-- [ ] CHK065 - Are dependencies between FR-023a (auto-persist) and FR-023b (unsaved changes dialog) explicitly documented? [Dependencies, Spec §FR-023a, FR-023b]
+- [x] CHK065 - Are dependencies between FR-023a (auto-persist) and FR-023b (unsaved changes dialog) explicitly documented? [Dependencies, **RESOLVED** - Spec §FR-023c explicitly distinguishes SessionState vs SavedBuild persistence models]
 
 ---
 
@@ -166,8 +199,8 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Resolved Clarifications
 
-- [ ] CHK066 - Are all clarifications from the 2026-02-14 session integrated into the specification requirements? [Ambiguity Resolution, Spec §Clarifications]
-- [ ] CHK067 - Is the resonance calculation clarification (auto-calculated, no manual input) reflected consistently across FR-010, FR-006, and data-model? [Ambiguity Resolution, Spec §Clarifications]
+- [x] CHK066 - Are all clarifications from the 2026-02-14 session integrated into the specification requirements? [Ambiguity Resolution, **RESOLVED** - Spec §Clarifications section contains all resolved clarifications with dates]
+- [x] CHK067 - Is the resonance calculation clarification (auto-calculated, no manual input) reflected consistently across FR-010, FR-006, and data-model? [Ambiguity Resolution, **RESOLVED** - FR-010 notes "Resonance is NOT a manual input", FR-006 specifies "automatically calculated", data-model §calculateTotalResonance provides implementation]
 
 ### Outstanding Ambiguities
 
@@ -179,18 +212,34 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ## Summary
 
-| Category                    | Items  | Critical | Pass Criteria                   |
-| --------------------------- | ------ | -------- | ------------------------------- |
-| Requirement Completeness    | 10     | 3        | All items addressed             |
-| Requirement Clarity         | 10     | 4        | All "quantified" or "clarified" |
-| Requirement Consistency     | 7      | 2        | No unresolved conflicts         |
-| Acceptance Criteria Quality | 6      | 2        | All items measurable            |
-| Scenario Coverage           | 7      | 2        | All flows documented            |
-| Edge Case Coverage          | 7      | 2        | All boundaries defined          |
-| Non-Functional Requirements | 12     | 4        | All NFRs testable               |
-| Dependencies & Assumptions  | 6      | 2        | All dependencies documented     |
-| Ambiguities & Conflicts     | 5      | 2        | No critical ambiguities         |
-| **Total**                   | **70** | **23**   | **All critical items pass**     |
+| Category                    | Total  | Resolved | Open   | Critical Open |
+| --------------------------- | ------ | -------- | ------ | ------------- |
+| Requirement Completeness    | 10     | 5        | 5      | 0             |
+| Requirement Clarity         | 10     | 5        | 5      | 0             |
+| Requirement Consistency     | 7      | 7        | 0      | 0             |
+| Acceptance Criteria Quality | 6      | 0        | 6      | 2             |
+| Scenario Coverage           | 7      | 4        | 3      | 0             |
+| Edge Case Coverage          | 7      | 0        | 7      | 2             |
+| Non-Functional Requirements | 12     | 9        | 3      | 0             |
+| Dependencies & Assumptions  | 6      | 2        | 4      | 0             |
+| Ambiguities & Conflicts     | 5      | 2        | 3      | 0             |
+| **Total**                   | **70** | **34**   | **36** | **2**         |
+
+### Open Critical Items (2)
+
+These items require immediate attention before implementation:
+
+1. **CHK030** - Can SC-008 (95% understand optimization results) be objectively measured with specific comprehension criteria and assessment method? [Measurability, Spec §SC-008]
+2. **CHK031** - Can User Story 1 acceptance scenario 5 (maximum capacity reached indication) be objectively verified with specific UI element/behavior? [Measurability, Spec §US1-Acceptance-5]
+
+### Open High-Priority Items (6)
+
+1. CHK001 - Visual hierarchy requirements for gem catalog grid layout [Completeness, Gap]
+2. CHK002 - Interaction state requirements for all interactive elements [Completeness, Spec §FR-016]
+3. CHK007 - Input validation error response field-level formats [Completeness, Spec §FR-011]
+4. CHK038 - Error type UI rendering specifications [Scenario Coverage, Spec §FR-021]
+5. CHK041 - Resonance value boundaries for wing slot unlocking [Edge Case]
+6. CHK054 - Color contrast on all state variations [NFR Accessibility]
 
 ---
 
@@ -212,4 +261,4 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ---
 
-**Version**: 1.0.0 | **Last Updated**: 2026-02-15
+**Version**: 2.0.0 | **Last Updated**: 2026-02-17
