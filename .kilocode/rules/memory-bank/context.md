@@ -31,6 +31,7 @@ All implemented user stories (P1-P3) have been completed:
 
 ## Recently Completed (2026-02-18)
 
+- [x] **T104-T113: Validation Tests** - Added automated tests for WCAG contrast, performance targets, and integration flows
 - [x] **T114: CSP Headers** - Content Security Policy configured in next.config.ts (FR-046)
 - [x] **Phase 6: Build Management** - Save/load builds, deprecated gem detection, beforeunload confirmation
 - [x] **Phase 7: Gem Information Reference** - Tooltips (desktop/mobile), resonance tables, upgrade costs
@@ -100,6 +101,8 @@ All implemented user stories (P1-P3) have been completed:
 
 | Date       | Changes                                                                                                                 |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 2026-02-18 | Added automated validation tests: WCAG contrast (15 tests), performance (13 tests), integration flow (14 tests)         |
+| 2026-02-18 | Fixed success green color (#16A34A → #15803D) for WCAG AA compliance                                                    |
 | 2026-02-18 | Added CSP headers (T114) - Content Security Policy, X-Frame-Options, X-XSS-Protection in next.config.ts                 |
 | 2026-02-18 | Completed Phases 6-9: Build management, gem reference, responsive mobile, optimization constraints                      |
 | 2026-02-18 | Added PVP/PVE mode toggle with visual indicator and context text                                                        |
