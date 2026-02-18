@@ -1,19 +1,26 @@
 "use client";
 
 /**
- * Optimize Page - Gem Selection and Configuration
+ * Optimize Page - Gem Selection, Resource Input, and Optimization
  *
  * User Story 1: Gem Inventory Entry
  * - Select gems from catalog
  * - Configure quality and rank
  * - View equipped gems with resonance calculation
+ *
+ * User Story 2: Resource Specification
+ * - Input available resources
+ * - Session persistence
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import type { EquippedGem, LegendaryGem, Quality, Rank } from "@/types/gem";
+import type { ResourceInventory, SessionState } from "@/types";
 import { deriveSlotType } from "@/types/gem";
+import { createEmptySessionState } from "@/types";
 import GemCatalog from "@/components/gems/GemCatalog";
 import GemDetail from "@/components/gems/GemDetail";
+import ResourceInput from "@/components/optimization/ResourceInput";
 import Card, { CardBody } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
@@ -24,7 +31,13 @@ import {
   isAtMaxCapacity,
 } from "@/lib/utils/slots";
 import { getResonanceInfo } from "@/lib/utils/resonance";
-import { Plus, Trash2, Sparkles, AlertCircle } from "lucide-react";
+import {
+  getOrCreateAnonymousId,
+  fetchSessionState,
+  persistSessionState,
+  handleSessionInvalidation,
+} from "@/lib/session/anonymous-session";
+import { Plus, Trash2, Sparkles, AlertCircle, Save } from "lucide-react";
 
 // ============================================================================
 // Mock Gem Database (will be replaced with real data)
@@ -326,12 +339,113 @@ const RANK_OPTIONS = Array.from({ length: 10 }, (_, i) => ({
 // ============================================================================
 
 export default function OptimizePage() {
-  // State for equipped gems
-  const [equippedGems, setEquippedGems] = useState<EquippedGem[]>([]);
+  // Session state
+  const [anonymousId, setAnonymousId] = useState<string>("");
+  const [sessionState, setSessionState] = useState<SessionState>(() =>
+    createEmptySessionState(),
+  );
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [sessionError, setSessionError] = useState<string | null>(null);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
+  // Debounced save timer ref
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // State for gem detail modal
   const [selectedGemId, setSelectedGemId] = useState<string | null>(null);
   const [showGemDetail, setShowGemDetail] = useState(false);
+
+  // Extract state from session
+  const equippedGems = sessionState.gems;
+  const resources = sessionState.resources;
+  const optimizationMode = sessionState.optimizationMode;
+
+  // ============================================================================
+  // Session Management
+  // ============================================================================
+
+  // Initialize anonymous ID and load session on mount
+  useEffect(() => {
+    const initSession = async () => {
+      const id = getOrCreateAnonymousId();
+      setAnonymousId(id);
+
+      try {
+        const result = await fetchSessionState(id);
+        if (result.success) {
+          setSessionState(result.data);
+        } else {
+          // Session not found or expired - create new
+          const newState = createEmptySessionState();
+          setSessionState(newState);
+          // Save the new session
+          await persistSessionState(id, newState);
+        }
+      } catch (error) {
+        console.error("Failed to load session:", error);
+        setSessionError("Failed to load session");
+      } finally {
+        setIsLoadingSession(false);
+      }
+    };
+
+    initSession();
+
+    // Cleanup save timer on unmount
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Auto-save session state with debounce
+  const saveSession = useCallback(
+    (state: SessionState) => {
+      // Cancel any pending save
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+
+      // Debounce save by 500ms
+      saveTimerRef.current = setTimeout(async () => {
+        if (!anonymousId) return;
+
+        const result = await persistSessionState(anonymousId, state);
+        if (result.success) {
+          setLastSaved(new Date());
+        } else if (result.error === "Session expired") {
+          // Handle session invalidation (T040a)
+          const { anonymousId: newId, sessionState: newSession } =
+            await handleSessionInvalidation(state);
+          setAnonymousId(newId);
+          setSessionState(newSession);
+          setSessionError("Session expired. A new session has been created.");
+          // Clear error after 5 seconds
+          setTimeout(() => setSessionError(null), 5000);
+        }
+      }, 500);
+    },
+    [anonymousId],
+  );
+
+  // Update session state and trigger auto-save
+  const updateSessionState = useCallback(
+    (updates: Partial<SessionState>) => {
+      const newState = {
+        ...sessionState,
+        ...updates,
+        updatedAt: new Date().toISOString(),
+      };
+      setSessionState(newState);
+      saveSession(newState);
+    },
+    [sessionState, saveSession],
+  );
+
+  // ============================================================================
+  // Gem Management
+  // ============================================================================
 
   // Calculate resonance info
   const resonanceInfo = useMemo(() => {
@@ -383,38 +497,56 @@ export default function OptimizePage() {
         slotType: deriveSlotType(nextSlot),
       };
 
-      setEquippedGems((prev) => [...prev, newGem]);
+      updateSessionState({
+        gems: [...equippedGems, newGem],
+      });
     },
-    [equippedGems, resonanceInfo.total, atCapacity],
+    [equippedGems, resonanceInfo.total, atCapacity, updateSessionState],
   );
 
   // Handle removing a gem
-  const handleRemoveGem = useCallback((slotPosition: number) => {
-    setEquippedGems((prev) =>
-      prev.filter((gem) => gem.slotPosition !== slotPosition),
-    );
-  }, []);
+  const handleRemoveGem = useCallback(
+    (slotPosition: number) => {
+      updateSessionState({
+        gems: equippedGems.filter((gem) => gem.slotPosition !== slotPosition),
+      });
+    },
+    [equippedGems, updateSessionState],
+  );
 
   // Handle quality change
   const handleQualityChange = useCallback(
     (slotPosition: number, quality: Quality) => {
-      setEquippedGems((prev) =>
-        prev.map((gem) =>
+      updateSessionState({
+        gems: equippedGems.map((gem) =>
           gem.slotPosition === slotPosition ? { ...gem, quality } : gem,
         ),
-      );
+      });
     },
-    [],
+    [equippedGems, updateSessionState],
   );
 
   // Handle rank change
-  const handleRankChange = useCallback((slotPosition: number, rank: Rank) => {
-    setEquippedGems((prev) =>
-      prev.map((gem) =>
-        gem.slotPosition === slotPosition ? { ...gem, rank } : gem,
-      ),
-    );
-  }, []);
+  const handleRankChange = useCallback(
+    (slotPosition: number, rank: Rank) => {
+      updateSessionState({
+        gems: equippedGems.map((gem) =>
+          gem.slotPosition === slotPosition ? { ...gem, rank } : gem,
+        ),
+      });
+    },
+    [equippedGems, updateSessionState],
+  );
+
+  // Handle resource change
+  const handleResourcesChange = useCallback(
+    (newResources: ResourceInventory) => {
+      updateSessionState({
+        resources: newResources,
+      });
+    },
+    [updateSessionState],
+  );
 
   // Handle viewing gem details
   const handleViewGemDetail = useCallback((gemId: string) => {
@@ -431,18 +563,55 @@ export default function OptimizePage() {
   // Get gem for detail view
   const selectedGem = selectedGemId ? GEM_MAP.get(selectedGemId) : null;
 
+  // ============================================================================
+  // Loading State
+  // ============================================================================
+
+  if (isLoadingSession) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading your session...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ============================================================================
+  // Render
+  // ============================================================================
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Optimize Your Build
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Select and configure your legendary gems to optimize your build
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Optimize Your Build
+              </h1>
+              <p className="mt-2 text-gray-600">
+                Select and configure your legendary gems to optimize your build
+              </p>
+            </div>
+            {/* Auto-save indicator (T080) */}
+            {lastSaved && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Save className="w-4 h-4" />
+                <span>Auto-saved</span>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Session Error Toast */}
+        {sessionError && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-amber-800">{sessionError}</p>
+          </div>
+        )}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -615,6 +784,18 @@ export default function OptimizePage() {
                     })}
                   </div>
                 )}
+              </CardBody>
+            </Card>
+
+            {/* Resource Input Card (T033) */}
+            <Card padding="md">
+              <CardBody>
+                <ResourceInput
+                  resources={resources}
+                  onResourcesChange={handleResourcesChange}
+                  gemDatabase={GEM_MAP}
+                  debounceMs={300}
+                />
               </CardBody>
             </Card>
           </div>

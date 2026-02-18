@@ -115,19 +115,19 @@
 
 ### Resource Input Components
 
-- [ ] T033 [US2] Create `src/components/optimization/ResourceInput.tsx` with all resource input fields per FR-010: gemPower, inventoryGems (two-panel UI: Left=equipped, Right=inventory), telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts (eternal/legendary/rare), dawningEchoes. Note: Awakened slots panel is created separately in T069a-T069d.
-- [ ] T034 [US2] Add debounced validation (300-500ms delay) for all resource inputs with non-negative integer validation (FR-011)
-- [ ] T035 [US2] Add number formatting display with commas for thousands, K suffix >=10,000, M suffix >=1,000,000 (FR-012)
-- [ ] T036 [US2] Create resource summary panel showing totals for all resource types and inventory gems counts per gem (FR-013)
+- [x] T033 [US2] Create `src/components/optimization/ResourceInput.tsx` with all resource input fields per FR-010: gemPower, inventoryGems (two-panel UI: Left=equipped, Right=inventory), telluricPearls, telluricFragments, fadingEmbers, platinum, crestCounts (eternal/legendary/rare), dawningEchoes. Note: Awakened slots panel is created separately in T069a-T069d.
+- [x] T034 [US2] Add debounced validation (300-500ms delay) for all resource inputs with non-negative integer validation (FR-011)
+- [x] T035 [US2] Add number formatting display with commas for thousands, K suffix >=10,000, M suffix >=1,000,000 (FR-012)
+- [x] T036 [US2] Create resource summary panel showing totals for all resource types and inventory gems counts per gem (FR-013)
 - [ ] T036a [US2] [DEFERRED] Add platinum-equivalent cost display to resource summary panel using values from docs/currencies-and-materials.csv (FR-010a - Out of Scope for MVP)
-- [ ] T037 [US2] Add clear/reset functionality for all resource values (FR-014)
+- [x] T037 [US2] Add clear/reset functionality for all resource values (FR-014)
 
 ### Session Persistence
 
-- [ ] T038 [US2] Create `src/app/api/session/route.ts` GET endpoint to restore session state from server database (FR-023)
-- [ ] T039 [US2] Create `src/app/api/session/route.ts` POST endpoint to auto-persist session state on every change (FR-023a)
-- [ ] T040 [US2] Integrate resource state with session auto-persistence in `src/app/optimize/page.tsx`
-- [ ] T040a [US2] Implement session invalidation handling: detect 404/410 from session endpoint, show "Session expired" toast, auto-create new session with new UUID, preserve local UI state, sync to new session (FR-029d)
+- [x] T038 [US2] Create `src/app/api/session/route.ts` GET endpoint to restore session state from server database (FR-023)
+- [x] T039 [US2] Create `src/app/api/session/route.ts` POST endpoint to auto-persist session state on every change (FR-023a)
+- [x] T040 [US2] Integrate resource state with session auto-persistence in `src/app/optimize/page.tsx`
+- [x] T040a [US2] Implement session invalidation handling: detect 404/410 from session endpoint, show "Session expired" toast, auto-create new session with new UUID, preserve local UI state, sync to new session (FR-029d)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - gem selection and resource input complete
 

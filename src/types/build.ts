@@ -6,6 +6,10 @@
 import type { EquippedGem, OptimizationMode, InventoryGem } from "./gem";
 import type { ResourceInventory } from "./optimization";
 
+// Re-export types needed by components
+export type { InventoryGem } from "./gem";
+export type { ResourceInventory } from "./optimization";
+
 // ============================================================================
 // Awakened Slot Types
 // ============================================================================
