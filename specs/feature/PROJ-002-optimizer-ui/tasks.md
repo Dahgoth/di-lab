@@ -158,8 +158,8 @@
 
 ### Optimization UI Components
 
-- [ ] T052 [US3] Create `src/components/ui/Skeleton.tsx` for loading placeholder shapes with pulse animation (FR-016, FR-016a)
-- [ ] T053 [US3] Create `src/components/optimization/OptimizeButton.tsx` with loading and disabled states (FR-015)
+- [x] T052 [US3] Create `src/components/ui/Skeleton.tsx` for loading placeholder shapes with pulse animation (FR-016, FR-016a)
+- [x] T053 [US3] Create `src/components/optimization/OptimizeButton.tsx` with loading and disabled states (FR-015)
 - [ ] T054 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay blocking underlying form, and Escape key cancellation (FR-017)
 - [ ] T055 [US3] Create `src/components/optimization/ResultsPanel.tsx` for ranked recommendations display with skeleton loading state (FR-018)
 - [ ] T056 [US3] Create `src/components/optimization/RecommendationCard.tsx` with expandable details showing target gem, upgrade path, resource cost, power gain (FR-019, FR-020)
@@ -169,7 +169,7 @@
 
 ### Error Handling
 
-- [ ] T060 [US3] Create `src/components/ui/Toast.tsx` with top-right positioning, vertical stack, z-index 50, max 3 visible, 5s auto-dismiss with pause on hover, mobile full-width adaptation (FR-021c)
+- [x] T060 [US3] Create `src/components/ui/Toast.tsx` with top-right positioning, vertical stack, z-index 50, max 3 visible, 5s auto-dismiss with pause on hover, mobile full-width adaptation (FR-021c)
 - [ ] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a), including rate-limited countdown display
 - [ ] T062 [US3] Create error display for insufficient-resources with "Add more resources" guidance (FR-021, FR-021a)
 - [ ] T063 [US3] Create error display for timeout with retry option (FR-021, FR-021a)
@@ -179,7 +179,7 @@
 
 ### Timeout Enhancement
 
-- [ ] T067 [US3] Add 20-second "Still processing..." warning toast and 30-second cancellation offer in `src/components/optimization/OptimizeButton.tsx` (FR-022)
+- [x] T067 [US3] Add 20-second "Still processing..." warning toast and 30-second cancellation offer in `src/components/optimization/OptimizeButton.tsx` (FR-022)
 
 ### Screen Reader Announcements
 

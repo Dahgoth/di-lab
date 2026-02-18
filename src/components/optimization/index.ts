@@ -4,3 +4,6 @@
 
 export { default as ResourceInput } from "./ResourceInput";
 export type { ResourceInputProps } from "./ResourceInput";
+
+export { OptimizeButton, useOptimizeTimer } from "./OptimizeButton";
+export type { OptimizeButtonProps } from "./OptimizeButton";
