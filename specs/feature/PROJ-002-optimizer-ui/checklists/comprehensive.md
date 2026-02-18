@@ -17,38 +17,41 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ## Resolution Summary
 
-| Item   | Status      | Resolution                                                                                                        |
-| ------ | ----------- | ----------------------------------------------------------------------------------------------------------------- |
-| CHK001 | ✅ RESOLVED | FR-002a specifies visual hierarchy: 120x160px cards, 16px gap, gold border for 5-star, tier badge colors          |
-| CHK002 | ✅ RESOLVED | FR-016b defines 5 interaction states: hover, focus, active, disabled, loading with specific visual feedback       |
-| CHK003 | ✅ RESOLVED | FR-009a now specifies dedicated empty states for each panel                                                       |
-| CHK004 | ✅ RESOLVED | FR-030a specifies full modal closing behavior (ESC, click outside, close button, focus trap)                      |
-| CHK006 | ✅ RESOLVED | FR-021c specifies toast positioning, stacking, z-index                                                            |
-| CHK007 | ✅ RESOLVED | FR-011 specifies structured JSON error format with field-level codes and inline display                           |
-| CHK008 | ✅ RESOLVED | FR-022a specifies cancel-and-replace pattern for concurrent requests                                              |
-| CHK015 | ✅ RESOLVED | Spec clarifies: 20s warning, 30s cancellation offer                                                               |
-| CHK016 | ✅ RESOLVED | SC-007 defines mid-range devices: Snapdragon 665+, 4GB+ RAM, 2020+, reference devices                             |
-| CHK017 | ✅ RESOLVED | Spec clarifies: >= 1,000,000 M suffix, >= 10,000 K suffix                                                         |
-| CHK020 | ✅ RESOLVED | FR-021c and edge case section specify 5s auto-dismiss with pause on hover                                         |
-| CHK021 | ✅ RESOLVED | FR-006 and data-model SLOT_CONFIG are consistent (8 base + 16 wing max)                                           |
-| CHK024 | ✅ RESOLVED | FR-011 specifies 300-500ms debounce, clarifications confirm                                                       |
-| CHK025 | ✅ RESOLVED | FR-021c and edge case both specify 5 seconds auto-dismiss                                                         |
-| CHK026 | ✅ RESOLVED | Modal overlay pattern with interactive Cancel button (FR-017, FR-022 updated)                                     |
-| CHK027 | ✅ RESOLVED | Hybrid persistence model - auto-save session, explicit save for named builds (FR-023a/b/c)                        |
-| CHK030 | ✅ RESOLVED | SC-008 specifies task-based assessment: identify top recommendation, explain ranking, identify resources consumed |
-| CHK031 | ✅ RESOLVED | US1-Acceptance-5 specifies: disabled catalog gems (opacity-50), toast notification, tooltip on hover              |
-| CHK034 | ✅ RESOLVED | "First-Time User Journey" section added with 12-step flow                                                         |
-| CHK035 | ✅ RESOLVED | FR-023, FR-023a cover session restoration flow                                                                    |
-| CHK036 | ✅ RESOLVED | FR-017, FR-022 specify cancellation during optimization                                                           |
-| CHK037 | ✅ RESOLVED | "Post-Optimization Iteration Flow" section added                                                                  |
-| CHK048 | ✅ RESOLVED | FR-041a specifies Core Web Vitals targets (FCP <1.8s, LCP <2.5s, TTI <3.8s)                                       |
-| CHK050 | ✅ RESOLVED | FR-041b specifies progressive enhancement for slow networks/low-end devices                                       |
-| CHK051 | ✅ RESOLVED | Moot - storage moved to server-side database, localStorage only stores anonymous ID                               |
-| CHK052 | ✅ RESOLVED | FR-043 specifies keyboard navigation for all interactive elements                                                 |
-| CHK053 | ✅ RESOLVED | FR-044a specifies ARIA live regions for critical optimization events                                              |
-| CHK055 | ✅ RESOLVED | FR-030a specifies focus trap and restoration for gem detail modal                                                 |
-| CHK059 | ✅ RESOLVED | FR-046 specifies XSS prevention with defense-in-depth approach                                                    |
-| CHK062 | ✅ RESOLVED | FR-029b specifies localStorage unavailability fallback to server-side session                                     |
+| Item   | Status      | Resolution                                                                                                                                |
+| ------ | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| CHK001 | ✅ RESOLVED | FR-002a specifies visual hierarchy: 120x160px cards, 16px gap, gold border for 5-star, tier badge colors                                  |
+| CHK002 | ✅ RESOLVED | FR-016b defines 5 interaction states: hover, focus, active, disabled, loading with specific visual feedback                               |
+| CHK003 | ✅ RESOLVED | FR-009a now specifies dedicated empty states for each panel                                                                               |
+| CHK004 | ✅ RESOLVED | FR-030a specifies full modal closing behavior (ESC, click outside, close button, focus trap)                                              |
+| CHK006 | ✅ RESOLVED | FR-021c specifies toast positioning, stacking, z-index                                                                                    |
+| CHK007 | ✅ RESOLVED | FR-011 specifies structured JSON error format with field-level codes and inline display                                                   |
+| CHK008 | ✅ RESOLVED | FR-022a specifies cancel-and-replace pattern for concurrent requests                                                                      |
+| CHK015 | ✅ RESOLVED | Spec clarifies: 20s warning, 30s cancellation offer                                                                                       |
+| CHK016 | ✅ RESOLVED | SC-007 defines mid-range devices: Snapdragon 665+, 4GB+ RAM, 2020+, reference devices                                                     |
+| CHK017 | ✅ RESOLVED | Spec clarifies: >= 1,000,000 M suffix, >= 10,000 K suffix                                                                                 |
+| CHK020 | ✅ RESOLVED | FR-021c and edge case section specify 5s auto-dismiss with pause on hover                                                                 |
+| CHK021 | ✅ RESOLVED | FR-006 and data-model SLOT_CONFIG are consistent (8 base + 16 wing max)                                                                   |
+| CHK024 | ✅ RESOLVED | FR-011 specifies 300-500ms debounce, clarifications confirm                                                                               |
+| CHK025 | ✅ RESOLVED | FR-021c and edge case both specify 5 seconds auto-dismiss                                                                                 |
+| CHK026 | ✅ RESOLVED | Modal overlay pattern with interactive Cancel button (FR-017, FR-022 updated)                                                             |
+| CHK027 | ✅ RESOLVED | Hybrid persistence model - auto-save session, explicit save for named builds (FR-023a/b/c)                                                |
+| CHK030 | ✅ RESOLVED | SC-008 specifies task-based assessment: identify top recommendation, explain ranking, identify resources consumed                         |
+| CHK031 | ✅ RESOLVED | US1-Acceptance-5 specifies: disabled catalog gems (opacity-50), toast notification, tooltip on hover                                      |
+| CHK034 | ✅ RESOLVED | "First-Time User Journey" section added with 12-step flow                                                                                 |
+| CHK035 | ✅ RESOLVED | FR-023, FR-023a cover session restoration flow                                                                                            |
+| CHK036 | ✅ RESOLVED | FR-017, FR-022 specify cancellation during optimization                                                                                   |
+| CHK037 | ✅ RESOLVED | "Post-Optimization Iteration Flow" section added                                                                                          |
+| CHK038 | ✅ RESOLVED | FR-021e defines per-error-type UI: validation (inline), insufficient-resources (toast+action), timeout (modal), server-error (toast+code) |
+| CHK041 | ✅ RESOLVED | Edge case section specifies resonance boundaries: 0 min, thresholds 6000/7000/8000/8500+ for 4/8/12/16 wing slots                         |
+| CHK048 | ✅ RESOLVED | FR-041a specifies Core Web Vitals targets (FCP <1.8s, LCP <2.5s, TTI <3.8s)                                                               |
+| CHK050 | ✅ RESOLVED | FR-041b specifies progressive enhancement for slow networks/low-end devices                                                               |
+| CHK051 | ✅ RESOLVED | Moot - storage moved to server-side database, localStorage only stores anonymous ID                                                       |
+| CHK052 | ✅ RESOLVED | FR-043 specifies keyboard navigation for all interactive elements                                                                         |
+| CHK053 | ✅ RESOLVED | FR-044a specifies ARIA live regions for critical optimization events                                                                      |
+| CHK054 | ✅ RESOLVED | FR-045 specifies WCAG AA contrast ratios: 4.5:1 normal text, 3:1 large text/UI, error red #DC2626                                         |
+| CHK055 | ✅ RESOLVED | FR-030a specifies focus trap and restoration for gem detail modal                                                                         |
+| CHK059 | ✅ RESOLVED | FR-046 specifies XSS prevention with defense-in-depth approach                                                                            |
+| CHK062 | ✅ RESOLVED | FR-029b specifies localStorage unavailability fallback to server-side session                                                             |
 
 ---
 
@@ -136,7 +139,7 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Error Flow Coverage
 
-- [ ] CHK038 - Are requirements for all four error types (validation, insufficient-resources, timeout, server-error) complete with UI rendering specifications? [Scenario Coverage, Spec §FR-021]
+- [x] CHK038 - Are requirements for all four error types (validation, insufficient-resources, timeout, server-error) complete with UI rendering specifications? [Scenario Coverage, **RESOLVED** - FR-021e defines per-error-type UI: validation (inline), insufficient-resources (toast+action), timeout (modal), server-error (toast+code)]
 - [ ] CHK039 - Are requirements for retry UI state (loading indicator, retry button state, disabled interactions) defined? [Scenario Coverage, Spec §FR-021b]
 - [ ] CHK040 - Are requirements for network reconnection after optimization failure defined? [Scenario Coverage, Spec §Edge Cases]
 
@@ -146,7 +149,7 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ### Boundary Conditions
 
-- [ ] CHK041 - Are requirements for minimum/maximum resonance values and their impact on wing slot unlocking defined? [Edge Case, data-model §calculateUnlockedWingSlots]
+- [x] CHK041 - Are requirements for minimum/maximum resonance values and their impact on wing slot unlocking defined? [Edge Case, **RESOLVED** - Edge case section specifies: 0 min, thresholds 6000/7000/8000/8500+ for 4/8/12/16 wing slots]
 - [ ] CHK042 - Are requirements for maximum integer values in resource inputs (2,147,483,647) defined with handling for overflow? [Edge Case, data-model §ResourceInventory]
 - [ ] CHK043 - Are requirements for gem catalog loading with 100 gems (maximum specified) defined with performance expectations? [Edge Case, Spec §Assumptions, SC-007]
 - [ ] CHK044 - Are requirements for build name uniqueness enforcement at the maximum character limit (50 chars) defined? [Edge Case, data-model §SavedBuild]
@@ -172,7 +175,7 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 - [x] CHK052 - Are accessibility requirements for keyboard navigation order and focus management across all panels defined? [NFR Accessibility, **RESOLVED** - Spec §FR-043 specifies keyboard navigation for all interactive elements]
 - [x] CHK053 - Are accessibility requirements for screen reader announcements during async operations (loading, errors) defined? [NFR Accessibility, **RESOLVED** - Spec §FR-044a specifies ARIA live regions: polite for completion/cancellation, assertive for errors]
-- [ ] CHK054 - Are accessibility requirements for color contrast on all state variations (hover, active, disabled, error) defined? [NFR Accessibility, Spec §FR-045]
+- [x] CHK054 - Are accessibility requirements for color contrast on all state variations (hover, active, disabled, error) defined? [NFR Accessibility, **RESOLVED** - FR-045 specifies WCAG AA: 4.5:1 normal text, 3:1 large text/UI, error red #DC2626 with white text]
 - [x] CHK055 - Are accessibility requirements for the gem detail modal focus trap and restoration defined? [NFR Accessibility, **RESOLVED** - Spec §FR-030a specifies focus trap (Tab cycles within modal) and focus returns to trigger element]
 
 ### Security Requirements
@@ -223,22 +226,33 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 | Requirement Clarity         | 10     | 5        | 5      | 0             |
 | Requirement Consistency     | 7      | 7        | 0      | 0             |
 | Acceptance Criteria Quality | 6      | 2        | 4      | 0             |
-| Scenario Coverage           | 7      | 4        | 3      | 0             |
-| Edge Case Coverage          | 7      | 0        | 7      | 2             |
-| Non-Functional Requirements | 12     | 9        | 3      | 0             |
+| Scenario Coverage           | 7      | 5        | 2      | 0             |
+| Edge Case Coverage          | 7      | 1        | 6      | 0             |
+| Non-Functional Requirements | 12     | 10       | 2      | 0             |
 | Dependencies & Assumptions  | 6      | 2        | 4      | 0             |
 | Ambiguities & Conflicts     | 5      | 2        | 3      | 0             |
-| **Total**                   | **70** | **39**   | **31** | **0**         |
+| **Total**                   | **70** | **42**   | **28** | **0**         |
 
 ### Open Critical Items (0)
 
 ✅ All critical items have been resolved!
 
-### Open High-Priority Items (3)
+### Open High-Priority Items (0)
 
-1. CHK038 - Error type UI rendering specifications [Scenario Coverage, Spec §FR-021]
-2. CHK041 - Resonance value boundaries for wing slot unlocking [Edge Case]
-3. CHK054 - Color contrast on all state variations [NFR Accessibility]
+✅ All high-priority items have been resolved!
+
+### Remaining Open Items (28)
+
+Remaining items are medium/low priority and can be addressed during implementation:
+
+- **Requirement Completeness** (2): CHK005, CHK009
+- **Requirement Clarity** (5): CHK011-CHK014, CHK018-CHK019
+- **Acceptance Criteria Quality** (4): CHK028-CHK029, CHK032-CHK033
+- **Scenario Coverage** (2): CHK039-CHK040
+- **Edge Case Coverage** (6): CHK042-CHK047
+- **Non-Functional Requirements** (2): CHK049, CHK056, CHK058
+- **Dependencies & Assumptions** (4): CHK060-CHK061, CHK063-CHK064
+- **Ambiguities & Conflicts** (3): CHK068-CHK070
 
 ---
 
@@ -260,4 +274,4 @@ This checklist tests the **REQUIREMENTS QUALITY**, not the implementation. Every
 
 ---
 
-**Version**: 2.1.0 | **Last Updated**: 2026-02-18
+**Version**: 2.2.0 | **Last Updated**: 2026-02-18

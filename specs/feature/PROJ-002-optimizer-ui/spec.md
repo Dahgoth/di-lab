@@ -242,6 +242,7 @@ After viewing optimization results, users typically iterate on their build. This
 - **FR-019**: System MUST show for each recommendation: target gem, upgrade path (rank progression), resource cost, and expected power gain. **[ADVANCED]** Acquisition paths (how to obtain gems/resources) are a nice-to-have feature showing methods like Elder Rift farming, market purchases, or crafting. Note: FR-052-054 (resource deficit display and acquisition options) are separate in-scope MVP requirements, not part of this advanced feature.
 - **FR-020**: System MUST allow users to expand recommendations for additional details
 - **FR-021**: System MUST display typed error messages when optimization cannot be performed, with specific handling for: validation errors (invalid input), insufficient-resources (no viable upgrades), timeout (processing exceeded 30 second limit), server-error (backend failure), and rate-limited (HTTP 429 with retry-after guidance showing wait time)
+- **FR-021e**: System MUST render each error type with distinct UI treatment: validation errors use inline field display with icon + red border, insufficient-resources errors show toast with 'View requirements' action linking to deficit panel, timeout errors display modal with retry button and elapsed time, server-error shows toast with 'Try again' button and error code for support reference
 - **FR-021d**: System MUST handle network connection loss during optimization: detect offline status via navigator.onLine or fetch failure, display "Connection lost" error with retry-when-online option, and queue retry when connection is restored
 - **FR-022**: System MUST handle optimization timeout gracefully:
   - Display a timeout warning after 20 seconds with "Still processing..." message
@@ -392,7 +393,7 @@ After viewing optimization results, users typically iterate on their build. This
   - Do NOT announce loading start (modal overlay already indicates progress)
   - Use aria-live="polite" region for non-intrusive announcements
   - Use aria-live="assertive" for error announcements requiring immediate attention
-- **FR-045**: System MUST maintain sufficient color contrast ratios (4.5:1 for normal text, 3:1 for large text)
+- **FR-045**: System MUST maintain sufficient color contrast ratios per WCAG 2.1 AA: normal text 4.5:1 minimum, large text (18px+ or 14px bold) 3:1 minimum, UI components 3:1 minimum. Hover/active states must maintain ratios, disabled states use opacity 50% (exempt per WCAG), error states use red (#DC2626) with white text for 4.8:1 contrast
 - **FR-046**: System MUST prevent XSS attacks in user-entered content:
   - Build names (1-50 characters) and notes (0-500 characters) are user-controllable
   - React's JSX auto-escaping provides baseline protection against injection
@@ -921,6 +922,15 @@ The following items are explicitly out of scope for this UI specification:
 - Q: What field-level error message format should FR-011 specify for resource input validation errors?
   A: **Structured JSON with inline display** - Validation errors returned as `{ "fields": [{ "field": "gemPower", "code": "INVALID_TYPE", "message": "Must be a positive integer" }] }` with error codes: INVALID_TYPE (non-numeric), NEGATIVE_VALUE (negative number), EXCEEDS_MAX (overflow). Errors displayed inline below each field with red border and error icon for immediate user feedback.
 
+- Q: What UI rendering specifications should be defined for each error type (validation, insufficient-resources, timeout, server-error)?
+  A: **Per-error-type specifications** - (1) validation: inline field errors with icon + red border, (2) insufficient-resources: toast with 'View requirements' action linking to resource deficit panel, (3) timeout: modal with retry button and elapsed time display, (4) server-error: toast with 'Try again' button and error code for support reference. Each type has distinct visual treatment and actionable guidance.
+
+- Q: What are the minimum/maximum resonance values and their impact on wing slot unlocking?
+  A: **Threshold-based unlocking** - Resonance range: 0 (minimum, no wing slots) to calculated max from equipped gems. Thresholds: 6000 resonance = 4 wing slots unlocked, 7000 = 8 slots, 8000 = 12 slots, 8500+ = 16 slots (maximum). Total slots = 8 base + unlocked wing slots (max 24). FR-006 already documents these thresholds; edge case section updated with boundary values.
+
+- Q: What color contrast requirements should be defined for all state variations (hover, active, disabled, error)?
+  A: **WCAG AA compliant ratios** - Normal text: 4.5:1 minimum, large text (18px+ or 14px bold): 3:1 minimum, UI components: 3:1 minimum. Hover/active states must maintain these ratios. Disabled states use opacity 50% (exempt from contrast per WCAG). Error states use red (#DC2626) background with white (#FFFFFF) text for 4.8:1 contrast. FR-045 updated with specific ratios.
+
 ### Session 2026-02-14
 
 - Q: Should we use placeholder graphics initially, or are official/representative gem icons available?  
@@ -1006,4 +1016,4 @@ The following items are explicitly out of scope for this UI specification:
 
 ---
 
-**Version**: 2.1.0 | **Last Updated**: 2026-02-18
+**Version**: 2.2.0 | **Last Updated**: 2026-02-18
