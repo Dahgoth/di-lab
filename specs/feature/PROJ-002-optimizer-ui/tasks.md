@@ -73,18 +73,18 @@
 
 ### Base UI Components
 
-- [ ] T013 [P] [US1] Create `src/components/ui/Button.tsx` with variants (primary, secondary, ghost, danger) and sizes (sm, md, lg), loading state, and disabled state
-- [ ] T014 [P] [US1] Create `src/components/ui/Card.tsx` with header, body, footer sections and responsive padding
-- [ ] T015 [P] [US1] Create `src/components/ui/Input.tsx` with label, error state, validation, and debounced onChange
-- [ ] T016 [P] [US1] Create `src/components/ui/Select.tsx` with native dropdown for mobile compatibility, options array, placeholder, and change handler
-- [ ] T017 [P] [US1] Create `src/components/ui/Modal.tsx` with open/close state, backdrop click handling, ESC key close, focus trap, and focus return to trigger element (FR-030a)
+- [x] T013 [P] [US1] Create `src/components/ui/Button.tsx` with variants (primary, secondary, ghost, danger) and sizes (sm, md, lg), loading state, and disabled state
+- [x] T014 [P] [US1] Create `src/components/ui/Card.tsx` with header, body, footer sections and responsive padding
+- [x] T015 [P] [US1] Create `src/components/ui/Input.tsx` with label, error state, validation, and debounced onChange
+- [x] T016 [P] [US1] Create `src/components/ui/Select.tsx` with native dropdown for mobile compatibility, options array, placeholder, and change handler
+- [x] T017 [P] [US1] Create `src/components/ui/Modal.tsx` with open/close state, backdrop click handling, ESC key close, focus trap, and focus return to trigger element (FR-030a)
 
 ### Gem Components
 
-- [ ] T018 [US1] Create `src/components/gems/GemCatalog.tsx` with star-rating tabs (1-star, 2-star, 5-star), 5-star default, search/filter bar, and grid layout (FR-001)
-- [ ] T019 [US1] Create `src/components/gems/GemCard.tsx` for catalog view with gem icon/placeholder, name, star rating, quick-add button, and hover state (FR-002, FR-003)
-- [ ] T020 [US1] Create `src/components/gems/GemSelector.tsx` with quality (1-5) and rank (1-10) native dropdown selects per FR-005a
-- [ ] T021 [US1] Create `src/components/gems/GemDetail.tsx` modal showing full gem information with close button, ESC key support, click-outside close, and focus management (FR-030, FR-030a)
+- [x] T018 [US1] Create `src/components/gems/GemCatalog.tsx` with star-rating tabs (1-star, 2-star, 5-star), 5-star default, search/filter bar, and grid layout (FR-001)
+- [x] T019 [US1] Create `src/components/gems/GemCard.tsx` for catalog view with gem icon/placeholder, name, star rating, quick-add button, and hover state (FR-002, FR-003)
+- [x] T020 [US1] Create `src/components/gems/GemSelector.tsx` with quality (1-5) and rank (1-10) native dropdown selects per FR-005a
+- [x] T021 [US1] Create `src/components/gems/GemDetail.tsx` modal showing full gem information with close button, ESC key support, click-outside close, and focus management (FR-030, FR-030a)
 
 ### Slot Management Logic
 
