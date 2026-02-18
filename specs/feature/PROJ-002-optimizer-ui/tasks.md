@@ -343,7 +343,7 @@
 
 ### CSP and Security
 
-- [ ] T114 Configure Content Security Policy header to prevent inline script execution (FR-046) - Server configuration
+- [x] T114 Configure Content Security Policy header to prevent inline script execution (FR-046) - Server configuration
 
 ---
 
