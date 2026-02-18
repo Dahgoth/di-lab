@@ -170,12 +170,12 @@
 ### Error Handling
 
 - [x] T060 [US3] Create `src/components/ui/Toast.tsx` with top-right positioning, vertical stack, z-index 50, max 3 visible, 5s auto-dismiss with pause on hover, mobile full-width adaptation (FR-021c)
-- [ ] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a), including rate-limited countdown display
-- [ ] T062 [US3] Create error display for insufficient-resources with "Add more resources" guidance (FR-021, FR-021a)
-- [ ] T063 [US3] Create error display for timeout with retry option (FR-021, FR-021a)
-- [ ] T064 [US3] Implement single retry with fixed 1s delay for transient API failures (FR-021b)
-- [ ] T065 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option (FR-021d)
-- [ ] T066 [US3] Implement cancel-and-replace pattern for concurrent optimization requests using AbortController (FR-022a)
+- [x] T061 [US3] Create error display component for validation errors with actionable guidance (FR-021, FR-021a), including rate-limited countdown display
+- [x] T062 [US3] Create error display for insufficient-resources with "Add more resources" guidance (FR-021, FR-021a)
+- [x] T063 [US3] Create error display for timeout with retry option (FR-021, FR-021a)
+- [x] T064 [US3] Implement single retry with fixed 1s delay for transient API failures (FR-021b)
+- [x] T065 [US3] Handle network connection loss during optimization with offline detection and retry-when-online option (FR-021d)
+- [x] T066 [US3] Implement cancel-and-replace pattern for concurrent optimization requests using AbortController (FR-022a)
 
 ### Timeout Enhancement
 

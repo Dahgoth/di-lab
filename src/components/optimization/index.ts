@@ -13,3 +13,10 @@ export { OptimizationModal } from "./OptimizationModal";
 export { ResultsPanel } from "./ResultsPanel";
 
 export { RecommendationCard } from "./RecommendationCard";
+
+export {
+  OptimizationErrorDisplay,
+  OfflineError,
+  ValidationError,
+  InsufficientResourcesError,
+} from "./OptimizationError";
