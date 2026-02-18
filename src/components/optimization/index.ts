@@ -7,3 +7,9 @@ export type { ResourceInputProps } from "./ResourceInput";
 
 export { OptimizeButton, useOptimizeTimer } from "./OptimizeButton";
 export type { OptimizeButtonProps } from "./OptimizeButton";
+
+export { OptimizationModal } from "./OptimizationModal";
+
+export { ResultsPanel } from "./ResultsPanel";
+
+export { RecommendationCard } from "./RecommendationCard";

@@ -160,12 +160,12 @@
 
 - [x] T052 [US3] Create `src/components/ui/Skeleton.tsx` for loading placeholder shapes with pulse animation (FR-016, FR-016a)
 - [x] T053 [US3] Create `src/components/optimization/OptimizeButton.tsx` with loading and disabled states (FR-015)
-- [ ] T054 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay blocking underlying form, and Escape key cancellation (FR-017)
-- [ ] T055 [US3] Create `src/components/optimization/ResultsPanel.tsx` for ranked recommendations display with skeleton loading state (FR-018)
-- [ ] T056 [US3] Create `src/components/optimization/RecommendationCard.tsx` with expandable details showing target gem, upgrade path, resource cost, power gain (FR-019, FR-020)
-- [ ] T057 [US3] Add priority badge and power gain display to recommendation cards
-- [ ] T058 [US3] Add resource cost breakdown to recommendation details
-- [ ] T059 [US3] Add alternatives display in expanded recommendation view
+- [x] T054 [US3] Create `src/components/optimization/OptimizationModal.tsx` with progress indicator, elapsed time display, Cancel button, semi-transparent overlay blocking underlying form, and Escape key cancellation (FR-017)
+- [x] T055 [US3] Create `src/components/optimization/ResultsPanel.tsx` for ranked recommendations display with skeleton loading state (FR-018)
+- [x] T056 [US3] Create `src/components/optimization/RecommendationCard.tsx` with expandable details showing target gem, upgrade path, resource cost, power gain (FR-019, FR-020)
+- [x] T057 [US3] Add priority badge and power gain display to recommendation cards
+- [x] T058 [US3] Add resource cost breakdown to recommendation details
+- [x] T059 [US3] Add alternatives display in expanded recommendation view
 
 ### Error Handling
 

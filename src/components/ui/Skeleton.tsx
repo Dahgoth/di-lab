@@ -93,16 +93,25 @@ export function SkeletonRecommendation({ className }: { className?: string }) {
 
 export function SkeletonGrid({
   count = 6,
+  variant = "gem",
   className,
 }: {
   count?: number;
+  variant?: "gem" | "recommendation";
   className?: string;
 }) {
+  const gridCols =
+    variant === "recommendation" ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-3";
+
   return (
-    <div className={cn("grid grid-cols-2 sm:grid-cols-3 gap-4", className)}>
-      {Array.from({ length: count }).map((_, i) => (
-        <SkeletonGemCard key={i} />
-      ))}
+    <div className={cn(`grid ${gridCols} gap-4`, className)}>
+      {Array.from({ length: count }).map((_, i) =>
+        variant === "recommendation" ? (
+          <SkeletonRecommendation key={i} />
+        ) : (
+          <SkeletonGemCard key={i} />
+        ),
+      )}
     </div>
   );
 }
