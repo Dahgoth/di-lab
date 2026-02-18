@@ -268,18 +268,18 @@
 
 ### Responsive Layout
 
-- [ ] T088 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px) per FR-038
-- [ ] T089 [US7] Ensure 44x44px minimum touch targets for all interactive elements (FR-039, SC-005)
-- [ ] T090 [US7] Optimize scroll performance with CSS `will-change` and virtualization if needed for 60fps on mid-range mobile devices (Snapdragon 665+, 4GB+ RAM, 2020+ release year; reference devices: Pixel 4a, Galaxy A52, Moto G Power) (FR-041, SC-007)
+- [x] T088 [US7] Add responsive grid layouts to `src/app/optimize/page.tsx` using Tailwind breakpoints (sm:640px, md:768px, lg:1024px, xl:1280px, 2xl:1536px) per FR-038
+- [x] T089 [US7] Ensure 44x44px minimum touch targets for all interactive elements (FR-039, SC-005)
+- [x] T090 [US7] Optimize scroll performance with CSS `will-change` and virtualization if needed for 60fps on mid-range mobile devices (Snapdragon 665+, 4GB+ RAM, 2020+ release year; reference devices: Pixel 4a, Galaxy A52, Moto G Power) (FR-041, SC-007)
 - [ ] T090a [US7] Manual performance validation on reference devices (Pixel 4a, Galaxy A52, Moto G Power) to verify 60fps scroll and touch responsiveness (SC-007)
-- [ ] T091 [US7] Test and fix horizontal scroll prevention on narrow viewports (320px minimum) (SC-004)
-- [ ] T092 [US7] Add full-width mobile adaptation for toast notifications on viewports < 640px (FR-021c)
+- [x] T091 [US7] Test and fix horizontal scroll prevention on narrow viewports (320px minimum) (SC-004)
+- [x] T092 [US7] Add full-width mobile adaptation for toast notifications on viewports < 640px (FR-021c)
 
 ### Progressive Enhancement
 
-- [ ] T093 [US7] Add skeleton loaders for gem catalog grid and optimization results (FR-016a)
-- [ ] T094 [US7] Implement lazy loading for gem images with placeholder fallbacks (FR-041b)
-- [ ] T095 [US7] Add `prefers-reduced-motion` media query support to disable non-essential animations (FR-041b)
+- [x] T093 [US7] Add skeleton loaders for gem catalog grid and optimization results (FR-016a)
+- [x] T094 [US7] Implement lazy loading for gem images with placeholder fallbacks (FR-041b)
+- [x] T095 [US7] Add `prefers-reduced-motion` media query support to disable non-essential animations (FR-041b)
 
 **Checkpoint**: At this point, User Story 7 is complete - mobile experience optimized
 
