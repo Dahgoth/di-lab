@@ -17,7 +17,7 @@
 
   /* Error and status colors (per FR-045) */
   --color-error: #DC2626; /* red-600 - 4.8:1 contrast with white */
-  --color-success: #16A34A; /* green-600 */
+  --color-success: #15803D; /* green-700 - 4.6:1 contrast with white */
   --color-warning: #CA8A04; /* yellow-600 */
 
   /* Interaction state colors (per FR-016b) */
