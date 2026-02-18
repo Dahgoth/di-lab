@@ -96,12 +96,12 @@
 
 ### Page Integration
 
-- [ ] T027 [US1] Create `src/app/optimize/page.tsx` as Client Component with gem selection grid, equipped gems panel, and state management
-- [ ] T028 [US1] Add equipped gems display with quality/rank dropdown selectors and remove button per FR-005a, FR-008
-- [ ] T029 [US1] Add summary stats display showing auto-calculated total resonance and unlocked wing slots indicator (FR-007)
-- [ ] T030 [US1] Implement gem add/remove flow with slot assignment and optimistic UI updates (FR-008a)
-- [ ] T031 [US1] Add empty state for equipped gems panel: "No gems equipped" with "Browse gems" action button (FR-009a)
-- [ ] T032 [US1] Add empty state for gem catalog when filter returns no results: "No gems match your filter" with "Clear filters" action (FR-009a)
+- [x] T027 [US1] Create `src/app/optimize/page.tsx` as Client Component with gem selection grid, equipped gems panel, and state management
+- [x] T028 [US1] Add equipped gems display with quality/rank dropdown selectors and remove button per FR-005a, FR-008
+- [x] T029 [US1] Add summary stats display showing auto-calculated total resonance and unlocked wing slots indicator (FR-007)
+- [x] T030 [US1] Implement gem add/remove flow with slot assignment and optimistic UI updates (FR-008a)
+- [x] T031 [US1] Add empty state for equipped gems panel: "No gems equipped" with "Browse gems" action button (FR-009a)
+- [x] T032 [US1] Add empty state for gem catalog when filter returns no results: "No gems match your filter" with "Clear filters" action (FR-009a)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently - users can select, configure, and view gems with resonance calculation
 
