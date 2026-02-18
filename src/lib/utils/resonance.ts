@@ -255,3 +255,129 @@ export function getThresholdProgress(totalResonance: number): number {
     100;
   return Math.min(100, Math.max(0, progress));
 }
+
+// ============================================================================
+// Awakened Slot Resonance Impact (FR-050)
+// ============================================================================
+
+/**
+ * Calculate resonance bonus from awakened slots
+ * Each awakened gem gains a 10% resonance bonus
+ * @param baseResonance - Base resonance of the gem
+ * @param isAwakened - Whether the slot is awakened
+ */
+export function calculateAwakenedResonance(
+  baseResonance: number,
+  isAwakened: boolean,
+): number {
+  if (!isAwakened) return baseResonance;
+  return Math.floor(baseResonance * 1.1); // 10% bonus, rounded down
+}
+
+/**
+ * Calculate total resonance with awakened slot bonuses
+ * @param equippedGems - Array of equipped gems
+ * @param gemDatabase - Map or record of gem definitions
+ * @param awakenedSlots - Set of slot positions that are awakened (1-indexed)
+ */
+export function calculateTotalResonanceWithAwakened(
+  equippedGems: EquippedGem[],
+  gemDatabase: Map<string, LegendaryGem> | Record<string, LegendaryGem>,
+  awakenedSlots: Set<number>,
+): number {
+  // Convert Record to Map if needed
+  const gemMap =
+    gemDatabase instanceof Map
+      ? gemDatabase
+      : new Map(Object.entries(gemDatabase));
+
+  let totalResonance = 0;
+
+  for (const gem of equippedGems) {
+    const gemDef = gemMap.get(gem.gemId);
+    if (!gemDef) continue;
+
+    const baseResonance = getResonanceForGem(
+      gemDef.starRating,
+      gem.rank,
+      gem.quality,
+    );
+
+    // Check if this slot is awakened
+    const isAwakened = awakenedSlots.has(gem.slotPosition);
+    totalResonance += calculateAwakenedResonance(baseResonance, isAwakened);
+  }
+
+  return totalResonance;
+}
+
+/**
+ * Get resonance bonus breakdown for awakened slots
+ */
+export interface AwakenedBonusDetail {
+  slotPosition: number;
+  gemId: string;
+  gemName: string;
+  baseResonance: number;
+  bonusResonance: number;
+  totalResonance: number;
+}
+
+/**
+ * Get breakdown of awakened slot bonuses
+ */
+export function getAwakenedBonusBreakdown(
+  equippedGems: EquippedGem[],
+  gemDatabase: Map<string, LegendaryGem> | Record<string, LegendaryGem>,
+  awakenedSlots: Set<number>,
+): AwakenedBonusDetail[] {
+  // Convert Record to Map if needed
+  const gemMap =
+    gemDatabase instanceof Map
+      ? gemDatabase
+      : new Map(Object.entries(gemDatabase));
+
+  const details: AwakenedBonusDetail[] = [];
+
+  for (const gem of equippedGems) {
+    if (!awakenedSlots.has(gem.slotPosition)) continue;
+
+    const gemDef = gemMap.get(gem.gemId);
+    if (!gemDef) continue;
+
+    const baseResonance = getResonanceForGem(
+      gemDef.starRating,
+      gem.rank,
+      gem.quality,
+    );
+    const totalResonance = calculateAwakenedResonance(baseResonance, true);
+    const bonusResonance = totalResonance - baseResonance;
+
+    details.push({
+      slotPosition: gem.slotPosition,
+      gemId: gem.gemId,
+      gemName: gemDef.name,
+      baseResonance,
+      bonusResonance,
+      totalResonance,
+    });
+  }
+
+  return details.sort((a, b) => b.bonusResonance - a.bonusResonance);
+}
+
+/**
+ * Calculate total resonance bonus from all awakened slots
+ */
+export function calculateTotalAwakenedBonus(
+  equippedGems: EquippedGem[],
+  gemDatabase: Map<string, LegendaryGem> | Record<string, LegendaryGem>,
+  awakenedSlots: Set<number>,
+): number {
+  const breakdown = getAwakenedBonusBreakdown(
+    equippedGems,
+    gemDatabase,
+    awakenedSlots,
+  );
+  return breakdown.reduce((sum, detail) => sum + detail.bonusResonance, 0);
+}

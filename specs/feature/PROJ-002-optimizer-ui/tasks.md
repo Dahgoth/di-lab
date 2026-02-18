@@ -190,8 +190,8 @@
 
 - [x] T069a [US3] Create `src/components/optimization/AwakenedSlotsPanel.tsx` with slot toggle UI (up to 12 slots) (FR-047)
 - [x] T069b [US3] Add awakened slot toggle functionality with Dawning Echo cost display (10,000 Platinum) (FR-048, FR-049)
-- [ ] T069c [US3] Implement awakened slot resonance impact calculation in `src/lib/utils/resonance.ts` (FR-050)
-- [ ] T069d [US3] Add awakened slots to SessionState and SavedBuild schemas (FR-047)
+- [x] T069c [US3] Implement awakened slot resonance impact calculation in `src/lib/utils/resonance.ts` (FR-050)
+- [x] T069d [US3] Add awakened slots to SessionState and SavedBuild schemas (FR-047)
 
 ### Resource Deficit & Acquisition
 
