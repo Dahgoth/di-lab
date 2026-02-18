@@ -20,3 +20,7 @@ export {
   ValidationError,
   InsufficientResourcesError,
 } from "./OptimizationError";
+
+export { AwakenedSlotsPanel } from "./AwakenedSlotsPanel";
+
+export { AcquisitionPaths, ResourceDeficit } from "./AcquisitionPaths";

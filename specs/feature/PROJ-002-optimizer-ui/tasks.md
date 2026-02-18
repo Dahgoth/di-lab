@@ -183,22 +183,22 @@
 
 ### Screen Reader Announcements
 
-- [ ] T068 [US3] Add aria-live="polite" region for optimization completion and cancellation announcements (FR-044a)
-- [ ] T069 [US3] Add aria-live="assertive" region for optimization error announcements (FR-044a)
+- [x] T068 [US3] Add aria-live="polite" region for optimization completion and cancellation announcements (FR-044a)
+- [x] T069 [US3] Add aria-live="assertive" region for optimization error announcements (FR-044a)
 
 ### Awakening Management
 
-- [ ] T069a [US3] Create `src/components/optimization/AwakenedSlotsPanel.tsx` with slot toggle UI (up to 12 slots) (FR-047)
-- [ ] T069b [US3] Add awakened slot toggle functionality with Dawning Echo cost display (10,000 Platinum) (FR-048, FR-049)
+- [x] T069a [US3] Create `src/components/optimization/AwakenedSlotsPanel.tsx` with slot toggle UI (up to 12 slots) (FR-047)
+- [x] T069b [US3] Add awakened slot toggle functionality with Dawning Echo cost display (10,000 Platinum) (FR-048, FR-049)
 - [ ] T069c [US3] Implement awakened slot resonance impact calculation in `src/lib/utils/resonance.ts` (FR-050)
 - [ ] T069d [US3] Add awakened slots to SessionState and SavedBuild schemas (FR-047)
 
 ### Resource Deficit & Acquisition
 
-- [ ] T069e [US3] Add GP deficit display in `src/components/optimization/ResultsPanel.tsx` when resources insufficient (FR-051)
-- [ ] T069f [US3] Create `src/components/optimization/AcquisitionPaths.tsx` showing concise three-path overview (Farming Elder Rifts, Market Purchases, Hybrid) per FR-052 - informational descriptions only, no guides/links
-- [ ] T069g [US3] Add run requirements calculator in `src/lib/utils/acquisition.ts` showing "X runs needed to craft Y gems" (FR-053)
-- [ ] T069h [US3] Implement crafting conversion rates in `src/lib/utils/acquisition.ts` (20 Fragments=1-star, 80=2-star, 320 Embers=Eternal Crest, 5 Embers=1 Pearl) (FR-054)
+- [x] T069e [US3] Add GP deficit display in `src/components/optimization/ResultsPanel.tsx` when resources insufficient (FR-051)
+- [x] T069f [US3] Create `src/components/optimization/AcquisitionPaths.tsx` showing concise three-path overview (Farming Elder Rifts, Market Purchases, Hybrid) per FR-052 - informational descriptions only, no guides/links
+- [x] T069g [US3] Add run requirements calculator in `src/lib/utils/acquisition.ts` showing "X runs needed to craft Y gems" (FR-053)
+- [x] T069h [US3] Implement crafting conversion rates in `src/lib/utils/acquisition.ts` (20 Fragments=1-star, 80=2-star, 320 Embers=Eternal Crest, 5 Embers=1 Pearl) (FR-054)
 
 **Checkpoint**: At this point, MVP is complete - users can select gems, input resources, and receive optimization recommendations
 
