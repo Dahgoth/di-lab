@@ -15,7 +15,7 @@
 
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import type { EquippedGem, LegendaryGem, Quality, Rank } from "@/types/gem";
-import type { ResourceInventory, SessionState } from "@/types";
+import type { ResourceInventory, SessionState, SavedBuild } from "@/types";
 import { deriveSlotType } from "@/types/gem";
 import { createEmptySessionState } from "@/types";
 import GemCatalog from "@/components/gems/GemCatalog";
@@ -37,7 +37,14 @@ import {
   persistSessionState,
   handleSessionInvalidation,
 } from "@/lib/session/anonymous-session";
-import { Plus, Trash2, Sparkles, AlertCircle, Save } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Sparkles,
+  AlertCircle,
+  Save,
+  AlertTriangle,
+} from "lucide-react";
 
 // ============================================================================
 // Mock Gem Database (will be replaced with real data)
@@ -348,6 +355,11 @@ export default function OptimizePage() {
   const [sessionError, setSessionError] = useState<string | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
+  // Build management state (T078, T079, T081)
+  const [loadedBuildId, setLoadedBuildId] = useState<string | null>(null);
+  const [loadedBuildName, setLoadedBuildName] = useState<string | null>(null);
+  const [deprecatedGems, setDeprecatedGems] = useState<EquippedGem[]>([]);
+
   // Debounced save timer ref
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -397,6 +409,79 @@ export default function OptimizePage() {
         clearTimeout(saveTimerRef.current);
       }
     };
+  }, []);
+
+  // T078: Load build from sessionStorage (from builds page)
+  useEffect(() => {
+    const loadBuildFromStorage = () => {
+      const buildJson = sessionStorage.getItem("di-lab-load-build");
+      if (!buildJson) return;
+
+      try {
+        const build: SavedBuild = JSON.parse(buildJson);
+
+        // Detect deprecated gems (T081)
+        const deprecated: EquippedGem[] = [];
+        const validGems: EquippedGem[] = [];
+
+        for (const gem of build.gems) {
+          if (GEM_MAP.has(gem.gemId)) {
+            validGems.push(gem);
+          } else {
+            deprecated.push(gem);
+          }
+        }
+
+        if (deprecated.length > 0) {
+          setDeprecatedGems(deprecated);
+        }
+
+        // Set session state with the loaded build
+        setSessionState({
+          gems: validGems,
+          resources: build.resources,
+          optimizationMode: build.optimizationMode,
+          updatedAt: new Date().toISOString(),
+        });
+
+        setLoadedBuildId(build.id);
+        setLoadedBuildName(build.name);
+
+        // Clear sessionStorage after loading
+        sessionStorage.removeItem("di-lab-load-build");
+      } catch (error) {
+        console.error("Failed to load build from sessionStorage:", error);
+      }
+    };
+
+    loadBuildFromStorage();
+  }, []);
+
+  // T079: beforeunload confirmation for unsaved named builds
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Only show confirmation if a named build is loaded (has been explicitly saved)
+      if (loadedBuildName) {
+        e.preventDefault();
+        // Standard requires returnValue to be set
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [loadedBuildName]);
+
+  // Remove deprecated gem handler (T081)
+  const handleRemoveDeprecatedGem = useCallback((gemId: string) => {
+    setDeprecatedGems((prev) => prev.filter((g) => g.gemId !== gemId));
+  }, []);
+
+  // Clear all deprecated gems handler (T081)
+  const handleClearDeprecatedGems = useCallback(() => {
+    setDeprecatedGems([]);
   }, []);
 
   // Auto-save session state with debounce
@@ -610,6 +695,65 @@ export default function OptimizePage() {
         {sessionError && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
             <p className="text-amber-800">{sessionError}</p>
+          </div>
+        )}
+
+        {/* Deprecated Gems Warning (T081) */}
+        {deprecatedGems.length > 0 && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-red-800">
+                  Deprecated Gems Detected
+                </h4>
+                <p className="text-sm text-red-700 mt-1">
+                  The following gems are no longer in the database and cannot be
+                  used:
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {deprecatedGems.map((gem) => (
+                    <li
+                      key={gem.gemId}
+                      className="flex items-center gap-2 text-sm text-red-700"
+                    >
+                      <span className="font-mono">{gem.gemId}</span>
+                      <span className="text-red-500">
+                        (Slot {gem.slotPosition})
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveDeprecatedGem(gem.gemId)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleClearDeprecatedGems}
+                  className="mt-3"
+                >
+                  Clear All Deprecated Gems
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loaded Build Indicator (T078) */}
+        {loadedBuildName && (
+          <div className="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-purple-600" />
+              <span className="text-purple-800">
+                Editing: <strong>{loadedBuildName}</strong>
+              </span>
+            </div>
           </div>
         )}
 

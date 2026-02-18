@@ -212,27 +212,27 @@
 
 ### Server-Side Build Storage
 
-- [ ] T070 [US4] Create `src/lib/db/queries.ts` with build CRUD operations: createBuild, getBuildsBySession, getBuildById, updateBuild, deleteBuild
-- [ ] T071 [US4] Add build name uniqueness validation per session in database queries (FR-025)
-- [ ] T072 [US4] Add 5-build limit enforcement for free tier users in database queries (FR-029a)
+- [x] T070 [US4] Create `src/lib/db/queries.ts` with build CRUD operations: createBuild, getBuildsBySession, getBuildById, updateBuild, deleteBuild
+- [x] T071 [US4] Add build name uniqueness validation per session in database queries (FR-025)
+- [x] T072 [US4] Add 5-build limit enforcement for free tier users in database queries (FR-029a)
 
 ### Build Pages and Components
 
-- [ ] T073 [US4] Create `src/app/builds/page.tsx` for saved builds list with name, timestamp, and summary stats (FR-026)
-- [ ] T074 [US4] Create save build modal in `src/components/optimization/SaveBuildModal.tsx` with name input (1-50 chars), optional notes (0-500 chars), and XSS sanitization (FR-024, FR-025, FR-046)
-- [ ] T075 [US4] Add load build functionality with state restoration in `src/app/builds/page.tsx` (FR-027)
-- [ ] T076 [US4] Add delete build functionality with confirmation dialog (FR-028)
-- [ ] T077 [US4] Add empty state for builds page: "No saved builds" with "Create your first build" guidance
+- [x] T073 [US4] Create `src/app/builds/page.tsx` for saved builds list with name, timestamp, and summary stats (FR-026)
+- [x] T074 [US4] Create save build modal in `src/components/optimization/SaveBuildModal.tsx` with name input (1-50 chars), optional notes (0-500 chars), and XSS sanitization (FR-024, FR-025, FR-046)
+- [x] T075 [US4] Add load build functionality with state restoration in `src/app/builds/page.tsx` (FR-027)
+- [x] T076 [US4] Add delete build functionality with confirmation dialog (FR-028)
+- [x] T077 [US4] Add empty state for builds page: "No saved builds" with "Create your first build" guidance
 
 ### Session Restore and Unsaved Changes
 
-- [ ] T078 [US4] Implement session restore on page load in `src/app/optimize/page.tsx` fetching from `/api/session` (FR-023)
-- [ ] T079 [US4] Implement beforeunload confirmation dialog for unsaved named builds only (FR-023b, FR-023c)
-- [ ] T080 [US4] Add "Session auto-saved" subtle indicator in optimizer UI (FR-023a)
+- [x] T078 [US4] Implement session restore on page load in `src/app/optimize/page.tsx` fetching from `/api/session` (FR-023)
+- [x] T079 [US4] Implement beforeunload confirmation dialog for unsaved named builds only (FR-023b, FR-023c)
+- [x] T080 [US4] Add "Session auto-saved" subtle indicator in optimizer UI (FR-023a)
 
 ### Deprecated Gem Detection
 
-- [ ] T081 [US4] Add deprecated gem detection when loading builds - show visual indicator and removal option for gems no longer in database (FR-009a edge case)
+- [x] T081 [US4] Add deprecated gem detection when loading builds - show visual indicator and removal option for gems no longer in database (FR-009a edge case)
 
 **Checkpoint**: At this point, User Stories 1-4 are complete - full build management available
 

@@ -24,3 +24,5 @@ export {
 export { AwakenedSlotsPanel } from "./AwakenedSlotsPanel";
 
 export { AcquisitionPaths, ResourceDeficit } from "./AcquisitionPaths";
+
+export { SaveBuildModal } from "./SaveBuildModal";
