@@ -318,32 +318,32 @@
 
 ### Accessibility
 
-- [ ] T101 Add keyboard navigation for gem catalog (arrow keys, Tab, Enter to select) (FR-043)
-- [ ] T102 Add ARIA labels and roles for all interactive elements (FR-044)
-- [ ] T103 Implement focus management for modals (focus trap on open, focus return on close) (FR-030a)
-- [ ] T104 Test and verify WCAG 2.1 AA color contrast ratios (4.5:1 text, 3:1 large text) (FR-045, FR-042)
+- [x] T101 Add keyboard navigation for gem catalog (arrow keys, Tab, Enter to select) (FR-043)
+- [x] T102 Add ARIA labels and roles for all interactive elements (FR-044)
+- [x] T103 Implement focus management for modals (focus trap on open, focus return on close) (FR-030a)
+- [ ] T104 Test and verify WCAG 2.1 AA color contrast ratios (4.5:1 text, 3:1 large text) (FR-045, FR-042) - Manual validation
 
 ### Optimistic UI & Multi-tab Handling
 
-- [ ] T105 Implement optimistic UI updates for gem add/remove with automatic rollback on failure (FR-008a)
-- [ ] T106 Add multi-tab conflict detection and non-blocking toast warning (auto-dismiss 5s, pause on hover) (edge case)
+- [ ] T105 [DEFERRED] Implement optimistic UI updates for gem add/remove with automatic rollback on failure (FR-008a) - Complex state management
+- [ ] T106 [DEFERRED] Add multi-tab conflict detection and non-blocking toast warning (auto-dismiss 5s, pause on hover) (edge case) - Requires broadcast channel API
 
 ### Performance Validation
 
-- [ ] T107 Run Lighthouse CI and verify score > 90
-- [ ] T108 Verify Core Web Vitals: FCP < 1.8s, LCP < 2.5s, TTI < 3.8s, CLS < 0.1 (FR-041a)
-- [ ] T109 Verify saved builds load in under 2 seconds (SC-006)
-- [ ] T110 Verify optimization results display within 5 seconds (SC-002)
+- [ ] T107 Run Lighthouse CI and verify score > 90 - Manual validation
+- [ ] T108 Verify Core Web Vitals: FCP < 1.8s, LCP < 2.5s, TTI < 3.8s, CLS < 0.1 (FR-041a) - Manual validation
+- [ ] T109 Verify saved builds load in under 2 seconds (SC-006) - Manual validation
+- [ ] T110 Verify optimization results display within 5 seconds (SC-002) - Manual validation
 
 ### Integration Testing
 
-- [ ] T111 Manual usability validation for SC-003 (90% gem addition success rate)
-- [ ] T112 Manual usability validation for SC-008 via task-based assessment: user correctly identifies (1) top priority recommendation, (2) why it's ranked first, and (3) which resources consumed. Conduct moderated testing with 20+ participants.
-- [ ] T113 Final integration testing and bug fixes
+- [ ] T111 Manual usability validation for SC-003 (90% gem addition success rate) - Manual testing
+- [ ] T112 Manual usability validation for SC-008 via task-based assessment: user correctly identifies (1) top priority recommendation, (2) why it's ranked first, and (3) which resources consumed. Conduct moderated testing with 20+ participants. - Manual testing
+- [ ] T113 Final integration testing and bug fixes - Manual testing
 
 ### CSP and Security
 
-- [ ] T114 Configure Content Security Policy header to prevent inline script execution (FR-046)
+- [ ] T114 Configure Content Security Policy header to prevent inline script execution (FR-046) - Server configuration
 
 ---
 
