@@ -1,1 +1,255 @@
 @import "tailwindcss";
+
+/* Custom properties for gem colors and visual indicators */
+:root {
+  /* Star rating colors */
+  --color-gem-1star: #9ca3af; /* gray-400 - 1-star gems */
+  --color-gem-2star: #60a5fa; /* blue-400 - 2-star gems */
+  --color-gem-5star: #fbbf24; /* amber-400 - 5-star gems */
+  --color-gem-5star-border: #f59e0b; /* amber-500 - 5-star gold border */
+
+  /* Tier ranking colors (per FR-002a) */
+  --color-tier-s: #FFD700; /* gold - S tier */
+  --color-tier-a: #C0C0C0; /* silver - A tier */
+  --color-tier-b: #CD7F32; /* bronze - B tier */
+  --color-tier-c: #808080; /* gray - C tier */
+  --color-tier-d: #808080; /* gray - D tier */
+
+  /* Error and status colors (per FR-045) */
+  --color-error: #DC2626; /* red-600 - 4.8:1 contrast with white */
+  --color-success: #15803D; /* green-700 - 4.6:1 contrast with white */
+  --color-warning: #CA8A04; /* yellow-600 */
+
+  /* Interaction state colors (per FR-016b) */
+  --color-hover-overlay: rgba(255, 255, 255, 0.1);
+  --color-focus-ring: #3b82f6; /* blue-500 */
+  --color-disabled-opacity: 0.5;
+
+  /* Layout constants (per FR-002a) */
+  --gem-card-width: 120px;
+  --gem-card-height: 160px;
+  --gem-card-gap: 16px;
+  --gem-border-5star: 2px;
+
+  /* Z-index hierarchy */
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+}
+
+/* Base styles */
+body {
+  @apply bg-gray-900 text-gray-100 antialiased;
+}
+
+/* Focus styles for accessibility (per FR-016b) */
+*:focus-visible {
+  @apply outline-none ring-2 ring-[var(--color-focus-ring)] ring-offset-2 ring-offset-gray-900;
+}
+
+/* Gem card base styles */
+.gem-card {
+  @apply relative flex flex-col items-center justify-center rounded-lg bg-gray-800 p-3 transition-all duration-150;
+  width: var(--gem-card-width);
+  height: var(--gem-card-height);
+}
+
+.gem-card:hover {
+  background-color: rgba(31, 41, 55, 0.9); /* gray-800 with increased opacity */
+  transform: scale(1.02);
+}
+
+.gem-card:active {
+  transform: scale(0.98);
+}
+
+.gem-card.disabled {
+  opacity: var(--color-disabled-opacity);
+  pointer-events: none;
+}
+
+/* 5-star gem gold border (per FR-002a) */
+.gem-card-5star {
+  border: var(--gem-border-5star) solid var(--color-gem-5star-border);
+}
+
+/* Tier badge styles */
+.tier-badge {
+  @apply px-2 py-0.5 text-xs font-bold rounded;
+}
+
+.tier-badge-s {
+  background-color: var(--color-tier-s);
+  color: #000;
+}
+
+.tier-badge-a {
+  background-color: var(--color-tier-a);
+  color: #000;
+}
+
+.tier-badge-b {
+  background-color: var(--color-tier-b);
+  color: #fff;
+}
+
+.tier-badge-c,
+.tier-badge-d {
+  background-color: var(--color-tier-c);
+  color: #fff;
+}
+
+/* Star rating indicator */
+.star-rating {
+  @apply flex items-center gap-0.5;
+}
+
+.star-rating-1 {
+  color: var(--color-gem-1star);
+}
+
+.star-rating-2 {
+  color: var(--color-gem-2star);
+}
+
+.star-rating-5 {
+  color: var(--color-gem-5star);
+}
+
+/* Button base styles (per FR-016b) */
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-150;
+}
+
+.btn:hover {
+  background-color: var(--color-hover-overlay);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled,
+.btn.loading {
+  opacity: var(--color-disabled-opacity);
+  cursor: not-allowed;
+}
+
+/* Primary button */
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
+}
+
+/* Secondary button */
+.btn-secondary {
+  @apply bg-gray-700 text-gray-100 hover:bg-gray-600 active:bg-gray-500;
+}
+
+/* Ghost button */
+.btn-ghost {
+  @apply bg-transparent text-gray-300 hover:bg-gray-800 hover:text-gray-100;
+}
+
+/* Danger button */
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 active:bg-red-800;
+}
+
+/* Button sizes */
+.btn-sm {
+  @apply px-3 py-1.5 text-sm;
+}
+
+.btn-md {
+  @apply px-4 py-2 text-base;
+}
+
+.btn-lg {
+  @apply px-6 py-3 text-lg;
+}
+
+/* Touch target minimum (per SC-005, FR-039) */
+@media (pointer: coarse) {
+  .btn,
+  .gem-card,
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Toast notification styles (per FR-021c) */
+.toast-container {
+  @apply fixed top-4 right-4 z-[var(--z-toast)] flex flex-col gap-2;
+  max-width: 100vw;
+}
+
+@media (max-width: 639px) {
+  .toast-container {
+    @apply left-4 right-4;
+  }
+}
+
+.toast {
+  @apply rounded-lg p-4 shadow-lg;
+  animation: toast-slide-in 0.3s ease-out;
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Modal styles (per FR-030a) */
+.modal-backdrop {
+  @apply fixed inset-0 z-[var(--z-modal-backdrop)] bg-black/70;
+}
+
+.modal-content {
+  @apply fixed z-[var(--z-modal)] rounded-lg bg-gray-800 shadow-xl;
+}
+
+/* Skeleton loading (per FR-016a) */
+.skeleton {
+  @apply animate-pulse rounded bg-gray-700;
+}
+
+/* Reduced motion support (per FR-041b) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded bg-gray-600 hover:bg-gray-500;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-blue-600/50;
+}
