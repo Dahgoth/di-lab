@@ -22,10 +22,10 @@ export function stripHtmlTags(input: string): string {
  */
 export function escapeHtml(input: string): string {
   const htmlEscapeMap: Record<string, string> = {
-    "&": "&",
-    "<": "<",
-    ">": ">",
-    '"': '"',
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
     "'": "&#x27;",
     "/": "&#x2F;",
   };
