@@ -98,6 +98,14 @@ const COMMIT_TYPES = [
  * - cd: Continuous deployment, release automation
  *       Example: "cd: configure auto-deploy to production"
  *
+ * - secrets: Secret management, vault integration, credential rotation
+ *            Example: "feat(secrets): add Battle.net OAuth secret rotation"
+ *            Example: "fix(secrets): resolve vault token refresh"
+ *
+ * - env: Environment-specific configurations, stage/prod settings
+ *         Example: "feat(env): add production environment variables"
+ *         Example: "fix(env): correct staging database URL"
+ *
  * Workflow Scopes (GitFlow-inspired):
  * - release: Release preparation, version bumps, changelogs
  *            Example: "release: prepare v0.2.0"
@@ -135,7 +143,9 @@ const COMMIT_SCOPES = [
   'db',     // Database: schema, migrations, queries
 
   // Infrastructure Scopes
-  'cd',     // Continuous Deployment: release automation
+  'cd',      // Continuous Deployment: release automation
+  'secrets', // Secrets: vault integration, credential rotation
+  'env',     // Environment: stage/prod configurations
 
   // Workflow Scopes
   'release', // Release: version bumps, changelog updates
