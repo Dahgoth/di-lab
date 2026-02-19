@@ -123,6 +123,7 @@ All implemented user stories (P1-P3) have been completed:
 
 | Date       | Changes                                                                                                                        |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-02-19 | Fixed critical XSS vulnerability in escapeHtml function - htmlEscapeMap now correctly maps special chars to HTML entities      |
 | 2026-02-19 | Completed deferred tasks T100a-T100c, T105, T106: Advanced Strategies, infusion recommendations, optimistic UI, multi-tab sync |
 | 2026-02-18 | Added automated validation tests: WCAG contrast (15 tests), performance (13 tests), integration flow (14 tests)                |
 | 2026-02-18 | Fixed success green color (#16A34A → #15803D) for WCAG AA compliance                                                           |
