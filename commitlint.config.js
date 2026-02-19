@@ -8,11 +8,15 @@
  * - For performance improvements: Use commit TYPE "perf" (e.g., "perf: optimize render loop")
  * - For gem optimizer feature: Use SCOPE "gems" (e.g., "feat(gems): add greedy algorithm")
  *
- * SUBJECT CASE: Allows lowercase, camelCase, PascalCase, and uppercase to support:
- * - Standard lowercase descriptions (preferred for general prose)
- * - Ticket identifiers (e.g., "T106", "PROJ-002")
- * - Variable/function names (e.g., "useOptimisticUpdate", "GemSelector")
- * - Component names in code references
+ * SUBJECT CASE: Allows multiple case styles for maximum flexibility:
+ * - lower-case: Standard for general prose (preferred)
+ * - upper-case: For ticket identifiers (e.g., T106, PROJ-002)
+ * - camel-case: For variable/function names (e.g., useOptimize)
+ * - kebab-case: For file/feature names (e.g., gem-selector)
+ * - pascal-case: For component/class names (e.g., GemSelector)
+ * - sentence-case: For readable titles (e.g., Add gem selector)
+ * - snake-case: For constants/config keys (e.g., GEM_CONFIG)
+ * - start-case: For proper nouns (e.g., Battle.net Integration)
  *
  * @see https://conventionalcommits.org/
  * @see https://github.com/conventional-changelog/commitlint
@@ -24,17 +28,17 @@
  * @type {ReadonlyArray<string>}
  */
 const COMMIT_TYPES = [
+  'build',    // Build system changes
+  'chore',    // Maintenance tasks
+  'ci',       // CI/CD changes
+  'docs',     // Documentation only
   'feat',     // New feature
   'fix',      // Bug fix
-  'docs',     // Documentation only
-  'style',    // Code style (formatting, whitespace)
-  'refactor', // Code refactoring
-  'test',     // Adding/updating tests
-  'chore',    // Maintenance tasks
   'perf',     // Performance improvement
-  'ci',       // CI/CD changes
-  'build',    // Build system changes
+  'refactor', // Code refactoring
   'revert',   // Revert previous commit
+  'style',    // Code style (formatting, whitespace)
+  'test',     // Adding/updating tests
 ];
 
 /**
@@ -169,15 +173,28 @@ module.exports = {
     // Scope must be one of the defined project scopes (or empty for global changes)
     'scope-enum': [2, 'always', COMMIT_SCOPES],
 
-    // Subject case: Allow multiple cases for flexibility
+    // Subject case: Allow multiple cases for maximum flexibility
     // - lower-case: Standard for general prose (preferred)
-    // - camel-case: For variable/function names (e.g., useOptimize)
-    // - pascal-case: For component/class names (e.g., GemSelector)
     // - upper-case: For ticket identifiers (e.g., T106, PROJ-002)
+    // - camel-case: For variable/function names (e.g., useOptimize)
+    // - kebab-case: For file/feature names (e.g., gem-selector)
+    // - pascal-case: For component/class names (e.g., GemSelector)
+    // - sentence-case: For readable titles (e.g., Add gem selector)
+    // - snake-case: For constants/config keys (e.g., GEM_CONFIG)
+    // - start-case: For proper nouns (e.g., Battle.net Integration)
     'subject-case': [
       2,
       'always',
-      ['lower-case', 'camel-case', 'pascal-case', 'upper-case'],
+      [
+        'lower-case',
+        'upper-case',
+        'camel-case',
+        'kebab-case',
+        'pascal-case',
+        'sentence-case',
+        'snake-case',
+        'start-case',
+      ],
     ],
 
     // Subject must not exceed 72 characters
