@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.2...di-lab-v0.3.0) (2026-02-19)
+
+
+### Features
+
+* **optimizer:** implement legendary gems optimizer UI (PROJ-002) ([#12](https://github.com/Dahgoth/di-lab/issues/12)) ([5923e17](https://github.com/Dahgoth/di-lab/commit/5923e17e9c622441a99766a76274322f9ead0506))
+
 ## [0.2.2](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.1...di-lab-v0.2.2) (2026-02-16)
 
 
