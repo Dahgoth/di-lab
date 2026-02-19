@@ -304,9 +304,9 @@
 
 ### Advanced Strategies
 
-- [ ] T100a [US6] [DEFERRED] Add "Advanced Strategies" toggle (default: off) to optimization controls in `src/app/optimize/page.tsx` (FR-037b) - Requires engine changes for infusion
-- [ ] T100b [US6] [DEFERRED] Implement dormant 5-star gem infusion recommendations when Advanced Strategies is enabled in `src/lib/optimization/engine.ts` (FR-037b) - Complex feature requiring engine refactoring
-- [ ] T100c [US6] [DEFERRED] Add infusion path display in recommendation cards showing source gem and GP requirements (FR-037b) - Depends on T100b
+- [x] T100a [US6] Add "Advanced Strategies" toggle (default: off) to optimization controls in `src/app/optimize/page.tsx` (FR-037b)
+- [x] T100b [US6] Implement dormant 5-star gem infusion recommendations when Advanced Strategies is enabled in `src/lib/optimization/engine.ts` (FR-037b)
+- [x] T100c [US6] Add infusion path display in recommendation cards showing source gem and GP requirements (FR-037b)
 
 **Checkpoint**: At this point, User Story 6 is complete - advanced optimization features available
 
@@ -325,8 +325,8 @@
 
 ### Optimistic UI & Multi-tab Handling
 
-- [ ] T105 [DEFERRED] Implement optimistic UI updates for gem add/remove with automatic rollback on failure (FR-008a) - Complex state management
-- [ ] T106 [DEFERRED] Add multi-tab conflict detection and non-blocking toast warning (auto-dismiss 5s, pause on hover) (edge case) - Requires broadcast channel API
+- [x] T105 Implement optimistic UI updates for gem add/remove with automatic rollback on failure (FR-008a)
+- [x] T106 Add multi-tab conflict detection and non-blocking toast warning (auto-dismiss 5s, pause on hover) (edge case)
 
 ### Performance Validation
 

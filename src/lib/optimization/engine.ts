@@ -11,6 +11,9 @@ import type {
   OptimizationResult,
   UpgradeCandidate,
   UpgradeRecommendation,
+  InfusionRecommendation,
+  InfusionSourceGem,
+  ExtendedOptimizationInput,
 } from "./types";
 import { getResonance } from "./constants";
 import { calculateTotalResonance } from "./resonance";
@@ -37,7 +40,8 @@ import {
  * 4. Sort by priority (greedy)
  * 5. Select within budget
  * 6. Generate reasoning text
- * 7. Return result with timing
+ * 7. Generate infusion recommendations (if advanced strategies enabled)
+ * 8. Return result with timing
  *
  * @param input - Optimization input with gems, resources, and mode
  * @returns Optimization result with recommendations
@@ -139,15 +143,36 @@ export function optimize(input: OptimizationInput): OptimizationResult {
 
   // Step 8: Calculate totals
   const totalCost = calculateTotalCost(recommendations);
-  const totalPowerGain = recommendations.reduce(
+  let totalPowerGain = recommendations.reduce(
     (sum, rec) => sum + rec.powerGain,
     0,
   );
+
+  // Step 9: Generate infusion recommendations if advanced strategies enabled (T100b - FR-037b)
+  let infusionRecommendations: InfusionRecommendation[] | undefined;
+  const extendedInput = input as ExtendedOptimizationInput;
+  if (extendedInput.advancedStrategies) {
+    infusionRecommendations = generateInfusionRecommendations(
+      input.gems,
+      gemDatabase,
+      input.mode,
+      input.resources.gemPower,
+      currentTotalResonance,
+    );
+
+    // Add infusion power gains to total
+    const infusionPowerGain = infusionRecommendations.reduce(
+      (sum, rec) => sum + rec.powerGain,
+      0,
+    );
+    totalPowerGain += infusionPowerGain;
+  }
 
   const endTime = performance.now();
 
   return {
     recommendations,
+    infusionRecommendations,
     totalPowerGain,
     totalResourceCost: totalCost,
     mode: input.mode,
@@ -237,6 +262,157 @@ function calculateResonanceGain(
   const before = getResonance(gemDef.starRating, fromRank, quality);
   const after = getResonance(gemDef.starRating, toRank, quality);
   return after - before;
+}
+
+// ============================================================================
+// Infusion Recommendations (T100b - FR-037b)
+// ============================================================================
+
+/**
+ * Infusion slot configuration for dormant 5-star gems
+ * Based on docs/legendary-gems/upgrading.md
+ */
+const INFUSION_SLOTS: Record<number, { slots: number; maxResonance: number }> =
+  {
+    4: { slots: 2, maxResonance: 40 },
+    5: { slots: 2, maxResonance: 40 },
+    6: { slots: 3, maxResonance: 60 },
+    7: { slots: 4, maxResonance: 170 },
+    8: { slots: 5, maxResonance: 280 },
+    9: { slots: 5, maxResonance: 280 },
+    10: { slots: 5, maxResonance: 280 },
+  };
+
+/**
+ * Resonance contributed by source gems based on star rating and rank
+ * 2-star: 2 resonance per rank, 5-star: 10 resonance per rank (from docs)
+ */
+function getSourceGemResonance(starRating: number, rank: number): number {
+  if (starRating === 2) {
+    return 2 * rank;
+  } else if (starRating === 5) {
+    return 10 * rank;
+  }
+  // 1-star gems don't provide meaningful infusion resonance
+  return 0;
+}
+
+/**
+ * Generate infusion recommendations for dormant 5-star gems
+ * (T100b - FR-037b)
+ *
+ * Dormant 5-star gems can gain additional resonance by socketing
+ * source gems (2-star or 5-star) and infusing with Gem Power.
+ * Only R10 5-star gems can gain additional resonance from infusion.
+ */
+function generateInfusionRecommendations(
+  gems: EquippedGem[],
+  gemDatabase: Map<string, LegendaryGem>,
+  mode: GameMode,
+  availableGemPower: number,
+  currentTotalResonance: number,
+): InfusionRecommendation[] {
+  const recommendations: InfusionRecommendation[] = [];
+
+  // Find 5-star gems that could benefit from infusion (R7+ only have slots)
+  const eligibleGems = gems.filter((gem) => {
+    const gemDef = gemDatabase.get(gem.gemId);
+    return gemDef?.starRating === 5 && gem.currentRank >= 7;
+  });
+
+  for (const gem of eligibleGems) {
+    const gemDef = gemDatabase.get(gem.gemId);
+    if (!gemDef) continue;
+
+    const slotConfig = INFUSION_SLOTS[gem.currentRank];
+    if (!slotConfig) continue;
+
+    // Calculate current resonance from the gem
+    const currentResonance = getResonance(5, gem.currentRank, gem.quality);
+
+    // Check if additional resonance can be gained (only R10 can get additional)
+    // For R7-R9, infusion provides normal resonance from socketed gems
+    // For R10, additional resonance = socketed gem GP / 200
+    const canGainAdditionalResonance = gem.currentRank === 10;
+
+    // Calculate potential infusion benefit
+    // Max additional resonance for R10 is 80 (from docs)
+    const maxAdditionalResonance = canGainAdditionalResonance ? 80 : 0;
+
+    if (maxAdditionalResonance === 0) {
+      // For R7-R9, infusion is more about filling slots for future ranks
+      // Skip recommendation if no immediate power gain
+      continue;
+    }
+
+    // Generate source gem recommendation
+    // For simplicity, recommend 2-star R1 gems as they're the most cost-effective
+    const sourceGems: InfusionSourceGem[] = [];
+    let totalGemPower = 0;
+    let totalResonance = 0;
+
+    // Calculate GP needed for max additional resonance
+    // Additional resonance = GP / 200, so GP = resonance * 200
+    const gpForMaxResonance = maxAdditionalResonance * 200;
+
+    // Check if affordable
+    if (availableGemPower >= gpForMaxResonance) {
+      // Recommend filling the infusion slots
+      for (let i = 0; i < slotConfig.slots; i++) {
+        // Use 2-star R1 gems as source (most common/affordable)
+        sourceGems.push({
+          gemId: "generic-2star",
+          starRating: 2,
+          rank: 1,
+          gemPowerContributed: gpForMaxResonance / slotConfig.slots,
+          resonanceContributed: 2, // 2 resonance per rank for 2-star
+        });
+      }
+      totalGemPower = gpForMaxResonance;
+      totalResonance = maxAdditionalResonance;
+    }
+
+    if (totalResonance > 0) {
+      const tier = getTierRanking(gemDef, mode);
+      // Power gain is based on resonance increase
+      const powerGain = totalResonance * getTierMultiplier(tier);
+
+      recommendations.push({
+        slot: gem.slot,
+        gemId: gem.gemId,
+        currentRank: gem.currentRank,
+        quality: gem.quality,
+        sourceGems,
+        totalGemPower,
+        additionalResonance: totalResonance,
+        powerGain,
+        priorityRank: 0, // Will be set after sorting
+        reasoning: `Infuse ${gemDef.name} with ${slotConfig.slots} source gems for +${totalResonance} resonance. This R10 5-star gem can gain additional resonance from socketed gem power.`,
+      });
+    }
+  }
+
+  // Sort by power gain and assign priority ranks
+  recommendations.sort((a, b) => b.powerGain - a.powerGain);
+  recommendations.forEach((rec, index) => {
+    rec.priorityRank = index + 1;
+  });
+
+  return recommendations;
+}
+
+/**
+ * Get tier multiplier for power calculation
+ */
+function getTierMultiplier(tier: string): number {
+  const multipliers: Record<string, number> = {
+    S: 1.3,
+    A: 1.2,
+    B: 1.1,
+    C: 1.0,
+    D: 0.9,
+  };
+  return multipliers[tier] ?? 1.0;
 }
 
 /**

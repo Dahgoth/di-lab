@@ -40,6 +40,7 @@ export interface SessionState {
   gems: EquippedGem[];
   resources: ResourceInventory;
   optimizationMode: OptimizationMode;
+  advancedStrategies?: boolean; // FR-037b: Enable advanced strategies like infusion
   updatedAt: string; // ISO timestamp
   lastSavedBuildId?: string; // Reference to last saved/loaded build (if any)
   hasUnsavedChanges?: boolean; // True if named build was modified after save
@@ -61,6 +62,7 @@ export interface SavedBuild {
   gems: EquippedGem[];
   resources: ResourceInventory;
   optimizationMode: OptimizationMode;
+  advancedStrategies?: boolean; // FR-037b: Advanced strategies toggle
   notes?: string; // Optional user notes (0-500 chars)
   createdAt: Date;
   updatedAt: Date;
@@ -141,6 +143,7 @@ export function createEmptySessionState(): SessionState {
       dawningEchoes: 0,
     },
     optimizationMode: "PVE",
+    advancedStrategies: false, // FR-037b: Default off
     updatedAt: new Date().toISOString(),
     awakenedSlots: [],
   };
@@ -215,6 +218,7 @@ export function sessionToSavedBuild(
     gems: sessionState.gems,
     resources: sessionState.resources,
     optimizationMode: sessionState.optimizationMode,
+    advancedStrategies: sessionState.advancedStrategies,
     notes: notes?.trim(),
     awakenedSlots: sessionState.awakenedSlots,
   };
@@ -228,6 +232,7 @@ export function savedBuildToSession(build: SavedBuild): SessionState {
     gems: build.gems,
     resources: build.resources,
     optimizationMode: build.optimizationMode,
+    advancedStrategies: build.advancedStrategies,
     updatedAt: new Date().toISOString(),
     lastSavedBuildId: build.id,
     hasUnsavedChanges: false,

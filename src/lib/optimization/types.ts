@@ -141,6 +141,8 @@ export interface UpgradeRecommendation {
 export interface OptimizationResult {
   /** Ordered list of upgrade recommendations */
   recommendations: UpgradeRecommendation[];
+  /** Infusion recommendations for dormant 5-star gems (T100b - FR-037b) */
+  infusionRecommendations?: InfusionRecommendation[];
   /** Total power gain from all recommendations */
   totalPowerGain: number;
   /** Total resource cost for all recommendations */
@@ -208,4 +210,56 @@ export interface PowerBreakdown {
   diminishingFactor: number;
   /** Final calculated power */
   finalPower: number;
+}
+
+/**
+ * Source gem for infusion into a dormant 5-star gem (T100b - FR-037b)
+ */
+export interface InfusionSourceGem {
+  /** Gem ID of the source gem */
+  gemId: string;
+  /** Star rating of source gem (1, 2, or 5) */
+  starRating: StarRating;
+  /** Rank of the source gem */
+  rank: number;
+  /** Gem Power contributed by this source */
+  gemPowerContributed: number;
+  /** Resonance contributed by this source */
+  resonanceContributed: number;
+}
+
+/**
+ * Infusion recommendation for dormant 5-star gems (T100b - FR-037b)
+ */
+export interface InfusionRecommendation {
+  /** Slot position of the dormant 5-star gem */
+  slot: number;
+  /** Gem ID of the dormant 5-star gem */
+  gemId: string;
+  /** Current rank of the dormant gem */
+  currentRank: number;
+  /** Quality of the dormant gem (2-5) */
+  quality: number;
+  /** Source gems to infuse */
+  sourceGems: InfusionSourceGem[];
+  /** Total Gem Power from infusion */
+  totalGemPower: number;
+  /** Additional resonance gained from infusion */
+  additionalResonance: number;
+  /** Power gain from the infusion */
+  powerGain: number;
+  /** Priority rank */
+  priorityRank: number;
+  /** Human-readable reasoning */
+  reasoning: string;
+}
+
+/**
+ * Extended optimization input with advanced strategies support (T100b - FR-037b)
+ */
+export interface ExtendedOptimizationInput extends OptimizationInput {
+  /** Whether advanced strategies are enabled */
+  advancedStrategies?: boolean;
+  /** Number of awakened slots available */
+  awakenedSlots?: number;
 }

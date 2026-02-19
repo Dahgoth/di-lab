@@ -14,6 +14,8 @@ export { ResultsPanel } from "./ResultsPanel";
 
 export { RecommendationCard } from "./RecommendationCard";
 
+export { InfusionRecommendationCard } from "./InfusionRecommendationCard";
+
 export {
   OptimizationErrorDisplay,
   OfflineError,

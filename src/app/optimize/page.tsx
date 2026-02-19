@@ -46,6 +46,7 @@ import {
   AlertTriangle,
   Sword,
   Shield,
+  Zap,
 } from "lucide-react";
 import type { OptimizationMode } from "@/types/gem";
 
@@ -374,6 +375,7 @@ export default function OptimizePage() {
   const equippedGems = sessionState.gems;
   const resources = sessionState.resources;
   const optimizationMode = sessionState.optimizationMode;
+  const advancedStrategies = sessionState.advancedStrategies ?? false;
 
   // ============================================================================
   // Session Management
@@ -646,6 +648,16 @@ export default function OptimizePage() {
     [updateSessionState],
   );
 
+  // Handle advanced strategies toggle (T100a - FR-037b)
+  const handleAdvancedStrategiesChange = useCallback(
+    (enabled: boolean) => {
+      updateSessionState({
+        advancedStrategies: enabled,
+      });
+    },
+    [updateSessionState],
+  );
+
   // Handle viewing gem details
   const handleViewGemDetail = useCallback((gemId: string) => {
     setSelectedGemId(gemId);
@@ -835,6 +847,42 @@ export default function OptimizePage() {
                       {optimizationMode === "PVE"
                         ? "Optimizing for dungeons and raids"
                         : "Optimizing for battlegrounds and arenas"}
+                    </p>
+                  </div>
+
+                  {/* Advanced Strategies Toggle (T100a - FR-037b) */}
+                  <div className="pb-3 border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        <span className="text-sm font-medium text-gray-700">
+                          Advanced Strategies
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={advancedStrategies}
+                        onClick={() =>
+                          handleAdvancedStrategiesChange(!advancedStrategies)
+                        }
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 ${
+                          advancedStrategies ? "bg-purple-600" : "bg-gray-200"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            advancedStrategies
+                              ? "translate-x-5"
+                              : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    <p className="mt-1.5 text-xs text-gray-400">
+                      {advancedStrategies
+                        ? "Including dormant 5-star gem infusion paths"
+                        : "Enable for infusion upgrade recommendations"}
                     </p>
                   </div>
 
