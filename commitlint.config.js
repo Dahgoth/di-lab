@@ -8,8 +8,15 @@
  * - For performance improvements: Use commit TYPE "perf" (e.g., "perf: optimize render loop")
  * - For gem optimizer feature: Use SCOPE "gems" (e.g., "feat(gems): add greedy algorithm")
  *
+ * SUBJECT CASE: Allows lowercase, camelCase, PascalCase, and uppercase to support:
+ * - Standard lowercase descriptions (preferred for general prose)
+ * - Ticket identifiers (e.g., "T106", "PROJ-002")
+ * - Variable/function names (e.g., "useOptimisticUpdate", "GemSelector")
+ * - Component names in code references
+ *
  * @see https://conventionalcommits.org/
  * @see https://github.com/conventional-changelog/commitlint
+ * @see https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional
  */
 
 /**
@@ -33,7 +40,48 @@ const COMMIT_TYPES = [
 /**
  * SCOPE CATEGORIES FOR DI-LAB
  *
- * Domain Scopes (application features):
+ * Standard Technical Scopes (industry-standard):
+ * - api: API routes, endpoints, server actions, REST/GraphQL interfaces
+ *        Example: "feat(api): add optimize endpoint"
+ *        Example: "fix(api): validate input schema before processing"
+ *
+ * - ui: Components, pages, styling, user interface elements
+ *       Example: "feat(ui): add gem selector component"
+ *       Example: "style(ui): improve mobile responsiveness"
+ *
+ * - core: Core functionality, shared logic, business rules
+ *         Example: "feat(core): add resonance calculation engine"
+ *         Example: "fix(core): handle edge case in scoring algorithm"
+ *
+ * - cli: Command-line interface tools and scripts
+ *        Example: "feat(cli): add build validation command"
+ *        Example: "fix(cli): correct argument parsing"
+ *
+ * - config: Configuration files, environment setup, tooling config
+ *           Example: "feat(config): add tailwind css 4 configuration"
+ *           Example: "fix(config): correct path alias mapping"
+ *
+ * - deps: Dependencies, package updates, version management
+ *         Example: "deps: upgrade next.js to v16"
+ *         Example: "fix(deps): pin better-sqlite3 version"
+ *
+ * - build: Build system, bundling, compilation, production artifacts
+ *          Example: "build: optimize production bundle size"
+ *          Example: "fix(build): resolve esm module resolution"
+ *
+ * - ci: Continuous integration, GitHub Actions workflows, pipelines
+ *       Example: "ci: add release-please workflow"
+ *       Example: "fix(ci): resolve husky hook permissions"
+ *
+ * - types: TypeScript type definitions, interfaces, type utilities
+ *          Example: "feat(types): add Gem optimization types"
+ *          Example: "fix(types): correct ResonanceBonus interface"
+ *
+ * - utils: Utility functions, helpers, shared utilities
+ *          Example: "feat(utils): add formatting utilities"
+ *          Example: "fix(utils): handle edge case in cn function"
+ *
+ * Domain Scopes (application-specific):
  * - gems: Legendary gems selection, management, optimization engine
  *         Example: "feat(gems): add greedy optimization algorithm"
  *         Example: "fix(gems): correct resonance calculation for 5-star gems"
@@ -42,33 +90,13 @@ const COMMIT_TYPES = [
  *         Example: "feat(auth): add Battle.net OAuth provider"
  *         Example: "fix(auth): handle expired session tokens"
  *
- * - api: API routes, endpoints, server actions
- *        Example: "feat(api): add optimize endpoint"
- *        Example: "fix(api): validate input schema before processing"
- *
- * - ui: Components, pages, styling, user interface elements
- *       Example: "feat(ui): add gem selector component"
- *       Example: "style(ui): improve mobile responsiveness"
- *
  * - db: Database schema, migrations, queries (Drizzle + SQLite)
  *       Example: "feat(db): add legendary_gems table"
  *       Example: "fix(db): correct foreign key constraint"
  *
  * Infrastructure Scopes:
- * - ci: Continuous integration, GitHub Actions workflows
- *       Example: "ci: add release-please workflow"
- *       Example: "fix(ci): resolve husky hook permissions"
- *
  * - cd: Continuous deployment, release automation
  *       Example: "cd: configure auto-deploy to production"
- *
- * - deps: Dependencies, package updates
- *         Example: "deps: upgrade next.js to v16"
- *         Example: "fix(deps): pin better-sqlite3 version"
- *
- * - config: Configuration files, environment setup
- *           Example: "config: add tailwind css 4 configuration"
- *           Example: "fix(config): correct path alias mapping"
  *
  * Workflow Scopes (GitFlow-inspired):
  * - release: Release preparation, version bumps, changelogs
@@ -89,18 +117,25 @@ const COMMIT_TYPES = [
  * @type {ReadonlyArray<string>}
  */
 const COMMIT_SCOPES = [
-  // Domain Scopes
+  // Standard Technical Scopes (industry-standard)
+  'api',    // API: routes, endpoints, server actions, REST/GraphQL
+  'ui',     // User Interface: components, pages, styling
+  'core',   // Core: shared logic, business rules, central functionality
+  'cli',    // CLI: command-line tools and scripts
+  'config', // Configuration: files, environment setup, tooling
+  'deps',   // Dependencies: package updates, version management
+  'build',  // Build: bundling, compilation, production artifacts
+  'ci',     // Continuous Integration: GitHub Actions, workflows
+  'types',  // Types: TypeScript definitions, interfaces
+  'utils',  // Utilities: helper functions, shared utilities
+
+  // Domain Scopes (application-specific)
   'gems',   // Legendary gems: selection, optimization, management
   'auth',   // Authentication: Battle.net OAuth, character verification
-  'api',    // API: routes, endpoints, server actions
-  'ui',     // User Interface: components, pages, styling
   'db',     // Database: schema, migrations, queries
 
   // Infrastructure Scopes
-  'ci',     // Continuous Integration: GitHub Actions, workflows
   'cd',     // Continuous Deployment: release automation
-  'deps',   // Dependencies: package updates, version management
-  'config', // Configuration: files, environment setup
 
   // Workflow Scopes
   'release', // Release: version bumps, changelog updates
@@ -124,8 +159,16 @@ module.exports = {
     // Scope must be one of the defined project scopes (or empty for global changes)
     'scope-enum': [2, 'always', COMMIT_SCOPES],
 
-    // Subject must be lowercase
-    'subject-case': [2, 'always', 'lower-case'],
+    // Subject case: Allow multiple cases for flexibility
+    // - lower-case: Standard for general prose (preferred)
+    // - camel-case: For variable/function names (e.g., useOptimize)
+    // - pascal-case: For component/class names (e.g., GemSelector)
+    // - upper-case: For ticket identifiers (e.g., T106, PROJ-002)
+    'subject-case': [
+      2,
+      'always',
+      ['lower-case', 'camel-case', 'pascal-case', 'upper-case'],
+    ],
 
     // Subject must not exceed 72 characters
     'subject-max-length': [2, 'always', 72],
