@@ -14,7 +14,13 @@
  */
 
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import type { EquippedGem, LegendaryGem, Quality, Rank } from "@/types/gem";
+import type {
+  EquippedGem,
+  LegendaryGem,
+  Quality,
+  Rank,
+  StarRating,
+} from "@/types/gem";
 import type { ResourceInventory, SessionState, SavedBuild } from "@/types";
 import { deriveSlotType } from "@/types/gem";
 import { createEmptySessionState } from "@/types";
@@ -92,6 +98,9 @@ export default function OptimizePage() {
   // State for gem detail modal
   const [selectedGemId, setSelectedGemId] = useState<string | null>(null);
   const [showGemDetail, setShowGemDetail] = useState(false);
+
+  // State for gem catalog star rating tabs
+  const [selectedStarRating, setSelectedStarRating] = useState<StarRating>(5);
 
   // Extract state from session
   const equippedGems = sessionState.gems;
@@ -512,6 +521,8 @@ export default function OptimizePage() {
               <CardBody>
                 <GemCatalog
                   gems={ALL_GEMS}
+                  selectedStarRating={selectedStarRating}
+                  onStarRatingChange={setSelectedStarRating}
                   onGemSelect={(gem: LegendaryGem) => handleAddGem(gem.id)}
                 />
               </CardBody>
