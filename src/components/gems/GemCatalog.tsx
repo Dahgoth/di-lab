@@ -1,14 +1,15 @@
-/**
- * GemCatalog component for DI-Lab
- * Displays a searchable grid of legendary gems with star-rating tabs (FR-001)
- */
-
 "use client";
 
+/**
+ * GemCatalog — Tactical Minimalism gem browser
+ *
+ * Dark theme: bg-black, border-zinc-800, font-mono data readouts.
+ * Strict grid-cols-4 for the gem grid.
+ */
+
 import { useState, useMemo, useCallback, type ChangeEvent } from "react";
-import { Search, Filter } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import type { LegendaryGem, StarRating, TierRanking } from "@/types";
-import { Card } from "@/components/ui";
 import GemCard from "./GemCard";
 
 // ============================================================================
@@ -16,19 +17,12 @@ import GemCard from "./GemCard";
 // ============================================================================
 
 export interface GemCatalogProps {
-  /** All legendary gems from database */
   gems: LegendaryGem[];
-  /** Currently selected star rating tab */
   selectedStarRating?: StarRating;
-  /** Called when star rating tab changes */
   onStarRatingChange?: (rating: StarRating) => void;
-  /** Called when a gem is selected for adding */
   onGemSelect?: (gem: LegendaryGem) => void;
-  /** Optional filter by tier ranking */
   tierFilter?: TierRanking;
-  /** Optional search query from parent */
   searchQuery?: string;
-  /** Called when search query changes */
   onSearchChange?: (query: string) => void;
 }
 
@@ -37,36 +31,24 @@ export interface GemCatalogProps {
 // ============================================================================
 
 const STAR_RATING_TABS: { value: StarRating; label: string }[] = [
-  { value: 5, label: "5-Star" },
-  { value: 2, label: "2-Star" },
-  { value: 1, label: "1-Star" },
+  { value: 5, label: "5★" },
+  { value: 2, label: "2★" },
+  { value: 1, label: "1★" },
 ];
 
 const TIER_FILTERS: { value: TierRanking | "all"; label: string }[] = [
-  { value: "all", label: "All Tiers" },
-  { value: "S", label: "S Tier" },
-  { value: "A", label: "A Tier" },
-  { value: "B", label: "B Tier" },
-  { value: "C", label: "C Tier" },
-  { value: "D", label: "D Tier" },
+  { value: "all", label: "ALL" },
+  { value: "S", label: "S" },
+  { value: "A", label: "A" },
+  { value: "B", label: "B" },
+  { value: "C", label: "C" },
+  { value: "D", label: "D" },
 ];
 
 // ============================================================================
 // Component
 // ============================================================================
 
-/**
- * GemCatalog displays a grid of legendary gems with tabs for star ratings
- * and search/filter functionality (FR-001)
- *
- * @example
- * ```tsx
- * <GemCatalog
- *   gems={allGems}
- *   onGemSelect={(gem) => addGem(gem)}
- * />
- * ```
- */
 export default function GemCatalog({
   gems,
   selectedStarRating = 5,
@@ -76,59 +58,47 @@ export default function GemCatalog({
   searchQuery: externalSearchQuery,
   onSearchChange,
 }: GemCatalogProps) {
-  // Internal state for search (if not controlled)
   const [internalSearchQuery, setInternalSearchQuery] = useState("");
   const [internalTierFilter, setInternalTierFilter] = useState<
     TierRanking | "all"
   >("all");
 
-  // Use external or internal state
   const searchQuery = externalSearchQuery ?? internalSearchQuery;
   const currentTierFilter = tierFilter ?? internalTierFilter;
 
-  // Filter gems by star rating, search, and tier
   const filteredGems = useMemo(() => {
     return gems.filter((gem) => {
-      // Star rating filter (from tabs)
       if (gem.starRating !== selectedStarRating) return false;
-
-      // Search filter
       if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        const matchesName = gem.name.toLowerCase().includes(query);
+        const q = searchQuery.toLowerCase();
+        const matchesName = gem.name.toLowerCase().includes(q);
         const matchesEffect = gem.effects.some(
-          (effect) =>
-            effect.description.toLowerCase().includes(query) ||
-            effect.type.toLowerCase().includes(query),
+          (e) =>
+            e.description.toLowerCase().includes(q) ||
+            e.type.toLowerCase().includes(q),
         );
         if (!matchesName && !matchesEffect) return false;
       }
-
-      // Tier filter
       if (currentTierFilter !== "all") {
-        const matchesPvp = gem.pvpTier === currentTierFilter;
-        const matchesPve = gem.pveTier === currentTierFilter;
-        if (!matchesPvp && !matchesPve) return false;
+        if (
+          gem.pvpTier !== currentTierFilter &&
+          gem.pveTier !== currentTierFilter
+        )
+          return false;
       }
-
       return true;
     });
   }, [gems, selectedStarRating, searchQuery, currentTierFilter]);
 
-  // Handle search input
   const handleSearchChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const query = event.target.value;
-      if (onSearchChange) {
-        onSearchChange(query);
-      } else {
-        setInternalSearchQuery(query);
-      }
+      const q = event.target.value;
+      if (onSearchChange) onSearchChange(q);
+      else setInternalSearchQuery(q);
     },
     [onSearchChange],
   );
 
-  // Handle star rating tab change
   const handleStarRatingChange = useCallback(
     (rating: StarRating) => {
       onStarRatingChange?.(rating);
@@ -136,61 +106,59 @@ export default function GemCatalog({
     [onStarRatingChange],
   );
 
-  // Handle tier filter change
   const handleTierFilterChange = useCallback((tier: TierRanking | "all") => {
     setInternalTierFilter(tier);
   }, []);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Tabs and Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-        {/* Star Rating Tabs */}
-        <div className="flex rounded-lg border border-gray-200 bg-gray-100 p-1">
+    <div className="flex flex-col h-full bg-black">
+      {/* ── Toolbar ─────────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 px-1">
+        {/* Star rating tabs */}
+        <div className="flex border border-zinc-800 divide-x divide-zinc-800">
           {STAR_RATING_TABS.map((tab) => (
             <button
               key={tab.value}
               onClick={() => handleStarRatingChange(tab.value)}
-              className={`
-                px-4 py-2 text-sm font-medium rounded-md transition-colors
-                ${
-                  selectedStarRating === tab.value
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
-                }
-              `}
               aria-pressed={selectedStarRating === tab.value}
+              className={[
+                "px-4 py-1.5 font-mono text-xs tracking-widest transition-colors",
+                selectedStarRating === tab.value
+                  ? "bg-zinc-900 text-zinc-100"
+                  : "bg-black text-zinc-600 hover:text-zinc-300",
+              ].join(" ")}
             >
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Search Input */}
+        {/* Search */}
         <div className="flex-1 relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            size={18}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none"
+            size={14}
           />
           <input
             type="text"
-            placeholder="Search gems..."
+            placeholder="SEARCH GEMS"
             value={searchQuery}
             onChange={handleSearchChange}
             className="
-              w-full pl-10 pr-4 py-2
-              border border-gray-300 rounded-lg
-              text-gray-900 placeholder:text-gray-400
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+              w-full pl-8 pr-3 py-1.5
+              bg-black border border-zinc-800
+              font-mono text-xs text-zinc-300 placeholder:text-zinc-700
+              focus:outline-none focus:border-zinc-600
+              tracking-wider uppercase
             "
           />
         </div>
 
-        {/* Tier Filter */}
-        <div className="relative">
-          <Filter
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            size={18}
+        {/* Tier filter */}
+        <div className="relative flex items-center border border-zinc-800">
+          <SlidersHorizontal
+            className="absolute left-2 text-zinc-600 pointer-events-none"
+            size={12}
           />
           <select
             value={currentTierFilter}
@@ -198,33 +166,32 @@ export default function GemCatalog({
               handleTierFilterChange(e.target.value as TierRanking | "all")
             }
             className="
-              pl-10 pr-8 py-2
-              border border-gray-300 rounded-lg
-              text-gray-900 bg-white
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+              pl-7 pr-6 py-1.5
+              bg-black
+              font-mono text-xs text-zinc-400 uppercase tracking-widest
+              focus:outline-none focus:border-zinc-600
               appearance-none cursor-pointer
             "
           >
-            {TIER_FILTERS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {TIER_FILTERS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
               </option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="text-sm text-gray-500 mb-3">
-        {filteredGems.length} gem{filteredGems.length !== 1 ? "s" : ""} found
+      {/* ── Count readout ───────────────────────────────────────────────── */}
+      <div className="px-1 mb-2">
+        <span className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+          {filteredGems.length} GEMS
+        </span>
       </div>
 
-      {/* Gem Grid */}
+      {/* ── Gem grid ────────────────────────────────────────────────────── */}
       {filteredGems.length > 0 ? (
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 will-change-scroll"
-          style={{ contain: "layout" }}
-        >
+        <div className="grid grid-cols-4 gap-px bg-zinc-900">
           {filteredGems.map((gem) => (
             <GemCard
               key={gem.id}
@@ -234,26 +201,20 @@ export default function GemCatalog({
           ))}
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-          <div className="text-gray-400 mb-2">
-            <Search size={48} />
-          </div>
-          <p className="text-gray-600 font-medium">No gems match your filter</p>
-          <p className="text-gray-500 text-sm mt-1">
-            Try adjusting your search or filter criteria
+        <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
+          <Search size={32} className="text-zinc-800 mb-3" />
+          <p className="font-mono text-xs text-zinc-600 uppercase tracking-widest">
+            NO GEMS FOUND
           </p>
           <button
             onClick={() => {
-              if (onSearchChange) {
-                onSearchChange("");
-              } else {
-                setInternalSearchQuery("");
-              }
+              if (onSearchChange) onSearchChange("");
+              else setInternalSearchQuery("");
               setInternalTierFilter("all");
             }}
-            className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm"
+            className="mt-4 font-mono text-[10px] text-zinc-600 hover:text-zinc-300 uppercase tracking-widest transition-colors"
           >
-            Clear filters
+            CLEAR FILTERS
           </button>
         </div>
       )}
