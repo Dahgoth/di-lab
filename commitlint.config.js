@@ -149,6 +149,7 @@ const COMMIT_SCOPES = [
   // Infrastructure Scopes
   'cd',      // Continuous Deployment: release automation
   'secrets', // Secrets: vault integration, credential rotation
+  'security', // Security: CSP, headers, authentication, authorization
   'env',     // Environment: stage/prod configurations
 
   // Workflow Scopes
