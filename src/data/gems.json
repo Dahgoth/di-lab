@@ -26,7 +26,8 @@
             "duration": 3,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-1.png"
       },
       {
         "id": "berserkers-eye",
@@ -49,7 +50,8 @@
             "maxValue": 2,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-2.png"
       },
       {
         "id": "caarsens-invigoration",
@@ -72,7 +74,8 @@
             "maxValue": 2,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-3.png"
       },
       {
         "id": "everlasting-torment",
@@ -97,7 +100,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-4.png"
       },
       {
         "id": "chained-death",
@@ -113,7 +117,8 @@
             "maxValue": 17.5,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-5.png"
       },
       {
         "id": "trickshot-gem",
@@ -136,7 +141,8 @@
             "maxValue": 2,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-6.png"
       },
       {
         "id": "the-black-rose",
@@ -154,7 +160,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-7.png"
       },
       {
         "id": "seleds-weakening",
@@ -178,7 +185,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-8.png"
       },
       {
         "id": "zod-stone",
@@ -201,7 +209,8 @@
             "maxValue": 8,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-9.png"
       },
       {
         "id": "respite-stone",
@@ -224,7 +233,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-10.png"
       },
       {
         "id": "nightmare-wreath",
@@ -249,7 +259,8 @@
             "maxValue": 8,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-11.png"
       },
       {
         "id": "pain-of-subjugation",
@@ -272,7 +283,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-12.png"
       },
       {
         "id": "defiant-soul",
@@ -298,7 +310,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-13.png"
       },
       {
         "id": "freedom-and-devotion",
@@ -321,7 +334,8 @@
             "maxValue": 3,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-14.png"
       },
       {
         "id": "mocking-laughter",
@@ -345,7 +359,8 @@
             "maxValue": 8,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-15.png"
       },
       {
         "id": "heartstone",
@@ -368,7 +383,8 @@
             "maxValue": 24,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-16.png"
       },
       {
         "id": "los-focused-gaze",
@@ -391,7 +407,8 @@
             "maxValue": 32,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-17.png"
       },
       {
         "id": "exigent-echo",
@@ -418,7 +435,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-18.png"
       },
       {
         "id": "eye-of-the-unyielding",
@@ -441,7 +459,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-19.png"
       },
       {
         "id": "unrefined-passage",
@@ -464,7 +483,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-20.png"
       },
       {
         "id": "misery-elixir",
@@ -487,7 +507,8 @@
             "maxValue": 2,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-21.png"
       },
       {
         "id": "lucent-watcher",
@@ -510,7 +531,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-22.png"
       },
       {
         "id": "entropic-well",
@@ -533,7 +555,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-23.png"
       },
       {
         "id": "havoc-bearer",
@@ -560,7 +583,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-24.png"
       },
       {
         "id": "faltergrasp",
@@ -587,7 +611,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-25.png"
       },
       {
         "id": "surging-sea",
@@ -611,7 +636,8 @@
             "maxValue": 2,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-26.png"
       },
       {
         "id": "mountain-toe",
@@ -634,7 +660,8 @@
             "maxValue": 4,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-27.png"
       },
       {
         "id": "flaystone",
@@ -657,7 +684,8 @@
             "maxValue": 4,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-28.png"
       }
     ],
     "2-star": [
@@ -682,7 +710,8 @@
             "maxValue": 60,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-29.png"
       },
       {
         "id": "power-and-command",
@@ -709,7 +738,8 @@
             "cooldown": 9,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-30.png"
       },
       {
         "id": "fervent-fang",
@@ -733,7 +763,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-31.png"
       },
       {
         "id": "lightning-core",
@@ -759,7 +790,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-32.png"
       },
       {
         "id": "cutthroats-grin",
@@ -782,7 +814,8 @@
             "maxValue": 4,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-33.png"
       },
       {
         "id": "pain-clasp",
@@ -805,7 +838,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-34.png"
       },
       {
         "id": "bloody-reach",
@@ -829,7 +863,8 @@
             "duration": 3,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-35.png"
       },
       {
         "id": "vipers-bite",
@@ -856,7 +891,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-36.png"
       },
       {
         "id": "the-hunger",
@@ -882,7 +918,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-37.png"
       },
       {
         "id": "the-abiding-curse",
@@ -909,7 +946,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-38.png"
       },
       {
         "id": "unity-crystal",
@@ -932,7 +970,8 @@
             "maxValue": 3.6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-39.png"
       },
       {
         "id": "followers-burden",
@@ -955,7 +994,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-40.png"
       },
       {
         "id": "kir-sling",
@@ -982,7 +1022,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-41.png"
       },
       {
         "id": "volatility-shard",
@@ -1008,7 +1049,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-42.png"
       },
       {
         "id": "mothers-lament",
@@ -1034,7 +1076,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-43.png"
       },
       {
         "id": "ironbane",
@@ -1061,7 +1104,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-44.png"
       },
       {
         "id": "igneous-scorn",
@@ -1087,7 +1131,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-45.png"
       },
       {
         "id": "grim-rhythm",
@@ -1113,7 +1158,8 @@
             "duration": 3,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-46.png"
       },
       {
         "id": "tear-of-the-comet",
@@ -1136,7 +1182,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-47.png"
       },
       {
         "id": "mossthorn",
@@ -1163,7 +1210,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-48.png"
       },
       {
         "id": "cold-confidant",
@@ -1190,7 +1238,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-49.png"
       },
       {
         "id": "mourneskull",
@@ -1218,7 +1267,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-50.png"
       },
       {
         "id": "mercys-harvest",
@@ -1244,7 +1294,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-51.png"
       },
       {
         "id": "specter-glass",
@@ -1271,7 +1322,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-52.png"
       },
       {
         "id": "crimson-behelit",
@@ -1308,7 +1360,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-53.png"
       },
       {
         "id": "stubborn-oracle",
@@ -1335,7 +1388,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-54.png"
       },
       {
         "id": "manaflux",
@@ -1363,7 +1417,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-55.png"
       },
       {
         "id": "fading-nostrum",
@@ -1390,7 +1445,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-56.png"
       },
       {
         "id": "rampant-torch",
@@ -1417,7 +1473,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-57.png"
       }
     ],
     "5-star": [
@@ -1442,7 +1499,8 @@
             "maxValue": 8,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-58.png"
       },
       {
         "id": "seeping-bile",
@@ -1469,7 +1527,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-59.png"
       },
       {
         "id": "echoing-shade",
@@ -1486,7 +1545,8 @@
             "duration": 30,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-60.png"
       },
       {
         "id": "bottled-hope",
@@ -1511,7 +1571,8 @@
             "maxValue": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-61.png"
       },
       {
         "id": "phoenix-ashes",
@@ -1537,7 +1598,8 @@
             "cooldown": 180,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-62.png"
       },
       {
         "id": "blessing-of-the-worthy",
@@ -1563,7 +1625,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-63.png"
       },
       {
         "id": "howlers-call",
@@ -1589,7 +1652,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-64.png"
       },
       {
         "id": "zwensons-haunting",
@@ -1616,7 +1680,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-65.png"
       },
       {
         "id": "chip-of-stone-flesh",
@@ -1640,7 +1705,8 @@
             "duration": 3,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-66.png"
       },
       {
         "id": "frozen-heart",
@@ -1667,7 +1733,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-67.png"
       },
       {
         "id": "consecrated-will",
@@ -1692,7 +1759,8 @@
             "cooldown": 6,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-68.png"
       },
       {
         "id": "hellfire-fragment",
@@ -1717,7 +1785,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-69.png"
       },
       {
         "id": "gloom-cask",
@@ -1744,7 +1813,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-70.png"
       },
       {
         "id": "starfire-shard",
@@ -1770,7 +1840,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-71.png"
       },
       {
         "id": "spiteful-blood",
@@ -1806,7 +1877,8 @@
             "cooldown": 20,
             "isStrifed": false
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-72.png"
       },
       {
         "id": "void-spark",
@@ -1833,7 +1905,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-73.png"
       },
       {
         "id": "maw-of-the-deep",
@@ -1859,7 +1932,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-74.png"
       },
       {
         "id": "roiling-consequence",
@@ -1895,7 +1969,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-75.png"
       },
       {
         "id": "stormvault",
@@ -1922,7 +1997,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-76.png"
       },
       {
         "id": "wolfheart",
@@ -1949,7 +2025,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-77.png"
       },
       {
         "id": "golden-firmament",
@@ -1976,7 +2053,8 @@
             "cooldown": 20,
             "isStrifed": true
           }
-        ]
+        ],
+        "icon": "/icons/gems/gem-78.png"
       },
       {
         "id": "colossus-engine",
