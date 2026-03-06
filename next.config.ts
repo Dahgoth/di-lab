@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
               "object-src 'none'", // Disallow plugins like Flash
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'self' https://*.kiloapps.io", // Allow self and Kilo Code preview
+              "frame-ancestors 'self' https://*.kiloapps.io https://*.vercel.app https://vercel.app https://*.builder.kiloapps.io", // Allow self and preview services
             ].join("; "),
           },
           {
@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "X-Frame-Options",
-            value: "SAMEORIGIN", // Allow framing by same origin only
+            value: "ALLOWALL", // Allow framing from any source (CSP controls this)
           },
           {
             key: "X-XSS-Protection",
