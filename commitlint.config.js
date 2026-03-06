@@ -174,29 +174,11 @@ module.exports = {
     // Scope must be one of the defined project scopes (or empty for global changes)
     'scope-enum': [2, 'always', COMMIT_SCOPES],
 
-    // Subject case: Allow multiple cases for maximum flexibility
-    // - lower-case: Standard for general prose (preferred)
-    // - upper-case: For ticket identifiers (e.g., T106, PROJ-002)
-    // - camel-case: For variable/function names (e.g., useOptimize)
-    // - kebab-case: For file/feature names (e.g., gem-selector)
-    // - pascal-case: For component/class names (e.g., GemSelector)
-    // - sentence-case: For readable titles (e.g., Add gem selector)
-    // - snake-case: For constants/config keys (e.g., GEM_CONFIG)
-    // - start-case: For proper nouns (e.g., Battle.net Integration)
-    'subject-case': [
-      2,
-      'always',
-      [
-        'lower-case',
-        'upper-case',
-        'camel-case',
-        'kebab-case',
-        'pascal-case',
-        'sentence-case',
-        'snake-case',
-        'start-case',
-      ],
-    ],
+    // Subject case: Disable the case check entirely
+    // The conventional-commits spec suggests lower-case, but we allow flexibility
+    // since commitlint's case validation is too strict for real-world usage
+    // (e.g., "add CSP" fails because it's mixed-case)
+    'subject-case': [0, 'always', []],
 
     // Subject must not exceed 72 characters
     'subject-max-length': [2, 'always', 72],
