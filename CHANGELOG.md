@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.3.0...di-lab-v0.4.0) (2026-03-06)
+
+
+### Features
+
+* **config:** add csp via middleware with nonce support ([7b94ddc](https://github.com/Dahgoth/di-lab/commit/7b94ddc8a1c4ce4e5f9157784c19d7052b74f510))
+
+
+### Bug Fixes
+
+* **config:** add exact preview subdomain to frame-ancestors ([fd3d3a0](https://github.com/Dahgoth/di-lab/commit/fd3d3a0ce324d3b5cf3d68831c011b13a4625b5d))
+* **config:** add more permissive frame-ancestors patterns ([89e7a3b](https://github.com/Dahgoth/di-lab/commit/89e7a3b7fb19b8bc37f8aaa41ba26a2dc4a41379))
+* **config:** add security scope to commitlint ([b9027ce](https://github.com/Dahgoth/di-lab/commit/b9027ce572d4f08b0ef8d89ce5a131c4414d15cf))
+* **config:** allow-kilo-code-preview-in-csp-headers ([e770425](https://github.com/Dahgoth/di-lab/commit/e770425ef95bc7525181b9cee8e73d6f6635093a))
+* **config:** disable subject-case check in commitlint ([e6f4e17](https://github.com/Dahgoth/di-lab/commit/e6f4e17cb63ef7b14861e883c3e91e61c0d77415))
+* **config:** expand-csp-frame-ancestors-for-preview-services ([d85b35d](https://github.com/Dahgoth/di-lab/commit/d85b35daa6e098d9fa8ff056cb08981d9825e874))
+* **config:** remove csp - incompatible with next.js nonces ([e548b1e](https://github.com/Dahgoth/di-lab/commit/e548b1eef3c2d517ea383ca6b996d0b3b439d560))
+* **config:** remove csp headers to diagnose script blocking ([53771a1](https://github.com/Dahgoth/di-lab/commit/53771a1fc0d5c80ba85505be73b8a1e91fe76bee))
+* **config:** restore csp with unsafe-inline for iframe compatibility ([d066465](https://github.com/Dahgoth/di-lab/commit/d0664651ebd76f388b3ad1f74720ffe5f305d064))
+
 ## [0.3.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.2.2...di-lab-v0.3.0) (2026-02-19)
 
 
