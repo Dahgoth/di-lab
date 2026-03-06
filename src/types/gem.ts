@@ -130,6 +130,7 @@ export interface LegendaryGem {
   // Metadata
   source?: string; // Acquisition source (e.g., "Battle Pass", "Event")
   isAuxiliary?: boolean; // Whether this is an auxiliary gem
+  icon?: string; // Path to icon image (e.g., "/icons/gems/blood-soaked-jade.png")
 }
 
 // ============================================================================

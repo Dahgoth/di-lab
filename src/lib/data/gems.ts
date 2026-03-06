@@ -37,6 +37,7 @@ interface RawGem {
   pvpTier: string;
   pveTier: string;
   effects: RawGemEffect[];
+  icon?: string;
 }
 
 interface GemsData {
@@ -107,6 +108,7 @@ function transformGem(raw: RawGem): LegendaryGem {
     pveTier: raw.pveTier as LegendaryGem["pveTier"],
     upgradeCosts: [], // Will be calculated dynamically
     resonanceTable,
+    icon: raw.icon,
   };
 }
 
