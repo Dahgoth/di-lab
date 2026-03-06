@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
               "object-src 'none'", // Disallow plugins like Flash
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'none'", // Prevent clickjacking
+              "frame-ancestors 'self' https://*.kiloapps.io", // Allow self and Kilo Code preview
             ].join("; "),
           },
           {
@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "X-Frame-Options",
-            value: "DENY",
+            value: "SAMEORIGIN", // Allow framing by same origin only
           },
           {
             key: "X-XSS-Protection",
