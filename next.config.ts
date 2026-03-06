@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
               "object-src 'none'", // Disallow plugins like Flash
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'self' https://*.kiloapps.io https://*.vercel.app https://vercel.app https://*.builder.kiloapps.io", // Allow self and preview services
+              "frame-ancestors 'self' https://*.kiloapps.io https://*.vercel.app https://vercel.app https://d66652b3-421a-4ef2-ae6f-cc7fa9793cee.builder.kiloapps.io https://*.builder.kiloapps.io", // Allow self and preview services
             ].join("; "),
           },
           {
