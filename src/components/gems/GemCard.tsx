@@ -9,6 +9,7 @@
 import type { LegendaryGem, TierRanking } from "@/types";
 import { Plus, Info } from "lucide-react";
 import { GemSummaryTooltip } from "@/components/ui";
+import Image from "next/image";
 
 // ============================================================================
 // Types
@@ -142,18 +143,28 @@ export default function GemCard({
         </span>
       </div>
 
-      {/* Gem Icon Placeholder */}
+      {/* Gem Icon */}
       <div className="flex items-center justify-center h-12 mt-2">
-        <div
-          className={`
-            w-10 h-10 rounded-full
-            flex items-center justify-center
-            text-2xl
-            ${gem.starRating === 5 ? "bg-yellow-200" : gem.starRating === 2 ? "bg-blue-200" : "bg-gray-200"}
-          `}
-        >
-          💎
-        </div>
+        {gem.icon ? (
+          <Image
+            src={gem.icon}
+            alt={`${gem.name} icon`}
+            width={40}
+            height={40}
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <div
+            className={`
+              w-10 h-10 rounded-full
+              flex items-center justify-center
+              text-2xl
+              ${gem.starRating === 5 ? "bg-yellow-200" : gem.starRating === 2 ? "bg-blue-200" : "bg-gray-200"}
+            `}
+          >
+            💎
+          </div>
+        )}
       </div>
 
       {/* Gem Name */}
