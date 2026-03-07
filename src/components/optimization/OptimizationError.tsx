@@ -44,9 +44,9 @@ export function OptimizationErrorDisplay({
       case "insufficient-resources":
         return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200";
       case "rate-limited":
-        return "bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-200";
+        return "bg-[var(--accent)]/50 border-[var(--border)] text-[var(--foreground)] dark:bg-[var(--accent)]/20 dark:border-[var(--border)] dark:text-[var(--foreground)]";
       default:
-        return "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200";
+        return "bg-[var(--destructive)]/10 border-[var(--destructive)]/30 text-[var(--destructive)] dark:bg-[var(--destructive)]/20 dark:border-[var(--destructive)]/30 dark:text-[var(--destructive)]";
     }
   };
 
@@ -141,8 +141,8 @@ export function ValidationError({ errors }: ValidationErrorProps) {
   if (errors.length === 0) return null;
 
   return (
-    <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4">
-      <div className="flex items-start gap-3 text-red-800 dark:text-red-200">
+    <div className="rounded-lg border border-[var(--destructive)] bg-[var(--destructive)]/10 p-4">
+      <div className="flex items-start gap-3 text-[var(--destructive)]">
         <AlertCircle className="w-5 h-5 flex-shrink-0" />
         <div className="flex-1">
           <h3 className="font-medium">Validation Error</h3>

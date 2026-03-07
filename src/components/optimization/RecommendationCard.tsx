@@ -45,8 +45,8 @@ export function RecommendationCard({
     if (rank === 2)
       return "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300";
     if (rank === 3)
-      return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
-    return "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400";
+      return "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]/80";
+    return "bg-[var(--muted)] text-[var(--muted-foreground)] dark:bg-[var(--muted)] dark:text-[var(--muted-foreground)]";
   };
 
   const getPriorityIcon = (rank: number) => {
@@ -60,9 +60,9 @@ export function RecommendationCard({
     const classes: Record<TierRanking, string> = {
       S: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
       A: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-      B: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
-      C: "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-      D: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+      B: "bg-[var(--muted)] text-[var(--foreground)] dark:bg-[var(--muted)] dark:text-[var(--foreground)]",
+      C: "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]",
+      D: "bg-[var(--destructive)]/10 text-[var(--destructive)] dark:bg-[var(--destructive)]/20 dark:text-[var(--destructive)]",
     };
     return classes[tier];
   };
@@ -119,7 +119,7 @@ export function RecommendationCard({
           {/* Gem Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-gray-900 dark:text-white truncate">
+              <h3 className="font-medium text-[var(--foreground)] truncate">
                 {gemName}
               </h3>
               <span
@@ -136,7 +136,7 @@ export function RecommendationCard({
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <span>Rank {currentRank}</span>
               <ArrowRight className="w-4 h-4" />
-              <span className="font-medium text-gray-900 dark:text-white">
+              <span className="font-medium text-[var(--foreground)]">
                 Rank {targetRank}
               </span>
             </div>

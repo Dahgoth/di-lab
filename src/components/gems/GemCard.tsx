@@ -108,7 +108,7 @@ export default function GemCard({
         className="w-full"
       >
         {/* Fallback gem placeholder */}
-        <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-600 text-lg select-none">
+        <div className="w-8 h-8 rounded-full bg-[var(--muted)] flex items-center justify-center text-[var(--muted-foreground)] text-lg select-none">
           ◆
         </div>
       </InventorySlot>
@@ -162,7 +162,7 @@ export default function GemCard({
                   e.stopPropagation();
                   onClick?.();
                 }}
-                className="flex items-center justify-center w-6 h-6 text-zinc-600 hover:text-rose-500 transition-colors"
+                className="flex items-center justify-center w-6 h-6 text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
                 aria-label={`Add ${gem.name}`}
               >
                 <Plus size={12} />

@@ -90,7 +90,7 @@ export function InfusionRecommendationCard({
           {/* Gem Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-gray-900 dark:text-white truncate">
+              <h3 className="font-medium text-[var(--foreground)] truncate">
                 {displayName}
               </h3>
               <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">

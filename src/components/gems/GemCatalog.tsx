@@ -111,7 +111,7 @@ export default function GemCatalog({
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-black">
+    <div className="flex flex-col h-full bg-[var(--background)]">
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 px-1">
         {/* Star rating tabs */}
@@ -191,7 +191,7 @@ export default function GemCatalog({
 
       {/* ── Gem grid ────────────────────────────────────────────────────── */}
       {filteredGems.length > 0 ? (
-        <div className="grid grid-cols-4 gap-px bg-zinc-900">
+        <div className="grid grid-cols-4 gap-px bg-[var(--border)]">
           {filteredGems.map((gem) => (
             <GemCard
               key={gem.id}

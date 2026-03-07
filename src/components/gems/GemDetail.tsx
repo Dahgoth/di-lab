@@ -47,11 +47,11 @@ export interface GemDetailProps {
 // ============================================================================
 
 const tierColors: Record<TierRanking, string> = {
-  S: "bg-yellow-500 text-white",
-  A: "bg-gray-300 text-gray-800",
+  S: "bg-[var(--primary)] text-white",
+  A: "bg-[var(--muted)] text-[var(--foreground)]",
   B: "bg-amber-600 text-white",
-  C: "bg-gray-400 text-white",
-  D: "bg-gray-500 text-white",
+  C: "bg-[var(--muted)] text-white",
+  D: "bg-[var(--muted)] text-white",
 };
 
 const effectCategoryColors: Record<string, string> = {
@@ -160,8 +160,8 @@ export default function GemDetail({
             }}
             className="
               px-4 py-2 rounded-lg
-              bg-blue-600 text-white font-medium
-              hover:bg-blue-700
+              bg-[var(--primary)] text-[var(--primary-foreground)] font-medium
+              hover:bg-[var(--primary)]/90
               focus:outline-none focus:ring-2 focus:ring-blue-500
               transition-colors
             "
@@ -264,7 +264,7 @@ function EffectCard({ effect }: EffectCardProps) {
   const maxValue = maxValueEntry ? maxValueEntry[1] : null;
 
   return (
-    <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+    <div className="border border-[var(--border)] rounded-lg p-3 bg-[var(--card)]">
       {/* Category Badge */}
       <div className="flex items-center gap-2 mb-2">
         <span
@@ -274,7 +274,7 @@ function EffectCard({ effect }: EffectCardProps) {
         </span>
         <span className="text-xs text-gray-500">{effect.type}</span>
         {effect.isStrifed && (
-          <span className="text-xs text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">
+          <span className="text-xs text-[var(--accent-foreground)] bg-[var(--accent)] px-1.5 py-0.5 rounded">
             Strifed
           </span>
         )}
@@ -323,7 +323,7 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
     return (
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-          <thead className="bg-gray-50">
+          <thead className="bg-[var(--muted)]/50">
             <tr>
               <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
                 Rank
@@ -342,7 +342,11 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
             {ranks.map((rank, idx) => (
               <tr
                 key={rank}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                className={
+                  idx % 2 === 0
+                    ? "bg-[var(--background)]"
+                    : "bg-[var(--muted)]/30"
+                }
               >
                 <td className="px-3 py-2 font-medium text-gray-700 border-b">
                   {rank}

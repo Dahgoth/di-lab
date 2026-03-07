@@ -197,9 +197,9 @@ export function CompactGemSelector({
           disabled={disabled}
           className="
             px-2 py-1 text-sm
-            border border-gray-300 rounded
-            bg-white text-gray-900
-            focus:outline-none focus:ring-1 focus:ring-blue-500
+            border border-[var(--border)] rounded
+            bg-[var(--background)] text-[var(--foreground)]
+            focus:outline-none focus:ring-1 focus:ring-[var(--primary)]
             disabled:opacity-50 disabled:cursor-not-allowed
           "
           aria-label="Quality"
@@ -218,9 +218,9 @@ export function CompactGemSelector({
         disabled={disabled}
         className="
           px-2 py-1 text-sm
-          border border-gray-300 rounded
-          bg-white text-gray-900
-          focus:outline-none focus:ring-1 focus:ring-blue-500
+          border border-[var(--border)] rounded
+          bg-[var(--background)] text-[var(--foreground)]
+          focus:outline-none focus:ring-1 focus:ring-[var(--primary)]
           disabled:opacity-50 disabled:cursor-not-allowed
         "
         aria-label="Rank"

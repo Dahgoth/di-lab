@@ -141,16 +141,18 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   };
 
   const colors = {
-    success: "bg-green-50 border-green-200 text-green-800",
-    error: "bg-red-50 border-red-200 text-red-800",
-    warning: "bg-amber-50 border-amber-200 text-amber-800",
+    success:
+      "bg-[var(--primary)]/10 border-[var(--primary)]/30 text-[var(--primary)]",
+    error:
+      "bg-[var(--destructive)]/10 border-[var(--destructive)]/30 text-[var(--destructive)]",
+    warning: "bg-yellow-500/10 border-yellow-500/30 text-yellow-600",
     info: "bg-blue-50 border-blue-200 text-blue-800",
   };
 
   const progressColors = {
-    success: "bg-green-400",
-    error: "bg-red-400",
-    warning: "bg-amber-400",
+    success: "bg-[var(--primary)]",
+    error: "bg-[var(--destructive)]",
+    warning: "bg-yellow-500",
     info: "bg-blue-400",
   };
 

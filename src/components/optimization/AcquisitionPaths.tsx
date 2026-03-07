@@ -62,8 +62,8 @@ export function AcquisitionPaths({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-      <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-md p-4">
+      <h3 className="font-medium text-[var(--foreground)] mb-4">
         Acquisition Paths
       </h3>
 

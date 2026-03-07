@@ -55,12 +55,12 @@ export function AwakenedSlotsPanel({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-md p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-500" />
-          <h3 className="font-medium text-gray-900 dark:text-white">
+          <Sparkles className="w-5 h-5 text-[var(--primary)]" />
+          <h3 className="font-medium text-[var(--foreground)]">
             Awakened Slots
           </h3>
         </div>
@@ -143,8 +143,8 @@ export function AwakenedSlotsPanel({
             </span>
           </div>
           <div>
-            <span className="text-gray-600 dark:text-gray-400">Platinum: </span>
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="text-[var(--muted-foreground)]">Platinum: </span>
+            <span className="font-medium text-[var(--foreground)]">
               {platinum.toLocaleString()}
             </span>
           </div>

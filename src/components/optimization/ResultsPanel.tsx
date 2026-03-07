@@ -28,7 +28,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-lg font-semibold text-[var(--foreground)] mb-2">
             Optimization Results
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -44,13 +44,11 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   if (error) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex items-start gap-3 text-red-600 dark:text-red-400">
+        <div className="flex items-start gap-3 text-[var(--destructive)]">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
             <h3 className="font-medium">Optimization Failed</h3>
-            <p className="text-sm text-red-500 dark:text-red-300 mt-1">
-              {error}
-            </p>
+            <p className="text-sm text-[var(--destructive)]/80 mt-1">{error}</p>
           </div>
         </div>
       </div>

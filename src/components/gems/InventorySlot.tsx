@@ -70,7 +70,7 @@ export default function InventorySlot({
   if (empty) {
     return (
       <div
-        className={`relative aspect-square overflow-hidden border border-dashed border-zinc-900 bg-black ${className}`}
+        className={`relative aspect-square overflow-hidden border border-dashed border-[var(--border)] bg-[var(--background)] ${className}`}
         aria-label={ariaLabel ?? "Empty slot"}
       />
     );
@@ -117,7 +117,7 @@ export default function InventorySlot({
     >
       {/* Selected: left-edge 2px data-bar */}
       {selected && (
-        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-rose-500 z-20" />
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--primary)] z-20" />
       )}
 
       {/* Equipped: top-left L-bracket in accent color */}

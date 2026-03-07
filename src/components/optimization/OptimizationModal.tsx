@@ -62,7 +62,7 @@ export function OptimizationModal({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+      <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2
@@ -89,7 +89,7 @@ export function OptimizationModal({
 
           {/* Elapsed time */}
           <div className="text-center">
-            <span className="text-3xl font-mono text-gray-900 dark:text-white">
+            <span className="text-3xl font-mono text-[var(--foreground)]">
               {formatTime(elapsedSeconds)}
             </span>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">

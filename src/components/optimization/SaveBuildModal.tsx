@@ -228,9 +228,9 @@ export function SaveBuildModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* General error */}
         {state.error && (
-          <div className="p-3 bg-red-900/20 border border-red-800 rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-            <p className="text-red-400 text-sm">{state.error}</p>
+          <div className="p-3 bg-[var(--destructive)]/10 border border-[var(--destructive)]/30 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-[var(--destructive)] flex-shrink-0 mt-0.5" />
+            <p className="text-[var(--destructive)] text-sm">{state.error}</p>
           </div>
         )}
 
@@ -261,7 +261,7 @@ export function SaveBuildModal({
             rows={3}
             maxLength={500}
             disabled={state.isSubmitting}
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder:[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed"
           />
           {state.fieldErrors.notes && (
             <p className="text-sm text-red-400">{state.fieldErrors.notes}</p>
