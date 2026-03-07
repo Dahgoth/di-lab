@@ -412,7 +412,7 @@ export default function OptimizePage() {
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border border-[var(--border)] border-t-[var(--primary)] rounded-full animate-spin mx-auto" />
-          <p className="mt-4 font-mono text-xs text-[var(--muted-foreground)] uppercase tracking-widest">
+          <p className="mt-4 font-mono text-xs text-[var(--muted-foreground)] uppercase">
             LOADING SESSION
           </p>
         </div>
@@ -433,12 +433,12 @@ export default function OptimizePage() {
             <h1 className="font-sans text-xl font-semibold text-[var(--foreground)] tracking-tight">
               Build Optimizer
             </h1>
-            <p className="mt-0.5 font-mono text-[11px] text-[var(--muted-foreground)] uppercase tracking-widest">
+            <p className="font-mono text-xs text-[var(--muted-foreground)] uppercase">
               LEGENDARY GEM CONFIGURATION
             </p>
           </div>
           {lastSaved && (
-            <div className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+            <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)] uppercase">
               <Save className="w-3 h-3" />
               <span>SAVED</span>
             </div>
@@ -460,21 +460,21 @@ export default function OptimizePage() {
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-[var(--destructive)] flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="font-mono text-xs text-rose-400 uppercase tracking-widest mb-1">
+                <p className="font-mono text-xs text-rose-400 uppercase mb-1">
                   DEPRECATED GEMS DETECTED
                 </p>
                 <ul className="space-y-0.5">
                   {deprecatedGems.map((gem) => (
                     <li key={gem.gemId} className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] text-[var(--muted-foreground)]">
+                      <span className="text-xs text-[var(--muted-foreground)]">
                         {gem.gemId}
                       </span>
-                      <span className="font-mono text-[10px] text-[var(--foreground)]">
+                      <span className="text-xs text-[var(--foreground)]">
                         SLOT {gem.slotPosition}
                       </span>
                       <button
                         onClick={() => handleRemoveDeprecatedGem(gem.gemId)}
-                        className="font-mono text-[10px] text-[var(--destructive)] hover:text-[var(--destructive)]/80 transition-colors"
+                        className="font-mono text-xs text-[var(--destructive)] hover:text-[var(--destructive)]/80 transition-colors"
                       >
                         REMOVE
                       </button>
@@ -483,7 +483,7 @@ export default function OptimizePage() {
                 </ul>
                 <button
                   onClick={handleClearDeprecatedGems}
-                  className="mt-2 font-mono text-[10px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] uppercase tracking-widest transition-colors"
+                  className="mt-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] uppercase transition-colors"
                 >
                   CLEAR ALL
                 </button>
@@ -496,7 +496,7 @@ export default function OptimizePage() {
         {loadedBuildName && (
           <div className="mb-3 px-3 py-2 border border-[var(--border)] flex items-center gap-2">
             <Sparkles className="w-3 h-3 text-[var(--muted-foreground)]" />
-            <span className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+            <span className="text-xs text-[var(--muted-foreground)] uppercase">
               EDITING:{" "}
               <span className="text-[var(--foreground)]">
                 {loadedBuildName}
@@ -521,13 +521,13 @@ export default function OptimizePage() {
           <div className="bg-[var(--background)] divide-y divide-[var(--border)]">
             {/* ── Build Stats ─────────────────────────────────────────── */}
             <div className="p-4 space-y-4">
-              <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+              <p className="text-xs text-[var(--muted-foreground)] uppercase">
                 BUILD STATS
               </p>
 
               {/* Mode toggle */}
               <div>
-                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest mb-1.5">
+                <p className="font-mono text-xs text-[var(--muted-foreground)] uppercase mb-1.5">
                   MODE
                 </p>
                 <div className="flex border border-[var(--border)] divide-x divide-[var(--border)]">
@@ -536,7 +536,7 @@ export default function OptimizePage() {
                     onClick={() => handleOptimizationModeChange("PVE")}
                     aria-pressed={optimizationMode === "PVE"}
                     className={[
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase tracking-widest transition-colors",
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase transition-colors",
                       optimizationMode === "PVE"
                         ? "bg-[var(--muted)] text-[var(--foreground)]"
                         : "bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
@@ -550,7 +550,7 @@ export default function OptimizePage() {
                     onClick={() => handleOptimizationModeChange("PVP")}
                     aria-pressed={optimizationMode === "PVP"}
                     className={[
-                      "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase tracking-widest transition-colors",
+                      "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase transition-colors",
                       optimizationMode === "PVP"
                         ? "bg-[var(--muted)] text-[var(--foreground)]"
                         : "bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
@@ -566,7 +566,7 @@ export default function OptimizePage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <Zap className="w-3 h-3 text-[var(--muted-foreground)]" />
-                  <span className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                  <span className="text-xs text-[var(--muted-foreground)] uppercase">
                     ADV. STRATEGIES
                   </span>
                 </div>
@@ -597,7 +597,7 @@ export default function OptimizePage() {
 
               {/* Resonance readout */}
               <div>
-                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                <p className="font-mono text-xs text-[var(--muted-foreground)] uppercase">
                   RESONANCE
                 </p>
                 <p className="font-mono text-2xl text-[var(--foreground)] tabular-nums">
@@ -608,7 +608,7 @@ export default function OptimizePage() {
               {/* Slot counts */}
               <div className="grid grid-cols-2 gap-2">
                 <div className="border border-[var(--border)] p-2">
-                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                  <p className="text-xs text-[var(--muted-foreground)] uppercase">
                     WING SLOTS
                   </p>
                   <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
@@ -617,7 +617,7 @@ export default function OptimizePage() {
                   </p>
                 </div>
                 <div className="border border-[var(--border)] p-2">
-                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                  <p className="text-xs text-[var(--muted-foreground)] uppercase">
                     OPEN SLOTS
                   </p>
                   <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
@@ -632,13 +632,13 @@ export default function OptimizePage() {
               {/* Next threshold */}
               {resonanceInfo.nextThreshold && (
                 <div className="border-t border-[var(--border)] pt-3">
-                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                  <p className="text-xs text-[var(--muted-foreground)] uppercase">
                     NEXT THRESHOLD
                   </p>
                   <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
                     {resonanceInfo.nextThreshold.toLocaleString()}
                   </p>
-                  <p className="font-mono text-[10px] text-[var(--muted-foreground)]">
+                  <p className="text-xs text-[var(--muted-foreground)]">
                     +{resonanceInfo.resonanceToNext.toLocaleString()} needed
                   </p>
                 </div>
@@ -648,10 +648,10 @@ export default function OptimizePage() {
             {/* ── Equipped Gems ────────────────────────────────────────── */}
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                <p className="text-sm text-[var(--muted-foreground)]">
                   EQUIPPED GEMS
                 </p>
-                <span className="font-mono text-[10px] text-[var(--muted-foreground)] tabular-nums">
+                <span className="text-sm text-[var(--muted-foreground)]">
                   {equippedGems.length}/{resonanceInfo.totalSlots}
                 </span>
               </div>
@@ -659,7 +659,7 @@ export default function OptimizePage() {
               {equippedGems.length === 0 ? (
                 <div className="py-8 text-center border border-dashed border-[var(--border)]">
                   <AlertCircle className="w-8 h-8 text-[var(--muted-foreground)] mx-auto mb-2" />
-                  <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+                  <p className="font-mono text-xs text-[var(--muted-foreground)] uppercase">
                     NO GEMS EQUIPPED
                   </p>
                 </div>
@@ -674,12 +674,12 @@ export default function OptimizePage() {
                         className="flex items-center gap-2 px-2 py-1.5 bg-[var(--muted)] border border-[var(--border)] hover:border-[var(--foreground)] transition-colors"
                       >
                         {/* Slot number */}
-                        <span className="font-mono text-[10px] text-[var(--muted-foreground)] w-4 flex-shrink-0 tabular-nums">
+                        <span className="text-sm text-[var(--muted-foreground)] w-4 flex-shrink-0">
                           {equipped.slotPosition}
                         </span>
 
                         {/* Gem name */}
-                        <span className="flex-1 font-sans text-xs text-[var(--muted-foreground)] truncate">
+                        <span className="flex-1 text-sm text-[var(--muted-foreground)] truncate">
                           {gem.name}
                         </span>
 
@@ -695,7 +695,7 @@ export default function OptimizePage() {
                                 )
                               }
                               options={QUALITY_OPTIONS}
-                              className="font-mono text-[10px] py-0.5 px-1 bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
+                              className="text-sm bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
                             />
                           )}
                           <Select
@@ -707,7 +707,7 @@ export default function OptimizePage() {
                               )
                             }
                             options={RANK_OPTIONS}
-                            className="font-mono text-[10px] py-0.5 px-1 bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
+                            className="text-sm bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
                           />
                         </div>
 
