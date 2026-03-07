@@ -26,12 +26,12 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-[var(--foreground)] mb-2">
             Optimization Results
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-[var(--muted-foreground)]">
             Calculating best upgrade path...
           </p>
         </div>
@@ -43,7 +43,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Error state
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
         <div className="flex items-start gap-3 text-[var(--destructive)]">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
@@ -58,13 +58,13 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Empty state
   if (!result) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
         <div className="text-center py-8">
-          <TrendingUp className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-          <h3 className="text-gray-500 dark:text-gray-400 font-medium">
+          <TrendingUp className="w-12 h-12 mx-auto text-[var(--muted-foreground)] mb-3" />
+          <h3 className="text-[var(--muted-foreground)] font-medium">
             No results yet
           </h3>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-sm text-[var(--muted-foreground)] mt-1">
             Configure your gems and resources, then click Optimize
           </p>
         </div>
@@ -75,13 +75,13 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // No recommendations found
   if (sortedRecommendations.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
         <div className="text-center py-8">
-          <Zap className="w-12 h-12 mx-auto text-yellow-500 dark:text-yellow-400 mb-3" />
-          <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+          <Zap className="w-12 h-12 mx-auto text-[var(--warning)] mb-3" />
+          <h3 className="text-[var(--foreground)] font-medium">
             No upgrades available
           </h3>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-sm text-[var(--muted-foreground)] mt-1">
             All your gems are at maximum rank or resources are insufficient
           </p>
         </div>
@@ -101,42 +101,42 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
       {/* Header with summary stats */}
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3">
           Optimization Results
         </h2>
         <div className="flex flex-wrap gap-4">
           {/* Total Power Gain */}
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-green-500" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <TrendingUp className="w-4 h-4 text-[var(--success)]" />
+            <span className="text-sm text-[var(--muted-foreground)]">
               Power Gain:
             </span>
-            <span className="font-medium text-green-600 dark:text-green-400">
+            <span className="font-medium text-[var(--success)]">
               {formatPowerGain(result.totalPowerGain)}
             </span>
           </div>
 
           {/* Processing Time */}
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <Clock className="w-4 h-4 text-[var(--muted-foreground)]" />
+            <span className="text-sm text-[var(--muted-foreground)]">
               Time:
             </span>
-            <span className="font-medium text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-[var(--foreground)]">
               {formatProcessingTime(result.processingTime)}
             </span>
           </div>
 
           {/* Recommendations Count */}
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <Zap className="w-4 h-4 text-[var(--warning)]" />
+            <span className="text-sm text-[var(--muted-foreground)]">
               Recommendations:
             </span>
-            <span className="font-medium text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-[var(--foreground)]">
               {sortedRecommendations.length}
             </span>
           </div>
@@ -154,8 +154,8 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
       </div>
 
       {/* Timestamp footer */}
-      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-400 dark:text-gray-500">
+      <div className="mt-4 pt-4 border-t border-[var(--border)]">
+        <p className="text-xs text-[var(--muted-foreground)]">
           Calculated: {new Date(result.calculatedAt).toLocaleString()}
         </p>
       </div>

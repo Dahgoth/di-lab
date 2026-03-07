@@ -40,9 +40,9 @@ export function OptimizationErrorDisplay({
   const getColorClass = () => {
     switch (type) {
       case "timeout":
-        return "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-200";
+        return "bg-[var(--warning)]/10 border-[var(--warning)]/30 text-[var(--warning)]";
       case "insufficient-resources":
-        return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200";
+        return "bg-[var(--info)]/10 border-[var(--info)]/30 text-[var(--info)]";
       case "rate-limited":
         return "bg-[var(--accent)]/50 border-[var(--border)] text-[var(--foreground)] dark:bg-[var(--accent)]/20 dark:border-[var(--border)] dark:text-[var(--foreground)]";
       default:
@@ -73,7 +73,7 @@ export function OptimizationErrorDisplay({
           {(type === "timeout" || type === "server-error") && onRetry && (
             <button
               onClick={onRetry}
-              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-white/50 dark:bg-black/20 hover:bg-white/70 dark:hover:bg-black/30 transition-colors"
+              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-[var(--card)]/50 dark:bg-[var(--background)]/20 hover:bg-[var(--card)]/70 dark:hover:bg-[var(--background)]/30 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Try Again
@@ -102,8 +102,8 @@ export function OfflineError({
   if (!isOffline) return null;
 
   return (
-    <div className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-4">
-      <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+    <div className="rounded-lg border border-[var(--border)] bg-[var(--muted)] p-4">
+      <div className="flex items-start gap-3 text-[var(--foreground)]">
         <WifiOff className="w-5 h-5 flex-shrink-0" />
         <div className="flex-1">
           <h3 className="font-medium">Connection Lost</h3>
@@ -113,7 +113,7 @@ export function OfflineError({
           {onRetryWhenOnline && (
             <button
               onClick={onRetryWhenOnline}
-              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-[var(--muted)] hover:bg-[var(--muted)]/80 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Retry When Online
@@ -191,8 +191,8 @@ export function InsufficientResourcesError({
   };
 
   return (
-    <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4">
-      <div className="flex items-start gap-3 text-blue-800 dark:text-blue-200">
+    <div className="rounded-lg border border-[var(--info)] bg-[var(--info)]/10 p-4">
+      <div className="flex items-start gap-3 text-[var(--info)]">
         <Package className="w-5 h-5 flex-shrink-0" />
         <div className="flex-1">
           <h3 className="font-medium">Insufficient Resources</h3>
@@ -212,7 +212,7 @@ export function InsufficientResourcesError({
           {onAddResources && (
             <button
               onClick={onAddResources}
-              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-white/50 dark:bg-black/20 hover:bg-white/70 dark:hover:bg-black/30 transition-colors"
+              className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-[var(--card)]/50 hover:bg-[var(--card)]/70 transition-colors"
             >
               Add More Resources
             </button>

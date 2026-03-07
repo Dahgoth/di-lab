@@ -206,7 +206,7 @@ export default function GemDetail({
 
         {/* Effects Section */}
         <div>
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--foreground)] mb-3">
             Gem Effects
           </h4>
           <div className="space-y-3">
@@ -218,7 +218,7 @@ export default function GemDetail({
 
         {/* Resonance Values Table (T084) */}
         <div>
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--foreground)] mb-3">
             Resonance Values by Rank
           </h4>
           <ResonanceTable starRating={gem.starRating} />
@@ -226,7 +226,7 @@ export default function GemDetail({
 
         {/* Upgrade Costs Table (T082) */}
         <div>
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--foreground)] mb-3">
             Gem Power Upgrade Costs
           </h4>
           <UpgradeCostTable starRating={gem.starRating} />
@@ -257,7 +257,7 @@ interface EffectCardProps {
 function EffectCard({ effect }: EffectCardProps) {
   const categoryColor =
     effectCategoryColors[effect.category] ||
-    "bg-gray-100 text-gray-800 border-gray-300";
+    "bg-[var(--muted)] text-[var(--foreground)] border-[var(--border)]";
 
   // Get max value from maxValues record
   const maxValueEntry = Object.entries(effect.maxValues)[0];
@@ -272,7 +272,9 @@ function EffectCard({ effect }: EffectCardProps) {
         >
           {effect.category}
         </span>
-        <span className="text-xs text-gray-500">{effect.type}</span>
+        <span className="text-xs text-[var(--muted-foreground)]">
+          {effect.type}
+        </span>
         {effect.isStrifed && (
           <span className="text-xs text-[var(--accent-foreground)] bg-[var(--accent)] px-1.5 py-0.5 rounded">
             Strifed
@@ -281,10 +283,10 @@ function EffectCard({ effect }: EffectCardProps) {
       </div>
 
       {/* Description */}
-      <p className="text-sm text-gray-700">{effect.description}</p>
+      <p className="text-sm text-[var(--foreground)]">{effect.description}</p>
 
       {/* Stats */}
-      <div className="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
+      <div className="flex flex-wrap gap-3 mt-2 text-xs text-[var(--muted-foreground)]">
         {maxValue !== null && (
           <span>
             <span className="font-medium">Max:</span>{" "}

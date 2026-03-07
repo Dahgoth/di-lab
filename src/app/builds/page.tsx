@@ -206,22 +206,22 @@ function BuildsPageContent() {
   // Empty state
   if (!isLoading && builds.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <header className="mb-8">
             <h1 className="text-3xl font-bold">Saved Builds</h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-[var(--muted-foreground)] mt-2">
               Manage your legendary gem configurations
             </p>
           </header>
 
           <Card className="text-center py-12">
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4">
-                <Gem className="w-8 h-8 text-gray-600" />
+              <div className="w-16 h-16 rounded-full bg-[var(--muted)] flex items-center justify-center mb-4">
+                <Gem className="w-8 h-8 text-[var(--muted-foreground)]" />
               </div>
               <h2 className="text-xl font-semibold mb-2">No Saved Builds</h2>
-              <p className="text-gray-400 mb-6 max-w-md">
+              <p className="text-[var(--muted-foreground)] mb-6 max-w-md">
                 Create your first build to save your gem configuration and
                 resources for later use.
               </p>
@@ -239,12 +239,12 @@ function BuildsPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <header className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold">Saved Builds</h1>
-            <p className="text-gray-400 mt-2">
+            <p className="text-[var(--muted-foreground)] mt-2">
               {builds.length} of 5 builds used
             </p>
           </div>
@@ -277,9 +277,9 @@ function BuildsPageContent() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <div className="h-6 bg-gray-700 rounded w-1/2 mb-4" />
-                <div className="h-4 bg-gray-700 rounded w-3/4 mb-2" />
-                <div className="h-4 bg-gray-700 rounded w-1/2" />
+                <div className="h-6 bg-[var(--muted)] rounded w-1/2 mb-4" />
+                <div className="h-4 bg-[var(--muted)] rounded w-3/4 mb-2" />
+                <div className="h-4 bg-[var(--muted)] rounded w-1/2" />
               </Card>
             ))}
           </div>
@@ -288,14 +288,14 @@ function BuildsPageContent() {
             {builds.map((build) => (
               <Card
                 key={build.id}
-                className="hover:border-gray-600 transition-colors"
+                className="hover:border-[var(--foreground)] transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-lg truncate">
                       {build.name}
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
                       <span
                         className={`px-2 py-0.5 rounded text-xs font-medium ${
                           build.optimizationMode === "PVP"
@@ -331,12 +331,12 @@ function BuildsPageContent() {
                 </div>
 
                 {build.notes && (
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                  <p className="text-sm text-[var(--muted-foreground)] mb-4 line-clamp-2">
                     {build.notes}
                   </p>
                 )}
 
-                <div className="flex items-center gap-2 pt-4 border-t border-gray-700">
+                <div className="flex items-center gap-2 pt-4 border-t border-[var(--border)]">
                   <Button
                     variant="primary"
                     size="sm"
@@ -384,7 +384,7 @@ function BuildsPageContent() {
         title="Delete Build"
       >
         <div className="space-y-4">
-          <p className="text-gray-300">
+          <p className="text-[var(--foreground)]">
             Are you sure you want to delete this build? This action cannot be
             undone.
           </p>

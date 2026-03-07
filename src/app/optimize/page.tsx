@@ -409,10 +409,10 @@ export default function OptimizePage() {
 
   if (isLoadingSession) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border border-zinc-700 border-t-zinc-400 rounded-full animate-spin mx-auto" />
-          <p className="mt-4 font-mono text-xs text-zinc-600 uppercase tracking-widest">
+          <div className="w-8 h-8 border border-[var(--border)] border-t-[var(--primary)] rounded-full animate-spin mx-auto" />
+          <p className="mt-4 font-mono text-xs text-[var(--muted-foreground)] uppercase tracking-widest">
             LOADING SESSION
           </p>
         </div>
@@ -425,20 +425,20 @@ export default function OptimizePage() {
   // ============================================================================
 
   return (
-    <div className="min-h-screen bg-black text-zinc-300 overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* ── Header ──────────────────────────────────────────────────── */}
-        <div className="mb-5 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-zinc-900 pb-4">
+        <div className="mb-5 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-[var(--border)] pb-4">
           <div>
-            <h1 className="font-sans text-xl font-semibold text-zinc-100 tracking-tight">
+            <h1 className="font-sans text-xl font-semibold text-[var(--foreground)] tracking-tight">
               Build Optimizer
             </h1>
-            <p className="mt-0.5 font-mono text-[11px] text-zinc-600 uppercase tracking-widest">
+            <p className="mt-0.5 font-mono text-[11px] text-[var(--muted-foreground)] uppercase tracking-widest">
               LEGENDARY GEM CONFIGURATION
             </p>
           </div>
           {lastSaved && (
-            <div className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+            <div className="flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
               <Save className="w-3 h-3" />
               <span>SAVED</span>
             </div>
@@ -464,15 +464,15 @@ export default function OptimizePage() {
                 <ul className="space-y-0.5">
                   {deprecatedGems.map((gem) => (
                     <li key={gem.gemId} className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] text-zinc-500">
+                      <span className="font-mono text-[10px] text-[var(--muted-foreground)]">
                         {gem.gemId}
                       </span>
-                      <span className="font-mono text-[10px] text-zinc-700">
+                      <span className="font-mono text-[10px] text-[var(--foreground)]">
                         SLOT {gem.slotPosition}
                       </span>
                       <button
                         onClick={() => handleRemoveDeprecatedGem(gem.gemId)}
-                        className="font-mono text-[10px] text-rose-700 hover:text-rose-400 transition-colors"
+                        className="font-mono text-[10px] text-[var(--destructive)] hover:text-[var(--destructive)]/80 transition-colors"
                       >
                         REMOVE
                       </button>
@@ -481,7 +481,7 @@ export default function OptimizePage() {
                 </ul>
                 <button
                   onClick={handleClearDeprecatedGems}
-                  className="mt-2 font-mono text-[10px] text-zinc-600 hover:text-zinc-300 uppercase tracking-widest transition-colors"
+                  className="mt-2 font-mono text-[10px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] uppercase tracking-widest transition-colors"
                 >
                   CLEAR ALL
                 </button>
@@ -492,18 +492,21 @@ export default function OptimizePage() {
 
         {/* ── Loaded Build Indicator ───────────────────────────────────── */}
         {loadedBuildName && (
-          <div className="mb-3 px-3 py-2 border border-zinc-800 flex items-center gap-2">
-            <Sparkles className="w-3 h-3 text-zinc-500" />
-            <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
-              EDITING: <span className="text-zinc-300">{loadedBuildName}</span>
+          <div className="mb-3 px-3 py-2 border border-[var(--border)] flex items-center gap-2">
+            <Sparkles className="w-3 h-3 text-[var(--muted-foreground)]" />
+            <span className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
+              EDITING:{" "}
+              <span className="text-[var(--foreground)]">
+                {loadedBuildName}
+              </span>
             </span>
           </div>
         )}
 
         {/* ── Main Content Grid ────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-zinc-900">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-[var(--border)]">
           {/* Left: Gem Catalog */}
-          <div className="lg:col-span-2 bg-black p-4">
+          <div className="lg:col-span-2 bg-[var(--background)] p-4">
             <GemCatalog
               gems={ALL_GEMS}
               selectedStarRating={selectedStarRating}
@@ -513,19 +516,19 @@ export default function OptimizePage() {
           </div>
 
           {/* Right: Stats + Equipped + Resources */}
-          <div className="bg-black divide-y divide-zinc-900">
+          <div className="bg-[var(--background)] divide-y divide-[var(--border)]">
             {/* ── Build Stats ─────────────────────────────────────────── */}
             <div className="p-4 space-y-4">
-              <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+              <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
                 BUILD STATS
               </p>
 
               {/* Mode toggle */}
               <div>
-                <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest mb-1.5">
+                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest mb-1.5">
                   MODE
                 </p>
-                <div className="flex border border-zinc-800 divide-x divide-zinc-800">
+                <div className="flex border border-[var(--border)] divide-x divide-[var(--border)]">
                   <button
                     type="button"
                     onClick={() => handleOptimizationModeChange("PVE")}
@@ -533,8 +536,8 @@ export default function OptimizePage() {
                     className={[
                       "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase tracking-widest transition-colors",
                       optimizationMode === "PVE"
-                        ? "bg-zinc-900 text-zinc-100"
-                        : "bg-black text-zinc-600 hover:text-zinc-300",
+                        ? "bg-[var(--muted)] text-[var(--foreground)]"
+                        : "bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
                     ].join(" ")}
                   >
                     <Shield className="w-3 h-3" />
@@ -547,8 +550,8 @@ export default function OptimizePage() {
                     className={[
                       "flex-1 flex items-center justify-center gap-1.5 py-2 font-mono text-xs uppercase tracking-widest transition-colors",
                       optimizationMode === "PVP"
-                        ? "bg-zinc-900 text-zinc-100"
-                        : "bg-black text-zinc-600 hover:text-zinc-300",
+                        ? "bg-[var(--muted)] text-[var(--foreground)]"
+                        : "bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
                     ].join(" ")}
                   >
                     <Sword className="w-3 h-3" />
@@ -560,8 +563,8 @@ export default function OptimizePage() {
               {/* Advanced strategies toggle */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <Zap className="w-3 h-3 text-zinc-600" />
-                  <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                  <Zap className="w-3 h-3 text-[var(--muted-foreground)]" />
+                  <span className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
                     ADV. STRATEGIES
                   </span>
                 </div>
@@ -575,16 +578,16 @@ export default function OptimizePage() {
                   className={[
                     "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer border transition-colors duration-150 focus:outline-none",
                     advancedStrategies
-                      ? "border-rose-700 bg-rose-950"
-                      : "border-zinc-800 bg-black",
+                      ? "border-[var(--primary)] bg-[var(--primary)]/20"
+                      : "border-[var(--border)] bg-[var(--background)]",
                   ].join(" ")}
                 >
                   <span
                     className={[
                       "inline-block h-3 w-3 m-0.5 bg-current transition-transform duration-150",
                       advancedStrategies
-                        ? "translate-x-4 text-rose-500"
-                        : "translate-x-0 text-zinc-700",
+                        ? "translate-x-4 text-[var(--primary)]"
+                        : "translate-x-0 text-[var(--muted-foreground)]",
                     ].join(" ")}
                   />
                 </button>
@@ -592,32 +595,32 @@ export default function OptimizePage() {
 
               {/* Resonance readout */}
               <div>
-                <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
                   RESONANCE
                 </p>
-                <p className="font-mono text-2xl text-zinc-100 tabular-nums">
+                <p className="font-mono text-2xl text-[var(--foreground)] tabular-nums">
                   {resonanceInfo.total.toLocaleString()}
                 </p>
               </div>
 
               {/* Slot counts */}
               <div className="grid grid-cols-2 gap-2">
-                <div className="border border-zinc-900 p-2">
-                  <p className="font-mono text-[9px] text-zinc-700 uppercase tracking-widest">
+                <div className="border border-[var(--border)] p-2">
+                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
                     WING SLOTS
                   </p>
-                  <p className="font-mono text-sm text-zinc-300 tabular-nums">
+                  <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
                     {resonanceInfo.unlockedWingSlots}
-                    <span className="text-zinc-700">/16</span>
+                    <span className="text-[var(--muted-foreground)]">/16</span>
                   </p>
                 </div>
-                <div className="border border-zinc-900 p-2">
-                  <p className="font-mono text-[9px] text-zinc-700 uppercase tracking-widest">
+                <div className="border border-[var(--border)] p-2">
+                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
                     OPEN SLOTS
                   </p>
-                  <p className="font-mono text-sm text-zinc-300 tabular-nums">
+                  <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
                     {availableSlotCount}
-                    <span className="text-zinc-700">
+                    <span className="text-[var(--muted-foreground)]">
                       /{resonanceInfo.totalSlots}
                     </span>
                   </p>
@@ -626,14 +629,14 @@ export default function OptimizePage() {
 
               {/* Next threshold */}
               {resonanceInfo.nextThreshold && (
-                <div className="border-t border-zinc-900 pt-3">
-                  <p className="font-mono text-[9px] text-zinc-700 uppercase tracking-widest">
+                <div className="border-t border-[var(--border)] pt-3">
+                  <p className="font-mono text-[9px] text-[var(--muted-foreground)] uppercase tracking-widest">
                     NEXT THRESHOLD
                   </p>
-                  <p className="font-mono text-sm text-zinc-400 tabular-nums">
+                  <p className="font-mono text-sm text-[var(--foreground)] tabular-nums">
                     {resonanceInfo.nextThreshold.toLocaleString()}
                   </p>
-                  <p className="font-mono text-[10px] text-zinc-700">
+                  <p className="font-mono text-[10px] text-[var(--muted-foreground)]">
                     +{resonanceInfo.resonanceToNext.toLocaleString()} needed
                   </p>
                 </div>
@@ -643,18 +646,18 @@ export default function OptimizePage() {
             {/* ── Equipped Gems ────────────────────────────────────────── */}
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+                <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
                   EQUIPPED GEMS
                 </p>
-                <span className="font-mono text-[10px] text-zinc-700 tabular-nums">
+                <span className="font-mono text-[10px] text-[var(--muted-foreground)] tabular-nums">
                   {equippedGems.length}/{resonanceInfo.totalSlots}
                 </span>
               </div>
 
               {equippedGems.length === 0 ? (
-                <div className="py-8 text-center border border-dashed border-zinc-900">
-                  <AlertCircle className="w-8 h-8 text-zinc-800 mx-auto mb-2" />
-                  <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+                <div className="py-8 text-center border border-dashed border-[var(--border)]">
+                  <AlertCircle className="w-8 h-8 text-[var(--muted-foreground)] mx-auto mb-2" />
+                  <p className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
                     NO GEMS EQUIPPED
                   </p>
                 </div>
@@ -666,15 +669,15 @@ export default function OptimizePage() {
                     return (
                       <div
                         key={equipped.slotPosition}
-                        className="flex items-center gap-2 px-2 py-1.5 bg-zinc-950 border border-zinc-900 hover:border-zinc-800 transition-colors"
+                        className="flex items-center gap-2 px-2 py-1.5 bg-[var(--muted)] border border-[var(--border)] hover:border-[var(--foreground)] transition-colors"
                       >
                         {/* Slot number */}
-                        <span className="font-mono text-[10px] text-zinc-700 w-4 flex-shrink-0 tabular-nums">
+                        <span className="font-mono text-[10px] text-[var(--muted-foreground)] w-4 flex-shrink-0 tabular-nums">
                           {equipped.slotPosition}
                         </span>
 
                         {/* Gem name */}
-                        <span className="flex-1 font-sans text-xs text-zinc-400 truncate">
+                        <span className="flex-1 font-sans text-xs text-[var(--muted-foreground)] truncate">
                           {gem.name}
                         </span>
 
@@ -690,7 +693,7 @@ export default function OptimizePage() {
                                 )
                               }
                               options={QUALITY_OPTIONS}
-                              className="font-mono text-[10px] py-0.5 px-1 bg-black border-zinc-800 text-zinc-500"
+                              className="font-mono text-[10px] py-0.5 px-1 bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
                             />
                           )}
                           <Select
@@ -702,7 +705,7 @@ export default function OptimizePage() {
                               )
                             }
                             options={RANK_OPTIONS}
-                            className="font-mono text-[10px] py-0.5 px-1 bg-black border-zinc-800 text-zinc-500"
+                            className="font-mono text-[10px] py-0.5 px-1 bg-[var(--background)] border-[var(--border)] text-[var(--muted-foreground)]"
                           />
                         </div>
 
@@ -710,7 +713,7 @@ export default function OptimizePage() {
                         <button
                           onClick={() => handleRemoveGem(equipped.slotPosition)}
                           aria-label={`Remove ${gem.name}`}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-800 hover:text-rose-500 transition-colors"
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-colors"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
