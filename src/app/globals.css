@@ -3,36 +3,72 @@
 /* Custom properties for gem colors and visual indicators */
 :root {
   /* shadcn/ui required variables for TweakCN compatibility */
-  --radius: 0.5rem;
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --card: #171717;
-  --card-foreground: #fafafa;
-  --popover: #171717;
-  --popover-foreground: #fafafa;
-  --primary: #3b82f6;
-  --primary-foreground: #fafafa;
-  --secondary: #262626;
-  --secondary-foreground: #fafafa;
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
-  --accent: #262626;
-  --accent-foreground: #fafafa;
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
-  --border: #262626;
-  --input: #262626;
-  --ring: #3b82f6;
-
+  --radius: 1rem;
+  
+  /* Light mode (default) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.1450 0 0);
+  --card: oklch(0.9950 0 0);
+  --card-foreground: oklch(0.1450 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.1450 0 0);
+  --primary: oklch(0.2050 0 0);
+  --primary-foreground: oklch(0.9850 0 0);
+  --secondary: oklch(0.8700 0 0);
+  --secondary-foreground: oklch(0.1450 0 0);
+  --muted: oklch(0.9500 0 0);
+  --muted-foreground: oklch(0.5560 0 0);
+  --accent: oklch(0.9500 0 0);
+  --accent-foreground: oklch(0.2050 0 0);
+  --destructive: oklch(0.5770 0.2450 27.3250);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9500 0 0);
+  --input: oklch(0.9700 0 0);
+  --ring: oklch(0.7080 0 0);
+  
+  /* Chart colors */
+  --chart-1: oklch(0.8100 0.1000 252);
+  --chart-2: oklch(0.6200 0.1900 260);
+  --chart-3: oklch(0.5500 0.2200 263);
+  --chart-4: oklch(0.4900 0.2200 264);
+  --chart-5: oklch(0.4200 0.1800 266);
+  
+  /* Sidebar (light) */
+  --sidebar: oklch(0.9850 0 0);
+  --sidebar-foreground: oklch(0.1450 0 0);
+  --sidebar-primary: oklch(0.2050 0 0);
+  --sidebar-primary-foreground: oklch(0.9850 0 0);
+  --sidebar-accent: oklch(0.9700 0 0);
+  --sidebar-accent-foreground: oklch(0.2050 0 0);
+  --sidebar-border: oklch(0.9220 0 0);
+  --sidebar-ring: oklch(0.7080 0 0);
+  
+  /* Font families */
+  --font-sans: "DM Sans", ui-sans-serif, sans-serif, system-ui;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  
+  /* Shadow configuration (light) */
+  --shadow-color: oklch(0 0 0);
+  --shadow-opacity: 0.1;
+  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  
   /* Additional toast colors for TweakCN */
-  --warning: #CA8A04;
-  --warning-foreground: #fafafa;
-  --info: #3b82f6;
-  --info-foreground: #fafafa;
-
+  --warning: oklch(0.75 0.18 90);
+  --warning-foreground: oklch(0.2050 0 0);
+  --info: oklch(0.6000 0.15 250);
+  --info-foreground: oklch(1 0 0);
+  
   /* Success color */
-  --success: #15803D;
-  --success-foreground: #fafafa;
+  --success: oklch(0.577 0.19 160);
+  --success-foreground: oklch(1 0 0);
 
   /* Star rating colors */
   --color-gem-1star: #9ca3af; /* gray-400 - 1-star gems */
@@ -41,32 +77,38 @@
   --color-gem-5star-border: #f59e0b; /* amber-500 - 5-star gold border */
 
   /* Tier ranking colors (per FR-002a) */
-  --color-tier-s: #FFD700; /* gold - S tier */
-  --color-tier-a: #C0C0C0; /* silver - A tier */
-  --color-tier-b: #CD7F32; /* bronze - B tier */
-  --color-tier-c: #808080; /* gray - C tier */
-  --color-tier-d: #808080; /* gray - D tier */
+  --color-tier-s: oklch(0.75 0.15 90); /* gold - S tier */
+  --color-tier-a: oklch(0.70 0.10 250); /* silver - A tier */
+  --color-tier-b: oklch(0.65 0.18 50); /* bronze - B tier */
+  --color-tier-c: oklch(0.50 0.05 250); /* gray - C tier */
+  --color-tier-d: oklch(0.50 0.05 250); /* gray - D tier */
 
   /* Gem effect category colors for TweakCN */
-  --effect-offense: #fca5a5; /* red-300 */
-  --effect-offense-fg: #7f1d1d; /* red-800 */
-  --effect-defense: #93c5fd; /* blue-300 */
-  --effect-defense-fg: #1e3a8a; /* blue-800 */
-  --effect-all: #d8b4fe; /* purple-300 */
-  --effect-all-fg: #6b21a8; /* purple-800 */
-  --effect-utility: #fed7aa; /* orange-300 */
-  --effect-utility-fg: #9a3412; /* orange-800 */
-  --effect-cc: #f9a8d4; /* pink-300 */
-  --effect-cc-fg: #831843; /* pink-800 */
+  --effect-offense: oklch(0.90 0.10 25);
+  --effect-offense-fg: oklch(0.35 0.10 25);
+  --effect-defense: oklch(0.90 0.10 250);
+  --effect-defense-fg: oklch(0.35 0.10 250);
+  --effect-all: oklch(0.90 0.10 290);
+  --effect-all-fg: oklch(0.35 0.10 290);
+  --effect-utility: oklch(0.90 0.10 60);
+  --effect-utility-fg: oklch(0.35 0.10 60);
+  --effect-cc: oklch(0.90 0.10 330);
+  --effect-cc-fg: oklch(0.35 0.10 330);
 
   /* Error and status colors (per FR-045) */
-  --color-error: #DC2626; /* red-600 - 4.8:1 contrast with white */
-  --color-success: #15803D; /* green-700 - 4.6:1 contrast with white */
-  --color-warning: #CA8A04; /* yellow-600 */
+  --color-error: oklch(0.577 0.22 25);
+  --color-success: oklch(0.577 0.19 160);
+  --color-warning: oklch(0.75 0.18 90);
+
+  /* Star rating colors */
+  --color-gem-1star: oklch(0.70 0.10 250);
+  --color-gem-2star: oklch(0.70 0.18 250);
+  --color-gem-5star: oklch(0.80 0.18 85);
+  --color-gem-5star-border: oklch(0.75 0.20 85);
 
   /* Interaction state colors (per FR-016b) */
-  --color-hover-overlay: rgba(255, 255, 255, 0.1);
-  --color-focus-ring: #3b82f6; /* blue-500 */
+  --color-hover-overlay: rgba(0, 0, 0, 0.1);
+  --color-focus-ring: oklch(0.7080 0 0);
   --color-disabled-opacity: 0.5;
 
   /* Layout constants (per FR-002a) */
@@ -79,6 +121,79 @@
   --z-modal-backdrop: 40;
   --z-modal: 50;
   --z-toast: 60;
+}
+
+/* Dark mode - TweakCN theme */
+.dark {
+  --background: oklch(0.2050 0 0);
+  --foreground: oklch(0.9850 0 0);
+  --card: oklch(0.1650 0 0);
+  --card-foreground: oklch(0.9850 0 0);
+  --popover: oklch(0.2050 0 0);
+  --popover-foreground: oklch(0.9850 0 0);
+  --primary: oklch(0.9220 0 0);
+  --primary-foreground: oklch(0.2050 0 0);
+  --secondary: oklch(0.2690 0 0);
+  --secondary-foreground: oklch(0.9850 0 0);
+  --muted: oklch(0.2690 0 0);
+  --muted-foreground: oklch(0.7080 0 0);
+  --accent: oklch(0.3710 0 0);
+  --accent-foreground: oklch(0.9850 0 0);
+  --destructive: oklch(0.7040 0.1910 22.2160);
+  --destructive-foreground: oklch(0.9850 0 0);
+  --border: oklch(0.2690 0 0);
+  --input: oklch(0.2690 0 0);
+  --ring: oklch(0.5560 0 0);
+  
+  /* Sidebar (dark) */
+  --sidebar: oklch(0.2690 0 0);
+  --sidebar-foreground: oklch(0.9850 0 0);
+  --sidebar-primary: oklch(0.4880 0.2430 264.3760);
+  --sidebar-primary-foreground: oklch(0.9850 0 0);
+  --sidebar-accent: oklch(0.2690 0 0);
+  --sidebar-accent-foreground: oklch(0.9850 0 0);
+  --sidebar-border: oklch(0.2750 0 0);
+  --sidebar-ring: oklch(0.4390 0 0);
+  
+  /* Additional toast colors (dark) */
+  --warning: oklch(0.75 0.18 90);
+  --warning-foreground: oklch(0.9850 0 0);
+  --info: oklch(0.6000 0.15 250);
+  --info-foreground: oklch(0.9850 0 0);
+  
+  /* Success color (dark) */
+  --success: oklch(0.577 0.19 160);
+  --success-foreground: oklch(0.9850 0 0);
+  
+  /* Gem effect category colors (dark) */
+  --effect-offense: oklch(0.65 0.18 25);
+  --effect-offense-fg: oklch(0.95 0.05 25);
+  --effect-defense: oklch(0.65 0.18 250);
+  --effect-defense-fg: oklch(0.95 0.05 250);
+  --effect-all: oklch(0.70 0.18 290);
+  --effect-all-fg: oklch(0.95 0.05 290);
+  --effect-utility: oklch(0.75 0.18 60);
+  --effect-utility-fg: oklch(0.95 0.05 60);
+  --effect-cc: oklch(0.70 0.18 330);
+  --effect-cc-fg: oklch(0.95 0.05 330);
+  
+  /* Tier ranking colors (dark - slightly brighter) */
+  --color-tier-s: oklch(0.75 0.15 90);
+  --color-tier-a: oklch(0.70 0.10 250);
+  --color-tier-b: oklch(0.65 0.18 50);
+  --color-tier-c: oklch(0.50 0.05 250);
+  --color-tier-d: oklch(0.50 0.05 250);
+  
+  /* Star rating colors (dark) */
+  --color-gem-1star: oklch(0.70 0.10 250);
+  --color-gem-2star: oklch(0.70 0.18 250);
+  --color-gem-5star: oklch(0.80 0.18 85);
+  --color-gem-5star-border: oklch(0.75 0.20 85);
+  
+  /* Interaction state colors (dark) */
+  --color-hover-overlay: rgba(255, 255, 255, 0.1);
+  --color-focus-ring: oklch(0.5560 0 0);
+  --color-disabled-opacity: 0.5;
 }
 
 /* Base styles */

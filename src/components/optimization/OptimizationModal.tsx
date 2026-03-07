@@ -62,7 +62,7 @@ export function OptimizationModal({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+      <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-[var(--shadow-xl)] p-6 max-w-sm w-full mx-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2

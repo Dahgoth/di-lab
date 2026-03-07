@@ -26,7 +26,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-[var(--shadow-md)] p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-[var(--foreground)] mb-2">
             Optimization Results
@@ -43,7 +43,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Error state
   if (error) {
     return (
-      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-[var(--shadow-md)] p-6">
         <div className="flex items-start gap-3 text-[var(--destructive)]">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
@@ -58,7 +58,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // Empty state
   if (!result) {
     return (
-      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-[var(--shadow-md)] p-6">
         <div className="text-center py-8">
           <TrendingUp className="w-12 h-12 mx-auto text-[var(--muted-foreground)] mb-3" />
           <h3 className="text-[var(--muted-foreground)] font-medium">
@@ -75,7 +75,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   // No recommendations found
   if (sortedRecommendations.length === 0) {
     return (
-      <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
+      <div className="bg-[var(--card)] rounded-lg shadow-[var(--shadow-md)] p-6">
         <div className="text-center py-8">
           <Zap className="w-12 h-12 mx-auto text-[var(--warning)] mb-3" />
           <h3 className="text-[var(--foreground)] font-medium">
@@ -101,7 +101,7 @@ export function ResultsPanel({ result, isLoading, error }: ResultsPanelProps) {
   };
 
   return (
-    <div className="bg-[var(--card)] rounded-lg shadow-md p-6">
+    <div className="bg-[var(--card)] rounded-lg shadow-[var(--shadow-md)] p-6">
       {/* Header with summary stats */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-[var(--foreground)] mb-3">

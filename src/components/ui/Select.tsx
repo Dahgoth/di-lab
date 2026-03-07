@@ -171,7 +171,7 @@ const NativeSelect = forwardRef<HTMLSelectElement, SelectProps>(
                   : undefined
             }
             className={cn(
-              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-[var(--shadow-sm)] transition-colors appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-50",
               hasError
                 ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
                 : "border-[var(--input)]",
@@ -286,7 +286,7 @@ const RadixSelectComponent = forwardRef<HTMLSelectElement, SelectProps>(
         >
           <RadixSelect.Trigger
             className={cn(
-              "flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-1 text-sm shadow-[var(--shadow-sm)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-50",
               hasError
                 ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
                 : "border-[var(--input)]",
@@ -312,7 +312,7 @@ const RadixSelectComponent = forwardRef<HTMLSelectElement, SelectProps>(
           </RadixSelect.Trigger>
 
           <RadixSelect.Portal>
-            <RadixSelect.Content className="relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-[var(--popover)] text-[var(--popover-foreground)] shadow-md">
+            <RadixSelect.Content className="relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-[var(--popover)] text-[var(--popover-foreground)] shadow-[var(--shadow-md)]">
               <RadixSelect.Viewport className="p-1">
                 {options.map((option) => (
                   <RadixSelect.Item

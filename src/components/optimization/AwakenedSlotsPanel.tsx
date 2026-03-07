@@ -55,7 +55,7 @@ export function AwakenedSlotsPanel({
   };
 
   return (
-    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-md p-4">
+    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-[var(--shadow-md)] p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">

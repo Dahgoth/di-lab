@@ -60,7 +60,7 @@ const sizeStyles = {
 const baseStyles = `
   bg-[var(--card)]
   rounded-lg
-  shadow-xl
+  shadow-[var(--shadow-xl)]
   w-full
   max-h-[90vh]
   overflow-hidden

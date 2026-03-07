@@ -146,7 +146,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   : undefined
             }
             className={cn(
-              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--muted-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-[var(--shadow-sm)] transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--muted-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:cursor-not-allowed disabled:opacity-50",
               hasError
                 ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
                 : "border-[var(--input)]",

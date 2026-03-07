@@ -62,7 +62,7 @@ export function AcquisitionPaths({
   };
 
   return (
-    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-md p-4">
+    <div className="bg-[var(--card)] text-[var(--card-foreground)] rounded-lg shadow-[var(--shadow-md)] p-4">
       <h3 className="font-medium text-[var(--foreground)] mb-4">
         Acquisition Paths
       </h3>

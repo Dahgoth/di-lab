@@ -162,7 +162,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   return (
     <div
       className={cn(
-        "relative p-4 rounded-lg border shadow-lg",
+        "relative p-4 rounded-lg border shadow-[var(--shadow-lg)]",
         "animate-in slide-in-from-right-full duration-300",
         colors[toast.type],
       )}

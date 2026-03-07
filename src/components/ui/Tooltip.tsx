@@ -158,7 +158,7 @@ function CustomTooltip({
           role="tooltip"
           className={cn(
             "absolute z-50 px-3 py-2",
-            "bg-[var(--popover)] text-[var(--popover-foreground)] text-sm rounded-lg shadow-lg",
+            "bg-[var(--popover)] text-[var(--popover-foreground)] text-sm rounded-lg shadow-[var(--shadow-lg)]",
             "animate-in fade-in-0 zoom-in-95 duration-150",
             positionClasses[position],
             className,
