@@ -24,7 +24,6 @@ The application analyzes your current gem build, considers available resources (
 - **Gem Inventory**: Upload screenshots or manually select legendary gems from a comprehensive database
 - **Resource Management**: Input available resources to get realistic upgrade recommendations
 - **Optimization Engine**: Algorithm that factors in resources, current build, and goals to recommend best upgrades
-- **DI Days Integration**: Current events and bonuses from diablo.tv
 - **Character Sync**: Battle.net OAuth with character verification (planned)
 - **Build Management**: Save, share, and compare builds (planned)
 
@@ -125,5 +124,4 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 ## Acknowledgments
 
 - Inspired by [Raidbots](https://www.raidbots.com/simbot) and [Ask Mr. Robot](https://www.askmrrobot.com/)
-- Data sourced from [diablo.tv](https://diablo.tv/)
-- Character verification via [diabloimmortalredeem.com](https://diabloimmortalredeem.com/)
+- Made with [Kilo Code](https://kilo.ai/)
