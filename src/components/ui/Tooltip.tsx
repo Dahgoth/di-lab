@@ -1,64 +1,28 @@
 /**
  * Tooltip component for DI-Lab
- * Accessible tooltip with desktop hover and mobile tap-to-reveal support (FR-034)
+ * Custom tooltip with backward compatibility
  */
 
 "use client";
 
+import * as React from "react";
 import { useState, useRef, useEffect, useCallback, useId } from "react";
-import { cn } from "@/lib/utils/cn";
-
-// ============================================================================
-// Types
-// ============================================================================
+import { cn } from "@/lib/utils";
 
 export interface TooltipProps {
-  /** Element that triggers the tooltip */
   trigger: React.ReactNode;
-  /** Tooltip content */
   content: React.ReactNode;
-  /** Position relative to trigger */
   position?: "top" | "bottom" | "left" | "right";
-  /** Delay before showing (ms) */
   showDelay?: number;
-  /** Delay before hiding (ms) */
   hideDelay?: number;
-  /** Additional class names for tooltip */
   className?: string;
-  /** Maximum width of tooltip */
   maxWidth?: number | string;
-  /** Whether tooltip is disabled */
   disabled?: boolean;
-  /** Called when tooltip opens */
   onOpen?: () => void;
-  /** Called when tooltip closes */
   onClose?: () => void;
 }
 
-// ============================================================================
-// Component
-// ============================================================================
-
-/**
- * Tooltip displays informative content on hover (desktop) or tap (mobile)
- *
- * Features:
- * - Hover support for desktop
- * - Tap-to-toggle support for mobile/touch devices
- * - Keyboard accessible (focus triggers tooltip)
- * - Screen reader announcements via aria-describedby
- * - Auto-positioning to stay within viewport
- *
- * @example
- * ```tsx
- * <Tooltip
- *   trigger={<button>Hover me</button>}
- *   content={<div>Tooltip content here</div>}
- *   position="top"
- * />
- * ```
- */
-export default function Tooltip({
+function CustomTooltip({
   trigger,
   content,
   position = "top",
@@ -71,19 +35,16 @@ export default function Tooltip({
   onClose,
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  // Detect touch device via lazy initialization
   const [isTouchDevice] = useState(() => {
-    // Check if we're in a browser environment
     if (typeof window === "undefined") return false;
     return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   });
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const showTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const showTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tooltipId = useId();
 
-  // Clear timeouts on unmount
   useEffect(() => {
     return () => {
       if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
@@ -93,13 +54,10 @@ export default function Tooltip({
 
   const showTooltip = useCallback(() => {
     if (disabled) return;
-
-    // Clear hide timeout if exists
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
       hideTimeoutRef.current = null;
     }
-
     showTimeoutRef.current = setTimeout(() => {
       setIsVisible(true);
       onOpen?.();
@@ -107,12 +65,10 @@ export default function Tooltip({
   }, [disabled, showDelay, onOpen]);
 
   const hideTooltip = useCallback(() => {
-    // Clear show timeout if exists
     if (showTimeoutRef.current) {
       clearTimeout(showTimeoutRef.current);
       showTimeoutRef.current = null;
     }
-
     hideTimeoutRef.current = setTimeout(() => {
       setIsVisible(false);
       onClose?.();
@@ -128,7 +84,6 @@ export default function Tooltip({
     }
   }, [disabled, isVisible, showTooltip, hideTooltip]);
 
-  // Close tooltip when clicking outside
   useEffect(() => {
     if (!isVisible || !isTouchDevice) return;
 
@@ -154,7 +109,6 @@ export default function Tooltip({
     };
   }, [isVisible, isTouchDevice, onClose]);
 
-  // Handle keyboard events
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Escape" && isVisible) {
       setIsVisible(false);
@@ -166,7 +120,6 @@ export default function Tooltip({
     }
   };
 
-  // Position classes
   const positionClasses: Record<string, string> = {
     top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
     bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
@@ -174,14 +127,13 @@ export default function Tooltip({
     right: "left-full top-1/2 -translate-y-1/2 ml-2",
   };
 
-  // Arrow classes
   const arrowClasses: Record<string, string> = {
-    top: "top-full left-1/2 -translate-x-1/2 border-t-gray-800 border-l-transparent border-r-transparent border-b-transparent",
+    top: "top-full left-1/2 -translate-x-1/2 border-t-[var(--popover)] border-l-transparent border-r-transparent border-b-transparent",
     bottom:
-      "bottom-full left-1/2 -translate-x-1/2 border-b-gray-800 border-l-transparent border-r-transparent border-t-transparent",
-    left: "left-full top-1/2 -translate-y-1/2 border-l-gray-800 border-t-transparent border-b-transparent border-r-transparent",
+      "bottom-full left-1/2 -translate-x-1/2 border-b-[var(--popover)] border-l-transparent border-r-transparent border-t-transparent",
+    left: "left-full top-1/2 -translate-y-1/2 border-l-[var(--popover)] border-t-transparent border-b-transparent border-r-transparent",
     right:
-      "right-full top-1/2 -translate-y-1/2 border-r-gray-800 border-t-transparent border-b-transparent border-l-transparent",
+      "right-full top-1/2 -translate-y-1/2 border-r-[var(--popover)] border-t-transparent border-b-transparent border-l-transparent",
   };
 
   return (
@@ -199,7 +151,6 @@ export default function Tooltip({
     >
       {trigger}
 
-      {/* Tooltip */}
       {isVisible && (
         <div
           ref={tooltipRef}
@@ -207,7 +158,7 @@ export default function Tooltip({
           role="tooltip"
           className={cn(
             "absolute z-50 px-3 py-2",
-            "bg-gray-800 text-white text-sm rounded-lg shadow-lg",
+            "bg-[var(--popover)] text-[var(--popover-foreground)] text-sm rounded-lg shadow-lg",
             "animate-in fade-in-0 zoom-in-95 duration-150",
             positionClasses[position],
             className,
@@ -215,8 +166,6 @@ export default function Tooltip({
           style={{ maxWidth }}
         >
           {content}
-
-          {/* Arrow */}
           <div
             className={cn(
               "absolute w-0 h-0",
@@ -230,31 +179,18 @@ export default function Tooltip({
   );
 }
 
-// ============================================================================
-// Gem Quick Summary Tooltip (T087)
-// ============================================================================
-
+// Gem Summary Tooltip
 export interface GemSummaryTooltipProps {
-  /** Gem name */
   name: string;
-  /** Star rating (1, 2, or 5) */
   starRating: 1 | 2 | 5;
-  /** PvP tier ranking */
   pvpTier: string;
-  /** PvE tier ranking */
   pveTier: string;
-  /** Short description */
   shortDescription?: string;
-  /** Source (e.g., "Dungeon", "Event") */
   source?: string;
-  /** Element to wrap with tooltip */
   children: React.ReactNode;
 }
 
-/**
- * Convenience wrapper for gem summary tooltips
- */
-export function GemSummaryTooltip({
+function GemSummaryTooltipFn({
   name,
   starRating,
   pvpTier,
@@ -266,7 +202,7 @@ export function GemSummaryTooltip({
   const starDisplay = "★".repeat(starRating);
 
   return (
-    <Tooltip
+    <CustomTooltip
       trigger={children}
       content={
         <div className="space-y-1.5">
@@ -274,21 +210,28 @@ export function GemSummaryTooltip({
             <span className="text-yellow-400">{starDisplay}</span> {name}
           </div>
           <div className="flex gap-2 text-xs">
-            <span className="text-gray-300">
-              PvP: <span className="text-white font-medium">{pvpTier}</span>
+            <span className="text-[var(--muted-foreground)]">
+              PvP:{" "}
+              <span className="text-[var(--foreground)] font-medium">
+                {pvpTier}
+              </span>
             </span>
-            <span className="text-gray-300">
-              PvE: <span className="text-white font-medium">{pveTier}</span>
+            <span className="text-[var(--muted-foreground)]">
+              PvE:{" "}
+              <span className="text-[var(--foreground)] font-medium">
+                {pveTier}
+              </span>
             </span>
           </div>
           {shortDescription && (
-            <p className="text-xs text-gray-300 leading-relaxed">
+            <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
               {shortDescription}
             </p>
           )}
           {source && (
-            <p className="text-xs text-gray-400">
-              <span className="text-gray-500">Source:</span> {source}
+            <p className="text-xs text-[var(--muted-foreground)]">
+              <span className="text-[var(--muted-foreground)]">Source:</span>{" "}
+              {source}
             </p>
           )}
         </div>
@@ -298,3 +241,6 @@ export function GemSummaryTooltip({
     />
   );
 }
+
+export default CustomTooltip;
+export { GemSummaryTooltipFn as GemSummaryTooltip };

@@ -1,6 +1,6 @@
 /**
  * Input component for DI-Lab
- * With label, error state, validation, and debounced onChange
+ * Uses shadcn/ui patterns with label, error state, validation, and debounced onChange
  */
 
 import {
@@ -12,6 +12,7 @@ import {
   type InputHTMLAttributes,
   type ChangeEvent,
 } from "react";
+import { cn } from "@/lib/utils";
 
 // ============================================================================
 // Types
@@ -40,51 +41,10 @@ export interface InputProps extends Omit<
 }
 
 // ============================================================================
-// Styles
-// ============================================================================
-
-const baseInputStyles = `
-  block rounded-lg border 
-  bg-white 
-  px-3 py-2 
-  text-gray-900 
-  placeholder:text-gray-400
-  focus:outline-none focus:ring-2 focus:ring-offset-0
-  disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed
-  transition-colors duration-150
-`;
-
-const normalStyles = `
-  border-gray-300 
-  focus:border-blue-500 focus:ring-blue-500
-`;
-
-const errorStyles = `
-  border-red-500 
-  focus:border-red-500 focus:ring-red-500
-  text-red-900
-`;
-
-// ============================================================================
 // Component
 // ============================================================================
 
-/**
- * Input component with label, error state, and debounced onChange
- *
- * @example
- * ```tsx
- * <Input
- *   label="Platinum Amount"
- *   type="number"
- *   value={platinum}
- *   onChange={(val) => setPlatinum(val)}
- *   debounceMs={300}
- *   error={error}
- * />
- * ```
- */
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       label,
@@ -95,9 +55,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       fullWidth = false,
       startIcon,
       endIcon,
-      className = "",
+      className,
       id,
       disabled,
+      type = "text",
       ...props
     },
     ref,
@@ -152,11 +113,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const hasError = Boolean(error);
 
     return (
-      <div className={`${fullWidth ? "w-full" : ""}`}>
+      <div className={cn(fullWidth ? "w-full" : "")}>
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-[var(--foreground)] mb-1"
           >
             {label}
           </label>
@@ -164,7 +125,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative">
           {startIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--muted-foreground)]">
               {startIcon}
             </div>
           )}
@@ -172,6 +133,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            type={type}
             value={displayValue}
             onChange={handleChange}
             disabled={disabled}
@@ -183,22 +145,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                   ? `${inputId}-helper`
                   : undefined
             }
-            className={`
-              ${baseInputStyles}
-              ${hasError ? errorStyles : normalStyles}
-              ${startIcon ? "pl-10" : ""}
-              ${endIcon ? "pr-10" : ""}
-              ${fullWidth ? "w-full" : ""}
-              ${disabled ? "opacity-50" : ""}
-              ${className}
-            `
-              .replace(/\s+/g, " ")
-              .trim()}
+            className={cn(
+              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--muted-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              hasError
+                ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
+                : "border-[var(--input)]",
+              startIcon ? "pl-10" : "",
+              endIcon ? "pr-10" : "",
+              fullWidth ? "w-full" : "",
+              disabled ? "opacity-50" : "",
+              className,
+            )}
             {...props}
           />
 
           {endIcon && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[var(--muted-foreground)]">
               {endIcon}
             </div>
           )}
@@ -207,7 +169,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {hasError && (
           <p
             id={`${inputId}-error`}
-            className="mt-1 text-sm text-red-600"
+            className="mt-1 text-sm text-[var(--destructive)]"
             role="alert"
           >
             {error}
@@ -215,7 +177,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {!hasError && helperText && (
-          <p id={`${inputId}-helper`} className="mt-1 text-sm text-gray-500">
+          <p
+            id={`${inputId}-helper`}
+            className="mt-1 text-sm text-[var(--muted-foreground)]"
+          >
             {helperText}
           </p>
         )}
@@ -248,19 +213,8 @@ export interface NumberInputProps extends Omit<
 
 /**
  * Number input with proper handling of numeric values
- *
- * @example
- * ```tsx
- * <NumberInput
- *   label="Platinum"
- *   value={platinum}
- *   onChange={(val) => setPlatinum(val)}
- *   min={0}
- *   debounceMs={300}
- * />
- * ```
  */
-export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
+const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ value, min, max, step = 1, onChange, ...props }, ref) => {
     const handleChange = (stringValue: string) => {
       // Handle empty string
@@ -308,4 +262,4 @@ NumberInput.displayName = "NumberInput";
 // Exports
 // ============================================================================
 
-export default Input;
+export { Input, NumberInput };

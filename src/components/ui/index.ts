@@ -3,30 +3,45 @@
  * Re-exports all UI components for convenient imports
  */
 
+// Button - shadcn/ui pattern with cva
+export { Button, buttonVariants, type ButtonProps } from "./Button";
+
+// Card - shadcn/ui pattern
 export {
-  default as Button,
-  type ButtonProps,
-  type ButtonVariant,
-  type ButtonSize,
-} from "./Button";
-export {
-  default as Card,
+  Card,
   CardHeader,
-  CardBody,
+  CardTitle,
+  CardDescription,
+  CardContent,
   CardFooter,
-  type CardProps,
-  type CardHeaderProps,
-  type CardBodyProps,
-  type CardFooterProps,
+  CardBody,
 } from "./Card";
+
+// Dialog - Radix UI with shadcn/ui styling (replaces Modal)
 export {
-  default as Input,
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./Dialog";
+
+// Input - shadcn/ui pattern with enhanced features
+export {
+  Input,
   NumberInput,
   type InputProps,
   type NumberInputProps,
 } from "./Input";
+
+// Select - Native + Radix UI with shadcn/ui styling
 export {
-  default as Select,
+  Select,
   createNumberOptions,
   QUALITY_OPTIONS,
   RANK_OPTIONS,
@@ -34,12 +49,16 @@ export {
   type SelectProps,
   type SelectOption,
 } from "./Select";
+
+// Modal - backward compatibility wrapper
 export {
-  default as Modal,
+  Modal,
   ConfirmModal,
   type ModalProps,
   type ConfirmModalProps,
 } from "./Modal";
+
+// Skeleton
 export {
   Skeleton,
   SkeletonText,
@@ -49,6 +68,8 @@ export {
   SkeletonGrid,
   type SkeletonProps,
 } from "./Skeleton";
+
+// Toast
 export {
   ToastProvider,
   useToast,
@@ -56,10 +77,14 @@ export {
   type Toast,
   type ToastType,
 } from "./Toast";
+
+// Screen Reader
 export {
   ScreenReaderAnnouncer,
   useScreenReader,
 } from "./ScreenReaderAnnouncer";
+
+// Tooltip - Custom tooltip with backward compatibility
 export {
   default as Tooltip,
   GemSummaryTooltip,

@@ -1,14 +1,20 @@
 /**
  * Select component for DI-Lab
- * Native dropdown for mobile compatibility
+ * Native dropdown for mobile compatibility with Radix UI enhancement
  */
+
+"use client";
 
 import {
   forwardRef,
   useId,
   type SelectHTMLAttributes,
   type ReactNode,
+  useState,
 } from "react";
+import * as RadixSelect from "@radix-ui/react-select";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // ============================================================================
 // Types
@@ -46,184 +52,9 @@ export interface SelectProps extends Omit<
   fullWidth?: boolean;
   /** Start icon/adornment */
   startIcon?: ReactNode;
+  /** Use Radix UI Select (better UX, less mobile friendly) */
+  useRadix?: boolean;
 }
-
-// ============================================================================
-// Styles
-// ============================================================================
-
-const baseSelectStyles = `
-  block rounded-lg border 
-  bg-white 
-  px-3 py-2 
-  text-gray-900 
-  focus:outline-none focus:ring-2 focus:ring-offset-0
-  disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed
-  transition-colors duration-150
-  appearance-none
-  cursor-pointer
-`;
-
-const normalStyles = `
-  border-gray-300 
-  focus:border-blue-500 focus:ring-blue-500
-`;
-
-const errorStyles = `
-  border-red-500 
-  focus:border-red-500 focus:ring-red-500
-`;
-
-// ============================================================================
-// Component
-// ============================================================================
-
-/**
- * Select component with native dropdown for mobile compatibility
- *
- * @example
- * ```tsx
- * <Select
- *   label="Quality"
- *   value={quality}
- *   onChange={(val) => setQuality(Number(val))}
- *   options={[
- *     { value: 1, label: '1★' },
- *     { value: 2, label: '2★' },
- *     { value: 3, label: '3★' },
- *   ]}
- * />
- * ```
- */
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  (
-    {
-      label,
-      helperText,
-      error,
-      options,
-      placeholder,
-      onChange,
-      fullWidth = false,
-      startIcon,
-      className = "",
-      id,
-      disabled,
-      value,
-      ...props
-    },
-    ref,
-  ) => {
-    // Generate unique ID if not provided
-    const generatedId = useId();
-    const selectId = id || generatedId;
-
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      onChange?.(event.target.value, event);
-    };
-
-    const hasError = Boolean(error);
-
-    return (
-      <div className={`${fullWidth ? "w-full" : ""}`}>
-        {label && (
-          <label
-            htmlFor={selectId}
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            {label}
-          </label>
-        )}
-
-        <div className="relative">
-          {startIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-              {startIcon}
-            </div>
-          )}
-
-          <select
-            ref={ref}
-            id={selectId}
-            value={value}
-            onChange={handleChange}
-            disabled={disabled}
-            aria-invalid={hasError}
-            aria-describedby={
-              hasError
-                ? `${selectId}-error`
-                : helperText
-                  ? `${selectId}-helper`
-                  : undefined
-            }
-            className={`
-              ${baseSelectStyles}
-              ${hasError ? errorStyles : normalStyles}
-              ${startIcon ? "pl-10" : ""}
-              ${fullWidth ? "w-full" : ""}
-              ${disabled ? "opacity-50" : ""}
-              pr-10
-              ${className}
-            `
-              .replace(/\s+/g, " ")
-              .trim()}
-            {...props}
-          >
-            {placeholder && (
-              <option value="" disabled>
-                {placeholder}
-              </option>
-            )}
-            {options.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-                disabled={option.disabled}
-              >
-                {option.label}
-              </option>
-            ))}
-          </select>
-
-          {/* Dropdown arrow icon */}
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-
-        {hasError && (
-          <p
-            id={`${selectId}-error`}
-            className="mt-1 text-sm text-red-600"
-            role="alert"
-          >
-            {error}
-          </p>
-        )}
-
-        {!hasError && helperText && (
-          <p id={`${selectId}-helper`} className="mt-1 text-sm text-gray-500">
-            {helperText}
-          </p>
-        )}
-      </div>
-    );
-  },
-);
-
-Select.displayName = "Select";
 
 // ============================================================================
 // Helper Functions
@@ -275,7 +106,290 @@ export const STAR_RATING_OPTIONS: SelectOption[] = [
 ];
 
 // ============================================================================
+// Native Select Component
+// ============================================================================
+
+const NativeSelect = forwardRef<HTMLSelectElement, SelectProps>(
+  (
+    {
+      label,
+      helperText,
+      error,
+      options,
+      placeholder,
+      onChange,
+      fullWidth = false,
+      startIcon,
+      className,
+      id,
+      disabled,
+      value,
+      ...props
+    },
+    ref,
+  ) => {
+    // Generate unique ID if not provided
+    const generatedId = useId();
+    const selectId = id || generatedId;
+
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      onChange?.(event.target.value, event);
+    };
+
+    const hasError = Boolean(error);
+
+    return (
+      <div className={cn(fullWidth ? "w-full" : "")}>
+        {label && (
+          <label
+            htmlFor={selectId}
+            className="block text-sm font-medium text-[var(--foreground)] mb-1"
+          >
+            {label}
+          </label>
+        )}
+
+        <div className="relative">
+          {startIcon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--muted-foreground)]">
+              {startIcon}
+            </div>
+          )}
+
+          <select
+            ref={ref}
+            id={selectId}
+            value={value}
+            onChange={handleChange}
+            disabled={disabled}
+            aria-invalid={hasError}
+            aria-describedby={
+              hasError
+                ? `${selectId}-error`
+                : helperText
+                  ? `${selectId}-helper`
+                  : undefined
+            }
+            className={cn(
+              "flex h-10 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors appearance-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              hasError
+                ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
+                : "border-[var(--input)]",
+              startIcon ? "pl-10" : "",
+              fullWidth ? "w-full" : "",
+              "pr-10",
+              disabled ? "opacity-50" : "",
+              className,
+            )}
+            {...props}
+          >
+            {placeholder && (
+              <option value="" disabled>
+                {placeholder}
+              </option>
+            )}
+            {options.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+                disabled={option.disabled}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+
+          {/* Dropdown arrow icon */}
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-[var(--muted-foreground)]">
+            <ChevronDown className="h-4 w-4" />
+          </div>
+        </div>
+
+        {hasError && (
+          <p
+            id={`${selectId}-error`}
+            className="mt-1 text-sm text-[var(--destructive)]"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+
+        {!hasError && helperText && (
+          <p
+            id={`${selectId}-helper`}
+            className="mt-1 text-sm text-[var(--muted-foreground)]"
+          >
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  },
+);
+
+NativeSelect.displayName = "NativeSelect";
+
+// ============================================================================
+// Radix Select Component
+// ============================================================================
+
+const RadixSelectComponent = forwardRef<HTMLSelectElement, SelectProps>(
+  (
+    {
+      label,
+      helperText,
+      error,
+      options,
+      placeholder,
+      onChange,
+      fullWidth = false,
+      startIcon,
+      className,
+      id,
+      disabled,
+      value,
+      ...props
+    },
+    ref,
+  ) => {
+    const generatedId = useId();
+    const selectId = id || generatedId;
+    const [isOpen, setIsOpen] = useState(false);
+    const hasError = Boolean(error);
+
+    const selectedOption = options.find(
+      (opt) => String(opt.value) === String(value),
+    );
+
+    return (
+      <div className={cn(fullWidth ? "w-full" : "")}>
+        {label && (
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+            {label}
+          </label>
+        )}
+
+        <RadixSelect.Root
+          value={value !== undefined ? String(value) : ""}
+          onValueChange={(val) => {
+            if (onChange) {
+              const fakeEvent = {
+                target: { value: val },
+              } as React.ChangeEvent<HTMLSelectElement>;
+              onChange(val, fakeEvent);
+            }
+          }}
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          disabled={disabled}
+        >
+          <RadixSelect.Trigger
+            className={cn(
+              "flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50",
+              hasError
+                ? "border-[var(--destructive)] focus-visible:ring-[var(--destructive)]"
+                : "border-[var(--input)]",
+              startIcon ? "pl-10" : "",
+              fullWidth ? "w-full" : "",
+              disabled ? "opacity-50" : "",
+              className,
+            )}
+          >
+            <div className="flex items-center gap-2">
+              {startIcon && (
+                <span className="text-[var(--muted-foreground)]">
+                  {startIcon}
+                </span>
+              )}
+              <RadixSelect.Value placeholder={placeholder}>
+                {selectedOption?.label || placeholder}
+              </RadixSelect.Value>
+            </div>
+            <RadixSelect.Icon>
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </RadixSelect.Icon>
+          </RadixSelect.Trigger>
+
+          <RadixSelect.Portal>
+            <RadixSelect.Content className="relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-[var(--popover)] text-[var(--popover-foreground)] shadow-md">
+              <RadixSelect.Viewport className="p-1">
+                {options.map((option) => (
+                  <RadixSelect.Item
+                    key={option.value}
+                    value={String(option.value)}
+                    disabled={option.disabled}
+                    className={cn(
+                      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-[var(--accent)] focus:text-[var(--accent-foreground)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                    )}
+                  >
+                    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                      <RadixSelect.ItemIndicator>
+                        <Check className="h-4 w-4" />
+                      </RadixSelect.ItemIndicator>
+                    </span>
+                    <RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
+                  </RadixSelect.Item>
+                ))}
+              </RadixSelect.Viewport>
+            </RadixSelect.Content>
+          </RadixSelect.Portal>
+        </RadixSelect.Root>
+
+        {hasError && (
+          <p className="mt-1 text-sm text-[var(--destructive)]" role="alert">
+            {error}
+          </p>
+        )}
+
+        {!hasError && helperText && (
+          <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  },
+);
+
+RadixSelectComponent.displayName = "RadixSelect";
+
+// ============================================================================
+// Main Select Component (chooses between native and Radix)
+// ============================================================================
+
+/**
+ * Select component with native dropdown for mobile compatibility
+ * Optionally uses Radix UI for enhanced UX
+ *
+ * @example
+ * ```tsx
+ * <Select
+ *   label="Quality"
+ *   value={quality}
+ *   onChange={(val) => setQuality(Number(val))}
+ *   options={[
+ *     { value: 1, label: '1★' },
+ *     { value: 2, label: '2★' },
+ *   ]}
+ * />
+ * ```
+ */
+const Select = forwardRef<HTMLSelectElement, SelectProps>((props, ref) => {
+  const { useRadix = false, ...rest } = props;
+
+  if (useRadix) {
+    return <RadixSelectComponent ref={ref} {...rest} />;
+  }
+
+  return <NativeSelect ref={ref} {...rest} />;
+});
+
+Select.displayName = "Select";
+
+// ============================================================================
 // Exports
 // ============================================================================
 
+export { Select, NativeSelect, RadixSelectComponent };
 export default Select;
