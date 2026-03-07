@@ -29,7 +29,17 @@ All implemented user stories (P1-P3) have been completed:
 | Phase 9  | User Story 6 - Optimization Constraints         | ✅ Complete |
 | Phase 10 | Polish & Cross-Cutting Concerns                 | ✅ Complete |
 
-## Recently Completed (2026-02-19)
+## Recently Completed (2026-03-07)
+
+- [x] **TweakCN Theme Migration** - Full migration to TweakCN theme with OKLCH colors and CSS variables:
+  - Added TweakCN theme CSS variables in globals.css (OKLCH-based colors)
+  - Added dark mode support (.dark class)
+  - Converted all hardcoded shadows (shadow-sm/md/lg/xl) to use var(--shadow-\*)
+  - Fixed ring-offset colors to use var(--background)
+  - Updated all UI components (Button, Select, Input, Card, Modal, Dialog, Tooltip, Toast)
+  - Updated optimization components (AcquisitionPaths, AwakenedSlotsPanel, OptimizationModal, ResultsPanel)
+
+## Previously Completed (2026-02-19)
 
 - [x] **T100a: Advanced Strategies Toggle** - Added toggle (default: off) to optimization controls (FR-037b)
 - [x] **T100b: Infusion Recommendations** - Implemented dormant 5-star gem infusion logic in optimization engine
