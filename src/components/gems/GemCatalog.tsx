@@ -145,17 +145,17 @@ export default function GemCatalog({
             value={searchQuery}
             onChange={handleSearchChange}
             className="
-              w-full pl-8 pr-3 py-1.5
+              w-full pl-8 pr-3 py-2
               bg-[var(--background)] border border-[var(--border)]
               font-mono text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]/50
               focus:outline-none focus:border-[var(--primary)]
-              tracking-wider uppercase
+              tracking-wider uppercase rounded-[var(--radius)]
             "
           />
         </div>
 
         {/* Tier filter */}
-        <div className="relative flex items-center border border-[var(--border)]">
+        <div className="relative flex items-center border border-[var(--border)] rounded-[var(--radius)]">
           <SlidersHorizontal
             className="absolute left-2 text-[var(--muted-foreground)] pointer-events-none"
             size={12}
@@ -166,11 +166,12 @@ export default function GemCatalog({
               handleTierFilterChange(e.target.value as TierRanking | "all")
             }
             className="
-              pl-7 pr-6 py-1.5
+              pl-7 pr-6 py-2
               bg-[var(--background)]
               font-mono text-xs text-[var(--muted-foreground)] uppercase tracking-widest
               focus:outline-none focus:border-[var(--primary)]
               appearance-none cursor-pointer
+              rounded-[var(--radius)]
             "
           >
             {TIER_FILTERS.map((opt) => (
@@ -191,7 +192,7 @@ export default function GemCatalog({
 
       {/* ── Gem grid ────────────────────────────────────────────────────── */}
       {filteredGems.length > 0 ? (
-        <div className="grid grid-cols-4 gap-px bg-[var(--border)]">
+        <div className="grid grid-cols-4 gap-px bg-[var(--border)] rounded-[var(--radius)] overflow-hidden">
           {filteredGems.map((gem) => (
             <GemCard
               key={gem.id}

@@ -91,6 +91,7 @@ export default function GemCard({
     <div
       className={[
         "flex flex-col bg-[var(--background)] border border-[var(--border)]",
+        "rounded-[var(--radius)] overflow-hidden",
         selected ? "ring-1 ring-inset ring-[var(--primary)]" : "",
         onClick
           ? "cursor-pointer hover:border-[var(--primary)] transition-colors group"
