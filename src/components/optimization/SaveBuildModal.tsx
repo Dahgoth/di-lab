@@ -264,7 +264,9 @@ export function SaveBuildModal({
             className="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder:[var(--muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none disabled:opacity-50 disabled:cursor-not-allowed"
           />
           {state.fieldErrors.notes && (
-            <p className="text-sm text-red-400">{state.fieldErrors.notes}</p>
+            <p className="text-sm text-[var(--destructive)]">
+              {state.fieldErrors.notes}
+            </p>
           )}
           <p className="text-xs text-[var(--muted-foreground)]">
             {state.notes.length}/500 characters

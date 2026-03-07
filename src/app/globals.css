@@ -47,6 +47,18 @@
   --color-tier-c: #808080; /* gray - C tier */
   --color-tier-d: #808080; /* gray - D tier */
 
+  /* Gem effect category colors for TweakCN */
+  --effect-offense: #fca5a5; /* red-300 */
+  --effect-offense-fg: #7f1d1d; /* red-800 */
+  --effect-defense: #93c5fd; /* blue-300 */
+  --effect-defense-fg: #1e3a8a; /* blue-800 */
+  --effect-all: #d8b4fe; /* purple-300 */
+  --effect-all-fg: #6b21a8; /* purple-800 */
+  --effect-utility: #fed7aa; /* orange-300 */
+  --effect-utility-fg: #9a3412; /* orange-800 */
+  --effect-cc: #f9a8d4; /* pink-300 */
+  --effect-cc-fg: #831843; /* pink-800 */
+
   /* Error and status colors (per FR-045) */
   --color-error: #DC2626; /* red-600 - 4.8:1 contrast with white */
   --color-success: #15803D; /* green-700 - 4.6:1 contrast with white */

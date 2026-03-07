@@ -49,18 +49,18 @@ export interface GemDetailProps {
 const tierColors: Record<TierRanking, string> = {
   S: "bg-[var(--primary)] text-white",
   A: "bg-[var(--muted)] text-[var(--foreground)]",
-  B: "bg-amber-600 text-white",
+  B: "bg-[var(--warning)] text-[var(--warning-foreground)]",
   C: "bg-[var(--muted)] text-white",
   D: "bg-[var(--muted)] text-white",
 };
 
 const effectCategoryColors: Record<string, string> = {
-  OFF: "bg-red-100 text-red-800 border-red-300",
-  DEF: "bg-blue-100 text-blue-800 border-blue-300",
-  ALL: "bg-purple-100 text-purple-800 border-purple-300",
-  DOT: "bg-orange-100 text-orange-800 border-orange-300",
-  LOC: "bg-pink-100 text-pink-800 border-pink-300",
-  TLOC: "bg-pink-100 text-pink-800 border-pink-300",
+  OFF: "bg-[var(--effect-offense)] text-[var(--effect-offense-fg)] border-[var(--effect-offense)]",
+  DEF: "bg-[var(--effect-defense)] text-[var(--effect-defense-fg)] border-[var(--effect-defense)]",
+  ALL: "bg-[var(--effect-all)] text-[var(--effect-all-fg)] border-[var(--effect-all)]",
+  DOT: "bg-[var(--effect-utility)] text-[var(--effect-utility-fg)] border-[var(--effect-utility)]",
+  LOC: "bg-[var(--effect-cc)] text-[var(--effect-cc-fg)] border-[var(--effect-cc)]",
+  TLOC: "bg-[var(--effect-cc)] text-[var(--effect-cc-fg)] border-[var(--effect-cc)]",
 };
 
 // ============================================================================
@@ -177,7 +177,9 @@ export default function GemDetail({
           <div>
             {/* Star Rating */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-yellow-500 text-xl">{starDisplay}</span>
+              <span className="text-[var(--warning)] text-xl">
+                {starDisplay}
+              </span>
               <span className="text-sm text-gray-500">
                 {formatStarRating(gem.starRating)} Gem
               </span>
@@ -234,8 +236,8 @@ export default function GemDetail({
 
         {/* Info Box */}
         {gem.starRating === 5 && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <p className="text-sm text-yellow-800">
+          <div className="bg-[var(--muted)] border border-[var(--border)] rounded-lg p-4">
+            <p className="text-sm text-[var(--foreground)]">
               <strong>5-Star Gem:</strong> Quality affects resonance values.
               Higher quality gems provide more resonance at each rank.
             </p>

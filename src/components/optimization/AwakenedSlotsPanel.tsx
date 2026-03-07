@@ -153,7 +153,7 @@ export function AwakenedSlotsPanel({
 
       {/* Help Text */}
       {!canEnableMore && enabledSlots < maxSlots && (
-        <p className="mt-3 text-xs text-yellow-600 dark:text-yellow-400">
+        <p className="mt-3 text-xs text-[var(--warning)]">
           Not enough resources to awaken more slots. You need 1 Dawning Echo or
           10,000 Platinum.
         </p>

@@ -35,7 +35,7 @@ export interface GemCardProps {
 const tierTextColors: Record<TierRanking, string> = {
   S: "text-[var(--primary)]",
   A: "text-[var(--foreground)]",
-  B: "text-yellow-500",
+  B: "text-[var(--warning)]",
   C: "text-[var(--muted-foreground)]",
   D: "text-[var(--muted-foreground)]/70",
 };
