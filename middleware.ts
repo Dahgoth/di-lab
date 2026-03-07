@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     "font-src 'self'",
     "connect-src 'self'",
     // Allow Kilo Code and TweakCN preview iframes
-    "frame-ancestors 'self' https://*.kilocode.com https://kilocode.com https://*.tweakcn.com https://tweakcn.com",
+    "frame-ancestors 'self' https://*.kilocode.com https://kilocode.com",
     "base-uri 'self'",
   ].join("; ");
 
