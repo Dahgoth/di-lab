@@ -54,7 +54,7 @@ export function InfusionRecommendationCard({
     if (rank === 1)
       return "bg-[var(--warning)]/10 text-[var(--warning)] dark:bg-[var(--warning)]/20 dark:text-[var(--warning)]";
     if (rank === 2)
-      return "bg-purple-500/10 text-purple-500 dark:bg-purple-500/20 dark:text-purple-500";
+      return "bg-[var(--effect-all)]/10 text-[var(--effect-all)] dark:bg-[var(--effect-all)]/20 dark:text-[var(--effect-all)]";
     return "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]";
   };
 
@@ -65,10 +65,10 @@ export function InfusionRecommendationCard({
   };
 
   return (
-    <div className="border border-purple-500/30 rounded-lg overflow-hidden bg-gradient-to-r from-purple-500/10 to-transparent">
+    <div className="border border-[var(--effect-all)]/30 rounded-lg overflow-hidden bg-gradient-to-r from-[var(--effect-all)]/10 to-transparent">
       {/* Main Card Content */}
       <div
-        className="p-4 cursor-pointer hover:bg-purple-500/10 transition-colors"
+        className="p-4 cursor-pointer hover:bg-[var(--effect-all)]/10 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => e.key === "Enter" && setIsExpanded(!isExpanded)}
         role="button"
@@ -96,7 +96,7 @@ export function InfusionRecommendationCard({
               <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-[var(--warning)]/10 text-[var(--warning)]">
                 5★
               </span>
-              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-purple-500/10 text-purple-500">
+              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-[var(--effect-all)]/10 text-[var(--effect-all)]">
                 INFUSION
               </span>
             </div>
@@ -112,13 +112,13 @@ export function InfusionRecommendationCard({
             {/* Resonance Gain */}
             <div className="flex items-center gap-3 mt-2 text-sm">
               <div className="flex items-center gap-1">
-                <Sparkles className="w-4 h-4 text-purple-500" />
-                <span className="font-medium text-purple-500">
+                <Sparkles className="w-4 h-4 text-[var(--effect-all)]" />
+                <span className="font-medium text-[var(--effect-all)]">
                   +{additionalResonance} Resonance
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingUp className="w-4 h-4 text-green-500" />
+                <TrendingUp className="w-4 h-4 text-[var(--success)]" />
                 <span className="font-medium text-[var(--success)]">
                   +{powerGain.toLocaleString()} Power
                 </span>
@@ -142,7 +142,7 @@ export function InfusionRecommendationCard({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-purple-500/30 pt-4">
+        <div className="px-4 pb-4 border-t border-[var(--effect-all)]/30 pt-4">
           {/* Reasoning */}
           <div className="mb-4">
             <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-1">
@@ -162,7 +162,7 @@ export function InfusionRecommendationCard({
                   key={idx}
                   className="flex items-center gap-2 p-2 bg-[var(--background)] rounded border border-[var(--border)]"
                 >
-                  <Gem className="w-4 h-4 text-purple-500" />
+                  <Gem className="w-4 h-4 text-[var(--effect-all)]" />
                   <div className="text-sm">
                     <span className="font-medium text-[var(--foreground)]">
                       {formatSourceGem(gem)}
@@ -178,15 +178,15 @@ export function InfusionRecommendationCard({
 
           {/* Gem Power Cost */}
           <div className="mb-4">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+            <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-2">
               Gem Power Required
             </h4>
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+            <div className="p-3 bg-[var(--muted)] dark:bg-[var(--effect-all)]/30 rounded-lg">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-sm text-[var(--muted-foreground)]">
                   Total GP for Infusion
                 </span>
-                <span className="font-medium text-purple-700 dark:text-purple-300">
+                <span className="font-medium text-[var(--effect-all)]">
                   {totalGemPower.toLocaleString()} GP
                 </span>
               </div>

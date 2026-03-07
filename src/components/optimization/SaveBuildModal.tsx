@@ -277,7 +277,9 @@ export function SaveBuildModal({
         <div className="p-3 bg-[var(--card)] rounded-lg">
           <p className="text-sm text-[var(--muted-foreground)]">
             This build contains{" "}
-            <span className="text-white font-medium">{gems.length} gems</span>
+            <span className="text-[var(--foreground)] font-medium">
+              {gems.length} gems
+            </span>
           </p>
         </div>
 

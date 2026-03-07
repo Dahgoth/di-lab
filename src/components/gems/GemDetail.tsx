@@ -47,11 +47,11 @@ export interface GemDetailProps {
 // ============================================================================
 
 const tierColors: Record<TierRanking, string> = {
-  S: "bg-[var(--primary)] text-white",
+  S: "bg-[var(--primary)] text-[var(--primary-foreground)]",
   A: "bg-[var(--muted)] text-[var(--foreground)]",
   B: "bg-[var(--warning)] text-[var(--warning-foreground)]",
-  C: "bg-[var(--muted)] text-white",
-  D: "bg-[var(--muted)] text-white",
+  C: "bg-[var(--muted)] text-[var(--foreground)]",
+  D: "bg-[var(--muted)] text-[var(--foreground)]",
 };
 
 const effectCategoryColors: Record<string, string> = {
@@ -162,7 +162,7 @@ export default function GemDetail({
               px-4 py-2 rounded-lg
               bg-[var(--primary)] text-[var(--primary-foreground)] font-medium
               hover:bg-[var(--primary)]/90
-              focus:outline-none focus:ring-2 focus:ring-blue-500
+              focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
               transition-colors
             "
           >
@@ -180,14 +180,16 @@ export default function GemDetail({
               <span className="text-[var(--warning)] text-xl">
                 {starDisplay}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[var(--muted-foreground)]">
                 {formatStarRating(gem.starRating)} Gem
               </span>
             </div>
 
             {/* Source */}
             {gem.source && (
-              <p className="text-sm text-gray-500">Source: {gem.source}</p>
+              <p className="text-sm text-[var(--muted-foreground)]">
+                Source: {gem.source}
+              </p>
             )}
           </div>
 
@@ -326,16 +328,16 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
     const qualities: Quality[] = [2, 3, 4, 5];
     return (
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm border border-gray-200 rounded-lg">
+        <table className="min-w-full text-sm border border-[var(--border)] rounded-lg">
           <thead className="bg-[var(--muted)]/50">
             <tr>
-              <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+              <th className="px-3 py-2 text-left font-medium text-[var(--muted-foreground)] border-b">
                 Rank
               </th>
               {qualities.map((q) => (
                 <th
                   key={q}
-                  className="px-3 py-2 text-center font-medium text-gray-600 border-b"
+                  className="px-3 py-2 text-center font-medium text-[var(--muted-foreground)] border-b"
                 >
                   Q{q}
                 </th>
@@ -352,13 +354,13 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
                     : "bg-[var(--muted)]/30"
                 }
               >
-                <td className="px-3 py-2 font-medium text-gray-700 border-b">
+                <td className="px-3 py-2 font-medium text-[var(--foreground)] border-b">
                   {rank}
                 </td>
                 {qualities.map((q) => (
                   <td
                     key={q}
-                    className="px-3 py-2 text-center text-gray-600 border-b"
+                    className="px-3 py-2 text-center text-[var(--muted-foreground)] border-b"
                   >
                     {getResonanceValue(5, rank, q).toLocaleString()}
                   </td>
@@ -374,16 +376,16 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
   // 1-star and 2-star gems have flat resonance per rank
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-        <thead className="bg-gray-50">
+      <table className="min-w-full text-sm border border-[var(--border)] rounded-lg">
+        <thead className="bg-[var(--muted)]">
           <tr>
-            <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-left font-medium text-[var(--muted-foreground)] border-b">
               Rank
             </th>
-            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-center font-medium text-[var(--muted-foreground)] border-b">
               Resonance
             </th>
-            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-center font-medium text-[var(--muted-foreground)] border-b">
               CR
             </th>
           </tr>
@@ -392,15 +394,17 @@ function ResonanceTable({ starRating }: ResonanceTableProps) {
           {ranks.map((rank, idx) => (
             <tr
               key={rank}
-              className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              className={
+                idx % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--muted)]"
+              }
             >
-              <td className="px-3 py-2 font-medium text-gray-700 border-b">
+              <td className="px-3 py-2 font-medium text-[var(--foreground)] border-b">
                 {rank}
               </td>
-              <td className="px-3 py-2 text-center text-gray-600 border-b">
+              <td className="px-3 py-2 text-center text-[var(--muted-foreground)] border-b">
                 {getResonanceValue(starRating, rank).toLocaleString()}
               </td>
-              <td className="px-3 py-2 text-center text-gray-600 border-b">
+              <td className="px-3 py-2 text-center text-[var(--muted-foreground)] border-b">
                 {getCRValue(starRating, rank).toLocaleString()}
               </td>
             </tr>
@@ -425,7 +429,7 @@ function UpgradeCostTable({ starRating }: UpgradeCostTableProps) {
 
   if (!costs) {
     return (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-[var(--muted-foreground)]">
         Upgrade costs not available for this gem type.
       </p>
     );
@@ -433,16 +437,16 @@ function UpgradeCostTable({ starRating }: UpgradeCostTableProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-        <thead className="bg-gray-50">
+      <table className="min-w-full text-sm border border-[var(--border)] rounded-lg">
+        <thead className="bg-[var(--muted)]">
           <tr>
-            <th className="px-3 py-2 text-left font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-left font-medium text-[var(--muted-foreground)] border-b">
               From Rank
             </th>
-            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-center font-medium text-[var(--muted-foreground)] border-b">
               To Rank
             </th>
-            <th className="px-3 py-2 text-center font-medium text-gray-600 border-b">
+            <th className="px-3 py-2 text-center font-medium text-[var(--muted-foreground)] border-b">
               Gem Power Cost
             </th>
           </tr>
@@ -451,15 +455,17 @@ function UpgradeCostTable({ starRating }: UpgradeCostTableProps) {
           {ranks.slice(0, -1).map((rank, idx) => (
             <tr
               key={rank}
-              className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              className={
+                idx % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--muted)]"
+              }
             >
-              <td className="px-3 py-2 font-medium text-gray-700 border-b">
+              <td className="px-3 py-2 font-medium text-[var(--foreground)] border-b">
                 {rank}
               </td>
-              <td className="px-3 py-2 text-center text-gray-600 border-b">
+              <td className="px-3 py-2 text-center text-[var(--muted-foreground)] border-b">
                 {rank + 1}
               </td>
-              <td className="px-3 py-2 text-center text-gray-600 border-b">
+              <td className="px-3 py-2 text-center text-[var(--muted-foreground)] border-b">
                 {(costs[rank] ?? 0).toLocaleString()}
               </td>
             </tr>

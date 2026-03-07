@@ -257,8 +257,8 @@ function BuildsPageContent() {
         </header>
 
         {error && (
-          <Card className="mb-6 bg-red-900/20 border-red-800">
-            <div className="flex items-center gap-3 text-red-400">
+          <Card className="mb-6 bg-[var(--destructive)]/20 border-[var(--destructive)]">
+            <div className="flex items-center gap-3 text-[var(--destructive)]">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <p>{error}</p>
               <Button
@@ -299,8 +299,8 @@ function BuildsPageContent() {
                       <span
                         className={`px-2 py-0.5 rounded text-xs font-medium ${
                           build.optimizationMode === "PVP"
-                            ? "bg-red-900/50 text-red-300"
-                            : "bg-green-900/50 text-green-300"
+                            ? "bg-[var(--destructive)]/50 text-[var(--destructive)]"
+                            : "bg-[var(--success)]/50 text-[var(--success)]"
                         }`}
                       >
                         {build.optimizationMode}
@@ -315,16 +315,16 @@ function BuildsPageContent() {
 
                 <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                   <div>
-                    <p className="text-gray-400">Gems</p>
+                    <p className="text-[var(--muted-foreground)]">Gems</p>
                     <p className="font-semibold flex items-center gap-1">
-                      <Gem className="w-4 h-4 text-purple-400" />
+                      <Gem className="w-4 h-4 text-[var(--effect-all)]" />
                       {build.gemCount}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-400">Resonance</p>
+                    <p className="text-[var(--muted-foreground)]">Resonance</p>
                     <p className="font-semibold flex items-center gap-1">
-                      <Zap className="w-4 h-4 text-yellow-400" />
+                      <Zap className="w-4 h-4 text-[var(--warning)]" />
                       {formatNumber(build.totalResonance)}
                     </p>
                   </div>
@@ -362,12 +362,12 @@ function BuildsPageContent() {
 
         {/* Build limit warning */}
         {builds.length >= 5 && (
-          <Card className="mt-6 bg-yellow-900/20 border-yellow-800">
-            <div className="flex items-center gap-3 text-yellow-400">
+          <Card className="mt-6 bg-[var(--warning)]/20 border-[var(--warning)]">
+            <div className="flex items-center gap-3 text-[var(--warning)]">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <div>
                 <p className="font-medium">Build limit reached</p>
-                <p className="text-sm text-yellow-400/80">
+                <p className="text-sm text-[var(--warning)]/80">
                   Free tier allows up to 5 saved builds. Delete an existing
                   build to create a new one.
                 </p>

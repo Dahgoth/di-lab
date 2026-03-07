@@ -43,7 +43,7 @@ export function AcquisitionPaths({
       case "market":
         return "bg-[var(--primary)]/10 border-[var(--primary)]/30";
       case "hybrid":
-        return "bg-purple-500/10 border-purple-500/30";
+        return "bg-[var(--effect-all)]/10 border-[var(--effect-all)]/30";
     }
   };
 
@@ -51,11 +51,11 @@ export function AcquisitionPaths({
     if (selectedPath === type) {
       switch (type) {
         case "farming":
-          return "ring-2 ring-green-500";
+          return "ring-2 ring-[var(--success)]";
         case "market":
-          return "ring-2 ring-blue-500";
+          return "ring-2 ring-[var(--primary)]";
         case "hybrid":
-          return "ring-2 ring-purple-500";
+          return "ring-2 ring-[var(--effect-all)]";
       }
     }
     return "";

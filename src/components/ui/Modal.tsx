@@ -58,13 +58,13 @@ const sizeStyles = {
 };
 
 const baseStyles = `
-  bg-white 
-  rounded-lg 
-  shadow-xl 
-  w-full 
-  max-h-[90vh] 
-  overflow-hidden 
-  flex 
+  bg-[var(--card)]
+  rounded-lg
+  shadow-xl
+  w-full
+  max-h-[90vh]
+  overflow-hidden
+  flex
   flex-col
   animate-in
   fade-in
