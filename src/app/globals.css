@@ -1,133 +1,98 @@
 @import "tailwindcss";
 
-/* Custom properties for gem colors and visual indicators */
+/* TweakCN Vercel Theme - Official */
 :root {
-  /* TweakCN theme radius */
-  --radius: 1rem;
+  /* Theme configuration */
+  --font-sans: "Geist", ui-sans-serif, sans-serif, system-ui;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-serif: Georgia, serif;
+  --radius: 0.5rem;
   
-  /* Light mode (default) */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.1450 0 0);
-  --card: oklch(0.9950 0 0);
-  --card-foreground: oklch(0.1450 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.1450 0 0);
-  --primary: oklch(0.2050 0 0);
-  --primary-foreground: oklch(0.9850 0 0);
-  --secondary: oklch(0.8700 0 0);
-  --secondary-foreground: oklch(0.1450 0 0);
-  --muted: oklch(0.9500 0 0);
-  --muted-foreground: oklch(0.5560 0 0);
-  --accent: oklch(0.9500 0 0);
-  --accent-foreground: oklch(0.2050 0 0);
-  --destructive: oklch(0.5770 0.2450 27.3250);
+  /* Letter spacing */
+  --tracking-normal: 0em;
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  
+  /* Light mode colors */
+  --background: oklch(0.9900 0 0);
+  --foreground: oklch(0 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0 0 0);
+  --popover: oklch(0.9900 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.9400 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.9700 0 0);
+  --muted-foreground: oklch(0.4400 0 0);
+  --accent: oklch(0.9400 0 0);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.6300 0.1900 23.0300);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9500 0 0);
-  --input: oklch(0.9700 0 0);
-  --ring: oklch(0.7080 0 0);
+  --border: oklch(0.9200 0 0);
+  --input: oklch(0.9400 0 0);
+  --ring: oklch(0 0 0);
   
-  /* Chart colors */
-  --chart-1: oklch(0.8100 0.1000 252);
-  --chart-2: oklch(0.6200 0.1900 260);
-  --chart-3: oklch(0.5500 0.2200 263);
-  --chart-4: oklch(0.4900 0.2200 264);
-  --chart-5: oklch(0.4200 0.1800 266);
+  /* Chart colors (light) */
+  --chart-1: oklch(0.8100 0.1700 75.3500);
+  --chart-2: oklch(0.5500 0.2200 264.5300);
+  --chart-3: oklch(0.7200 0 0);
+  --chart-4: oklch(0.9200 0 0);
+  --chart-5: oklch(0.5600 0 0);
   
   /* Sidebar (light) */
-  --sidebar: oklch(0.9850 0 0);
-  --sidebar-foreground: oklch(0.1450 0 0);
-  --sidebar-primary: oklch(0.2050 0 0);
-  --sidebar-primary-foreground: oklch(0.9850 0 0);
-  --sidebar-accent: oklch(0.9700 0 0);
-  --sidebar-accent-foreground: oklch(0.2050 0 0);
-  --sidebar-border: oklch(0.9220 0 0);
-  --sidebar-ring: oklch(0.7080 0 0);
-  
-  /* Font families */
-  --font-sans: "DM Sans", ui-sans-serif, sans-serif, system-ui;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --sidebar: oklch(0.9900 0 0);
+  --sidebar-foreground: oklch(0 0 0);
+  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.9400 0 0);
+  --sidebar-accent-foreground: oklch(0 0 0);
+  --sidebar-border: oklch(0.9400 0 0);
+  --sidebar-ring: oklch(0 0 0);
   
   /* Shadow configuration (light) */
-  --shadow-color: oklch(0 0 0);
-  --shadow-opacity: 0.1;
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-}
-
-/* Dark mode - TweakCN theme */
-.dark {
-  --background: oklch(0.2050 0 0);
-  --foreground: oklch(0.9850 0 0);
-  --card: oklch(0.1650 0 0);
-  --card-foreground: oklch(0.9850 0 0);
-  --popover: oklch(0.2050 0 0);
-  --popover-foreground: oklch(0.9850 0 0);
-  --primary: oklch(0.9220 0 0);
-  --primary-foreground: oklch(0.2050 0 0);
-  --secondary: oklch(0.2690 0 0);
-  --secondary-foreground: oklch(0.9850 0 0);
-  --muted: oklch(0.2690 0 0);
-  --muted-foreground: oklch(0.7080 0 0);
-  --accent: oklch(0.3710 0 0);
-  --accent-foreground: oklch(0.9850 0 0);
-  --destructive: oklch(0.7040 0.1910 22.2160);
-  --destructive-foreground: oklch(0.9850 0 0);
-  --border: oklch(0.2690 0 0);
-  --input: oklch(0.2690 0 0);
-  --ring: oklch(0.5560 0 0);
+  --shadow-color: hsl(0 0% 0%);
+  --shadow-opacity: 0.18;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 1px;
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
+  --shadow-sm: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow-md: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 2px 4px -1px hsl(0 0% 0% / 0.18);
+  --shadow-lg: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 4px 6px -1px hsl(0 0% 0% / 0.18);
+  --shadow-xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 8px 10px -1px hsl(0 0% 0% / 0.18);
+  --shadow-2xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.45);
   
-  /* Sidebar (dark) */
-  --sidebar: oklch(0.2690 0 0);
-  --sidebar-foreground: oklch(0.9850 0 0);
-  --sidebar-primary: oklch(0.4880 0.2430 264.3760);
-  --sidebar-primary-foreground: oklch(0.9850 0 0);
-  --sidebar-accent: oklch(0.2690 0 0);
-  --sidebar-accent-foreground: oklch(0.9850 0 0);
-  --sidebar-border: oklch(0.2750 0 0);
-  --sidebar-ring: oklch(0.4390 0 0);
-  
-  /* Shadow configuration (dark) */
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-}
-  
-  /* Additional toast colors for TweakCN */
+  /* Additional DI-Lab specific colors */
+  /* Toast/feedback colors */
   --warning: oklch(0.75 0.18 90);
   --warning-foreground: oklch(0.2050 0 0);
   --info: oklch(0.6000 0.15 250);
   --info-foreground: oklch(1 0 0);
-  
-  /* Success color */
   --success: oklch(0.577 0.19 160);
   --success-foreground: oklch(1 0 0);
-
+  
   /* Star rating colors */
-  --color-gem-1star: #9ca3af; /* gray-400 - 1-star gems */
-  --color-gem-2star: #60a5fa; /* blue-400 - 2-star gems */
-  --color-gem-5star: #fbbf24; /* amber-400 - 5-star gems */
-  --color-gem-5star-border: #f59e0b; /* amber-500 - 5-star gold border */
-
+  --color-gem-1star: #9ca3af;
+  --color-gem-2star: #60a5fa;
+  --color-gem-5star: #fbbf24;
+  --color-gem-5star-border: #f59e0b;
+  
   /* Tier ranking colors (per FR-002a) */
-  --color-tier-s: oklch(0.75 0.15 90); /* gold - S tier */
-  --color-tier-a: oklch(0.70 0.10 250); /* silver - A tier */
-  --color-tier-b: oklch(0.65 0.18 50); /* bronze - B tier */
-  --color-tier-c: oklch(0.50 0.05 250); /* gray - C tier */
-  --color-tier-d: oklch(0.50 0.05 250); /* gray - D tier */
-
-  /* Gem effect category colors for TweakCN */
+  --color-tier-s: oklch(0.75 0.15 90);
+  --color-tier-a: oklch(0.70 0.10 250);
+  --color-tier-b: oklch(0.65 0.18 50);
+  --color-tier-c: oklch(0.50 0.05 250);
+  --color-tier-d: oklch(0.50 0.05 250);
+  
+  /* Gem effect category colors */
   --effect-offense: oklch(0.90 0.10 25);
   --effect-offense-fg: oklch(0.35 0.10 25);
   --effect-defense: oklch(0.90 0.10 250);
@@ -138,321 +103,103 @@
   --effect-utility-fg: oklch(0.35 0.10 60);
   --effect-cc: oklch(0.90 0.10 330);
   --effect-cc-fg: oklch(0.35 0.10 330);
-
+  
   /* Error and status colors (per FR-045) */
   --color-error: oklch(0.577 0.22 25);
   --color-success: oklch(0.577 0.19 160);
   --color-warning: oklch(0.75 0.18 90);
-
-  /* Star rating colors */
-  --color-gem-1star: oklch(0.70 0.10 250);
-  --color-gem-2star: oklch(0.70 0.18 250);
-  --color-gem-5star: oklch(0.80 0.18 85);
-  --color-gem-5star-border: oklch(0.75 0.20 85);
-
+  
   /* Interaction state colors (per FR-016b) */
   --color-hover-overlay: rgba(0, 0, 0, 0.1);
   --color-focus-ring: oklch(0.7080 0 0);
   --color-disabled-opacity: 0.5;
-
+  
   /* Layout constants (per FR-002a) */
   --gem-card-width: 120px;
   --gem-card-height: 160px;
   --gem-card-gap: 16px;
   --gem-border-5star: 2px;
-
+  
   /* Z-index hierarchy */
   --z-modal-backdrop: 40;
   --z-modal: 50;
   --z-toast: 60;
 }
 
-/* Dark mode - TweakCN theme */
+/* Dark mode - TweakCN Vercel theme */
 .dark {
-  --background: oklch(0.2050 0 0);
-  --foreground: oklch(0.9850 0 0);
-  --card: oklch(0.1650 0 0);
-  --card-foreground: oklch(0.9850 0 0);
-  --popover: oklch(0.2050 0 0);
-  --popover-foreground: oklch(0.9850 0 0);
-  --primary: oklch(0.9220 0 0);
-  --primary-foreground: oklch(0.2050 0 0);
-  --secondary: oklch(0.2690 0 0);
-  --secondary-foreground: oklch(0.9850 0 0);
-  --muted: oklch(0.2690 0 0);
-  --muted-foreground: oklch(0.7080 0 0);
-  --accent: oklch(0.3710 0 0);
-  --accent-foreground: oklch(0.9850 0 0);
-  --destructive: oklch(0.7040 0.1910 22.2160);
-  --destructive-foreground: oklch(0.9850 0 0);
-  --border: oklch(0.2690 0 0);
-  --input: oklch(0.2690 0 0);
-  --ring: oklch(0.5560 0 0);
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.1400 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.1800 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.2500 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.2300 0 0);
+  --muted-foreground: oklch(0.7200 0 0);
+  --accent: oklch(0.3200 0 0);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6900 0.2000 23.9100);
+  --destructive-foreground: oklch(0 0 0);
+  --border: oklch(0.2600 0 0);
+  --input: oklch(0.3200 0 0);
+  --ring: oklch(0.7200 0 0);
+  
+  /* Chart colors (dark) */
+  --chart-1: oklch(0.8100 0.1700 75.3500);
+  --chart-2: oklch(0.5800 0.2100 260.8400);
+  --chart-3: oklch(0.5600 0 0);
+  --chart-4: oklch(0.4400 0 0);
+  --chart-5: oklch(0.9200 0 0);
   
   /* Sidebar (dark) */
-  --sidebar: oklch(0.2690 0 0);
-  --sidebar-foreground: oklch(0.9850 0 0);
-  --sidebar-primary: oklch(0.4880 0.2430 264.3760);
-  --sidebar-primary-foreground: oklch(0.9850 0 0);
-  --sidebar-accent: oklch(0.2690 0 0);
-  --sidebar-accent-foreground: oklch(0.9850 0 0);
-  --sidebar-border: oklch(0.2750 0 0);
-  --sidebar-ring: oklch(0.4390 0 0);
+  --sidebar: oklch(0.1800 0 0);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(1 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.3200 0 0);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.3200 0 0);
+  --sidebar-ring: oklch(0.7200 0 0);
   
-  /* Additional toast colors (dark) */
-  --warning: oklch(0.75 0.18 90);
-  --warning-foreground: oklch(0.9850 0 0);
-  --info: oklch(0.6000 0.15 250);
-  --info-foreground: oklch(0.9850 0 0);
-  
-  /* Success color (dark) */
-  --success: oklch(0.577 0.19 160);
-  --success-foreground: oklch(0.9850 0 0);
-  
-  /* Gem effect category colors (dark) */
-  --effect-offense: oklch(0.65 0.18 25);
-  --effect-offense-fg: oklch(0.95 0.05 25);
-  --effect-defense: oklch(0.65 0.18 250);
-  --effect-defense-fg: oklch(0.95 0.05 250);
-  --effect-all: oklch(0.70 0.18 290);
-  --effect-all-fg: oklch(0.95 0.05 290);
-  --effect-utility: oklch(0.75 0.18 60);
-  --effect-utility-fg: oklch(0.95 0.05 60);
-  --effect-cc: oklch(0.70 0.18 330);
-  --effect-cc-fg: oklch(0.95 0.05 330);
-  
-  /* Tier ranking colors (dark - slightly brighter) */
-  --color-tier-s: oklch(0.75 0.15 90);
-  --color-tier-a: oklch(0.70 0.10 250);
-  --color-tier-b: oklch(0.65 0.18 50);
-  --color-tier-c: oklch(0.50 0.05 250);
-  --color-tier-d: oklch(0.50 0.05 250);
-  
-  /* Star rating colors (dark) */
-  --color-gem-1star: oklch(0.70 0.10 250);
-  --color-gem-2star: oklch(0.70 0.18 250);
-  --color-gem-5star: oklch(0.80 0.18 85);
-  --color-gem-5star-border: oklch(0.75 0.20 85);
-  
-  /* Interaction state colors (dark) */
-  --color-hover-overlay: rgba(255, 255, 255, 0.1);
-  --color-focus-ring: oklch(0.5560 0 0);
-  --color-disabled-opacity: 0.5;
+  /* Shadow configuration (dark) */
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
+  --shadow-sm: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow-md: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 2px 4px -1px hsl(0 0% 0% / 0.18);
+  --shadow-lg: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 4px 6px -1px hsl(0 0% 0% / 0.18);
+  --shadow-xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.18), 0px 8px 10px -1px hsl(0 0% 0% / 0.18);
+  --shadow-2xl: 0px 1px 2px 0px hsl(0 0% 0% / 0.45);
 }
 
 /* Base styles */
-body {
-  @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
-}
-
-/* Focus styles for accessibility (per FR-016b) */
-*:focus-visible {
-  @apply outline-none ring-2 ring-[var(--color-focus-ring)] ring-offset-2 ring-offset-[var(--background)];
-}
-
-/* Gem card base styles */
-.gem-card {
-  @apply relative flex flex-col items-center justify-center rounded-lg bg-[var(--card)] p-3 transition-all duration-150;
-  width: var(--gem-card-width);
-  height: var(--gem-card-height);
-}
-
-.gem-card:hover {
-  background-color: var(--muted); /* gray-800 with increased opacity */
-  transform: scale(1.02);
-}
-
-.gem-card:active {
-  transform: scale(0.98);
-}
-
-.gem-card.disabled {
-  opacity: var(--color-disabled-opacity);
-  pointer-events: none;
-}
-
-/* 5-star gem gold border (per FR-002a) */
-.gem-card-5star {
-  border: var(--gem-border-5star) solid var(--color-gem-5star-border);
-}
-
-/* Tier badge styles */
-.tier-badge {
-  @apply px-2 py-0.5 text-xs font-bold rounded;
-}
-
-.tier-badge-s {
-  background-color: var(--color-tier-s);
-  color: #000;
-}
-
-.tier-badge-a {
-  background-color: var(--color-tier-a);
-  color: #000;
-}
-
-.tier-badge-b {
-  background-color: var(--color-tier-b);
-  color: #fff;
-}
-
-.tier-badge-c,
-.tier-badge-d {
-  background-color: var(--color-tier-c);
-  color: #fff;
-}
-
-/* Star rating indicator */
-.star-rating {
-  @apply flex items-center gap-0.5;
-}
-
-.star-rating-1 {
-  color: var(--color-gem-1star);
-}
-
-.star-rating-2 {
-  color: var(--color-gem-2star);
-}
-
-.star-rating-5 {
-  color: var(--color-gem-5star);
-}
-
-/* Button base styles (per FR-016b) */
-.btn {
-  @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-150;
-}
-
-.btn:hover {
-  background-color: var(--color-hover-overlay);
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-.btn:disabled,
-.btn.loading {
-  opacity: var(--color-disabled-opacity);
-  cursor: not-allowed;
-}
-
-/* Primary button */
-.btn-primary {
-  @apply bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 active:opacity-80;
-}
-
-/* Secondary button */
-.btn-secondary {
-  @apply bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:opacity-90 active:opacity-80;
-}
-
-/* Ghost button */
-.btn-ghost {
-  @apply bg-transparent text-[var(--foreground)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)];
-}
-
-/* Danger button */
-.btn-danger {
-  @apply bg-[var(--destructive)] text-[var(--destructive-foreground)] hover:opacity-90 active:opacity-80;
-}
-
-/* Button sizes */
-.btn-sm {
-  @apply px-3 py-1.5 text-sm;
-}
-
-.btn-md {
-  @apply px-4 py-2 text-base;
-}
-
-.btn-lg {
-  @apply px-6 py-3 text-lg;
-}
-
-/* Touch target minimum (per SC-005, FR-039) */
-@media (pointer: coarse) {
-  .btn,
-  .gem-card,
-  button,
-  [role="button"],
-  a,
-  input,
-  select,
-  textarea {
-    min-height: 44px;
-    min-width: 44px;
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-normal);
   }
 }
 
-/* Toast notification styles (per FR-021c) */
-.toast-container {
-  @apply fixed top-4 right-4 z-[var(--z-toast)] flex flex-col gap-2;
-  max-width: 100vw;
-}
-
-@media (max-width: 639px) {
-  .toast-container {
-    @apply left-4 right-4;
-  }
-}
-
-.toast {
-  @apply rounded-lg p-4 shadow-lg;
-  animation: toast-slide-in 0.3s ease-out;
-}
-
-@keyframes toast-slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Modal styles (per FR-030a) */
-.modal-backdrop {
-  @apply fixed inset-0 z-[var(--z-modal-backdrop)] bg-black/70;
-}
-
-.modal-content {
-  @apply fixed z-[var(--modal)] rounded-lg bg-[var(--card)] shadow-xl;
-}
-
-/* Skeleton loading (per FR-016a) */
-.skeleton {
-  @apply animate-pulse rounded bg-[var(--muted)];
-}
-
-/* Reduced motion support (per FR-041b) */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Scrollbar styling */
+/* Custom scrollbar for TweakCN feel */
 ::-webkit-scrollbar {
-  @apply w-2;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-[var(--card)];
+  background: var(--muted);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded bg-[var(--muted-foreground)]/30 hover:bg-[var(--muted-foreground)]/50;
+  background: var(--muted-foreground);
+  border-radius: 4px;
 }
 
-/* Selection styling */
-::selection {
-  @apply bg-[var(--primary)]/50;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
 }
