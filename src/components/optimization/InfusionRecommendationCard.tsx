@@ -52,10 +52,10 @@ export function InfusionRecommendationCard({
   // Priority badge styling
   const getPriorityBadgeClass = (rank: number): string => {
     if (rank === 1)
-      return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200";
+      return "bg-[var(--warning)]/10 text-[var(--warning)] dark:bg-[var(--warning)]/20 dark:text-[var(--warning)]";
     if (rank === 2)
-      return "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300";
-    return "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300";
+      return "bg-purple-500/10 text-purple-500 dark:bg-purple-500/20 dark:text-purple-500";
+    return "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]";
   };
 
   // Format source gem display
@@ -65,10 +65,10 @@ export function InfusionRecommendationCard({
   };
 
   return (
-    <div className="border border-purple-200 dark:border-purple-800 rounded-lg overflow-hidden bg-gradient-to-r from-purple-50/50 to-transparent dark:from-purple-950/30">
+    <div className="border border-purple-500/30 rounded-lg overflow-hidden bg-gradient-to-r from-purple-500/10 to-transparent">
       {/* Main Card Content */}
       <div
-        className="p-4 cursor-pointer hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors"
+        className="p-4 cursor-pointer hover:bg-purple-500/10 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => e.key === "Enter" && setIsExpanded(!isExpanded)}
         role="button"
@@ -93,16 +93,16 @@ export function InfusionRecommendationCard({
               <h3 className="font-medium text-[var(--foreground)] truncate">
                 {displayName}
               </h3>
-              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-[var(--warning)]/10 text-[var(--warning)]">
                 5★
               </span>
-              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+              <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-purple-500/10 text-purple-500">
                 INFUSION
               </span>
             </div>
 
             {/* Infusion Summary */}
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
               <Gem className="w-4 h-4" />
               <span>
                 Slot {slot} • R{currentRank} {quality}/5
@@ -113,13 +113,13 @@ export function InfusionRecommendationCard({
             <div className="flex items-center gap-3 mt-2 text-sm">
               <div className="flex items-center gap-1">
                 <Sparkles className="w-4 h-4 text-purple-500" />
-                <span className="font-medium text-purple-600 dark:text-purple-400">
+                <span className="font-medium text-purple-500">
                   +{additionalResonance} Resonance
                 </span>
               </div>
               <div className="flex items-center gap-1">
                 <TrendingUp className="w-4 h-4 text-green-500" />
-                <span className="font-medium text-green-600 dark:text-green-400">
+                <span className="font-medium text-[var(--success)]">
                   +{powerGain.toLocaleString()} Power
                 </span>
               </div>
@@ -128,7 +128,7 @@ export function InfusionRecommendationCard({
 
           {/* Expand Toggle */}
           <button
-            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             aria-label={isExpanded ? "Collapse details" : "Expand details"}
           >
             {isExpanded ? (
@@ -142,34 +142,32 @@ export function InfusionRecommendationCard({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-purple-200 dark:border-purple-700 pt-4">
+        <div className="px-4 pb-4 border-t border-purple-500/30 pt-4">
           {/* Reasoning */}
           <div className="mb-4">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+            <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-1">
               Strategy
             </h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              {reasoning}
-            </p>
+            <p className="text-sm text-[var(--foreground)]">{reasoning}</p>
           </div>
 
           {/* Source Gems Required */}
           <div className="mb-4">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+            <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-2">
               Source Gems ({sourceGems.length} slots)
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {sourceGems.map((gem, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-2 p-2 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700"
+                  className="flex items-center gap-2 p-2 bg-[var(--background)] rounded border border-[var(--border)]"
                 >
                   <Gem className="w-4 h-4 text-purple-500" />
                   <div className="text-sm">
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-[var(--foreground)]">
                       {formatSourceGem(gem)}
                     </span>
-                    <span className="text-gray-500 dark:text-gray-400 ml-1">
+                    <span className="text-[var(--muted-foreground)] ml-1">
                       (+{gem.resonanceContributed} res)
                     </span>
                   </div>
@@ -192,7 +190,7 @@ export function InfusionRecommendationCard({
                   {totalGemPower.toLocaleString()} GP
                 </span>
               </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-2 text-xs text-[var(--muted-foreground)]">
                 Additional resonance = Socketed GP ÷ 200 (max{" "}
                 {additionalResonance} for R10)
               </p>
@@ -200,11 +198,11 @@ export function InfusionRecommendationCard({
           </div>
 
           {/* Infusion Benefits */}
-          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-            <h4 className="text-xs font-medium text-green-700 dark:text-green-400 uppercase tracking-wide mb-2">
+          <div className="p-3 bg-[var(--success)]/10 rounded-lg border border-[var(--success)]/30">
+            <h4 className="text-xs font-medium text-[var(--success)] uppercase tracking-wide mb-2">
               Benefits
             </h4>
-            <ul className="space-y-1 text-sm text-green-700 dark:text-green-300">
+            <ul className="space-y-1 text-sm text-[var(--success)]">
               <li className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 <span>+{additionalResonance} additional resonance</span>

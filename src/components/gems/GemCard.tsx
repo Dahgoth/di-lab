@@ -33,11 +33,11 @@ export interface GemCardProps {
 // ============================================================================
 
 const tierTextColors: Record<TierRanking, string> = {
-  S: "text-rose-500",
-  A: "text-zinc-300",
-  B: "text-amber-500",
-  C: "text-zinc-500",
-  D: "text-zinc-600",
+  S: "text-[var(--primary)]",
+  A: "text-[var(--foreground)]",
+  B: "text-yellow-500",
+  C: "text-[var(--muted-foreground)]",
+  D: "text-[var(--muted-foreground)]/70",
 };
 
 // ============================================================================
@@ -65,20 +65,20 @@ export default function GemCard({
         onClick={onClick}
         className={[
           "flex items-center gap-2 px-2 py-1.5",
-          "border border-zinc-800 bg-black",
-          selected ? "ring-1 ring-inset ring-rose-500" : "",
+          "border border-[var(--border)] bg-[var(--background)]",
+          selected ? "ring-1 ring-inset ring-[var(--primary)]" : "",
           onClick
-            ? "cursor-pointer hover:border-zinc-600 transition-colors"
+            ? "cursor-pointer hover:border-[var(--primary)] transition-colors"
             : "",
           className,
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        <span className="font-sans text-xs text-zinc-300 truncate">
+        <span className="font-sans text-xs text-[var(--foreground)] truncate">
           {gem.name}
         </span>
-        <span className="font-mono text-[10px] text-zinc-500 flex-shrink-0">
+        <span className="font-mono text-[10px] text-[var(--muted-foreground)] flex-shrink-0">
           {starLabel}
         </span>
       </div>
@@ -90,10 +90,10 @@ export default function GemCard({
   const cardEl = (
     <div
       className={[
-        "flex flex-col bg-black border border-zinc-800",
-        selected ? "ring-1 ring-inset ring-rose-500" : "",
+        "flex flex-col bg-[var(--background)] border border-[var(--border)]",
+        selected ? "ring-1 ring-inset ring-[var(--primary)]" : "",
         onClick
-          ? "cursor-pointer hover:border-zinc-600 transition-colors group"
+          ? "cursor-pointer hover:border-[var(--primary)] transition-colors group"
           : "",
         className,
       ]
@@ -114,15 +114,15 @@ export default function GemCard({
       </InventorySlot>
 
       {/* Metadata footer */}
-      <div className="px-2 py-1.5 border-t border-zinc-800 space-y-1">
+      <div className="px-2 py-1.5 border-t border-[var(--border)] space-y-1">
         {/* Gem name */}
-        <p className="font-sans text-[11px] text-zinc-300 leading-tight line-clamp-2 min-h-[2.2em]">
+        <p className="font-sans text-[11px] text-[var(--foreground)] leading-tight line-clamp-2 min-h-[2.2em]">
           {gem.name}
         </p>
 
         {/* Star rating + tier row */}
         <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] text-zinc-600">
+          <span className="font-mono text-[10px] text-[var(--muted-foreground)]">
             {starLabel}
           </span>
           <div className="flex items-center gap-1">
@@ -150,7 +150,7 @@ export default function GemCard({
                   e.stopPropagation();
                   onInfoClick();
                 }}
-                className="flex items-center justify-center w-6 h-6 text-zinc-600 hover:text-zinc-300 transition-colors"
+                className="flex items-center justify-center w-6 h-6 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
                 aria-label={`View ${gem.name} details`}
               >
                 <Info size={12} />

@@ -245,13 +245,13 @@ export function SaveBuildModal({
           maxLength={50}
           disabled={state.isSubmitting}
         />
-        <p className="text-xs text-gray-500 -mt-2">
+        <p className="text-xs text-[var(--muted-foreground)] -mt-2">
           {state.name.length}/50 characters
         </p>
 
         {/* Notes */}
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-300">
+          <label className="block text-sm font-medium text-[var(--foreground)]">
             Notes (optional)
           </label>
           <textarea
@@ -266,14 +266,14 @@ export function SaveBuildModal({
           {state.fieldErrors.notes && (
             <p className="text-sm text-red-400">{state.fieldErrors.notes}</p>
           )}
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-[var(--muted-foreground)]">
             {state.notes.length}/500 characters
           </p>
         </div>
 
         {/* Gem count summary */}
-        <div className="p-3 bg-gray-800 rounded-lg">
-          <p className="text-sm text-gray-400">
+        <div className="p-3 bg-[var(--card)] rounded-lg">
+          <p className="text-sm text-[var(--muted-foreground)]">
             This build contains{" "}
             <span className="text-white font-medium">{gems.length} gems</span>
           </p>

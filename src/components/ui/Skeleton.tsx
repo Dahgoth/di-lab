@@ -23,7 +23,7 @@ export function Skeleton({ className, variant = "pulse" }: SkeletonProps) {
   return (
     <div
       className={cn(
-        "bg-gray-200 rounded",
+        "bg-[var(--muted)] rounded",
         variant === "pulse" && "animate-pulse",
         variant === "wave" && "animate-shimmer",
         className,

@@ -67,13 +67,13 @@ export function OptimizationModal({
         <div className="flex items-center justify-between mb-4">
           <h2
             id="modal-title"
-            className="text-lg font-semibold text-gray-900 dark:text-white"
+            className="text-lg font-semibold text-[var(--foreground)]"
           >
             Optimizing...
           </h2>
           <button
             onClick={onCancel}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
             aria-label="Cancel optimization"
           >
             <X className="w-5 h-5" />
@@ -84,7 +84,7 @@ export function OptimizationModal({
         <div className="mb-4">
           <div className="flex items-center justify-center mb-4">
             {/* Spinning loader */}
-            <div className="w-12 h-12 border-4 border-blue-200 dark:border-blue-900 border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin" />
+            <div className="w-12 h-12 border-4 border-[var(--primary)]/30 dark:border-[var(--primary)]/30 border-t-[var(--primary)] rounded-full animate-spin" />
           </div>
 
           {/* Elapsed time */}
@@ -92,7 +92,7 @@ export function OptimizationModal({
             <span className="text-3xl font-mono text-[var(--foreground)]">
               {formatTime(elapsedSeconds)}
             </span>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-[var(--muted-foreground)] mt-1">
               elapsed
             </p>
           </div>
@@ -100,8 +100,8 @@ export function OptimizationModal({
 
         {/* Long running warning */}
         {isLongRunning && (
-          <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
-            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+          <div className="mb-4 p-3 bg-[var(--warning)]/10 rounded-md">
+            <p className="text-sm text-[var(--warning)]">
               Still processing... This is taking longer than expected.
             </p>
           </div>
@@ -115,15 +115,15 @@ export function OptimizationModal({
         {/* Cancel button */}
         <button
           onClick={onCancel}
-          className="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 text-sm font-medium text-[var(--foreground)] bg-[var(--secondary)] rounded-md hover:opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]"
         >
           Cancel
         </button>
 
         {/* Keyboard hint */}
-        <p className="mt-2 text-xs text-center text-gray-400 dark:text-gray-500">
+        <p className="mt-2 text-xs text-center text-[var(--muted-foreground)]">
           Press{" "}
-          <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+          <kbd className="px-1.5 py-0.5 bg-[var(--secondary)] rounded text-xs font-mono">
             Esc
           </kbd>{" "}
           to cancel

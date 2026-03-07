@@ -39,11 +39,11 @@ export function AcquisitionPaths({
   const getColorClass = (type: AcquisitionPath["type"]) => {
     switch (type) {
       case "farming":
-        return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800";
+        return "bg-[var(--success)]/10 border-[var(--success)]/30";
       case "market":
-        return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800";
+        return "bg-[var(--primary)]/10 border-[var(--primary)]/30";
       case "hybrid":
-        return "bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800";
+        return "bg-purple-500/10 border-purple-500/30";
     }
   };
 
@@ -80,25 +80,25 @@ export function AcquisitionPaths({
             )}
           >
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 text-gray-600 dark:text-gray-400">
+              <div className="flex-shrink-0 text-[var(--muted-foreground)]">
                 {getIcon(path.type)}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 dark:text-white mb-1">
+                <h4 className="font-medium text-[var(--foreground)] mb-1">
                   {path.title}
                 </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <p className="text-sm text-[var(--muted-foreground)] mb-2">
                   {path.description}
                 </p>
 
                 {/* Pros */}
-                <div className="text-xs text-gray-500 dark:text-gray-400">
+                <div className="text-xs text-[var(--muted-foreground)]">
                   <span className="font-medium">Pros: </span>
                   {path.pros.slice(0, 2).join(", ")}
                 </div>
 
                 {/* Cons */}
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <div className="text-xs text-[var(--muted-foreground)] mt-1">
                   <span className="font-medium">Cons: </span>
                   {path.cons.slice(0, 2).join(", ")}
                 </div>
@@ -106,12 +106,12 @@ export function AcquisitionPaths({
                 {/* Estimates */}
                 <div className="flex gap-4 mt-2 text-xs">
                   {path.estimatedTime && (
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span className="text-[var(--muted-foreground)]">
                       ⏱️ {path.estimatedTime}
                     </span>
                   )}
                   {path.estimatedCost && (
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span className="text-[var(--muted-foreground)]">
                       💰 ~{path.estimatedCost.toLocaleString()} platinum
                     </span>
                   )}
@@ -151,14 +151,14 @@ export function ResourceDeficit({ deficits, className }: ResourceDeficitProps) {
   return (
     <div
       className={cn(
-        "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4",
+        "bg-[var(--warning)]/10 border border-[var(--warning)]/30 rounded-lg p-4",
         className,
       )}
     >
-      <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+      <h4 className="font-medium text-[var(--warning)] mb-2">
         Resource Deficit
       </h4>
-      <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
+      <p className="text-sm text-[var(--warning)] mb-3">
         You need additional resources to complete all recommendations:
       </p>
       <ul className="space-y-1">
@@ -167,10 +167,10 @@ export function ResourceDeficit({ deficits, className }: ResourceDeficitProps) {
             key={resource}
             className="flex items-center justify-between text-sm"
           >
-            <span className="text-yellow-700 dark:text-yellow-300">
+            <span className="text-[var(--warning)]">
               {formatResourceName(resource)}
             </span>
-            <span className="font-medium text-yellow-800 dark:text-yellow-200">
+            <span className="font-medium text-[var(--warning)]">
               {amount.toLocaleString()} needed
             </span>
           </li>

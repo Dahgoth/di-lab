@@ -97,14 +97,14 @@ export default function InventorySlot({
         // Base
         "relative aspect-square overflow-hidden",
         // Radial gradient background via inline style (see below)
-        "bg-black",
+        "bg-[var(--background)]",
         // Border
         selected
-          ? "border border-zinc-800 ring-1 ring-inset ring-rose-500"
-          : "border border-zinc-800",
+          ? "border border-[var(--border)] ring-1 ring-inset ring-[var(--primary)]"
+          : "border border-[var(--border)]",
         // Hover
         onClick
-          ? "cursor-pointer hover:border-zinc-600 hover:brightness-110 transition-all duration-150"
+          ? "cursor-pointer hover:border-[var(--primary)] hover:brightness-110 transition-all duration-150"
           : "",
         className,
       ]
@@ -112,7 +112,7 @@ export default function InventorySlot({
         .join(" ")}
       style={{
         background:
-          "radial-gradient(circle at center, #121212 0%, #000000 100%)",
+          "radial-gradient(circle at center, var(--muted) 0%, var(--background) 100%)",
       }}
     >
       {/* Selected: left-edge 2px data-bar */}
@@ -131,8 +131,8 @@ export default function InventorySlot({
             style={{
               width: 10,
               height: 10,
-              borderLeft: "1px solid #E11D48",
-              borderBottom: "1px solid #E11D48",
+              borderLeft: "1px solid var(--primary)",
+              borderBottom: "1px solid var(--primary)",
             }}
           />
         </div>
@@ -141,7 +141,7 @@ export default function InventorySlot({
       {/* Top-right: quantity badge */}
       {quantity !== undefined && quantity > 0 && (
         <div className="absolute top-1 right-1 z-20 pointer-events-none">
-          <span className="font-mono text-[10px] leading-none text-zinc-300 tabular-nums">
+          <span className="font-mono text-[10px] leading-none text-[var(--foreground)] tabular-nums">
             {quantity}
           </span>
         </div>
@@ -166,9 +166,9 @@ export default function InventorySlot({
       {rank !== undefined && (
         <div
           className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center"
-          style={{ height: 18, background: "rgba(24,24,27,0.85)" }}
+          style={{ height: 18, background: "rgba(var(--muted-rgb), 0.85)" }}
         >
-          <span className="font-mono text-[10px] uppercase tracking-tighter text-zinc-400 leading-none">
+          <span className="font-mono text-[10px] uppercase tracking-tighter text-[var(--muted-foreground)] leading-none">
             R{rank}
           </span>
         </div>

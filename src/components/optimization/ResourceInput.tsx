@@ -197,7 +197,9 @@ export default function ResourceInput({
     <div className="space-y-6">
       {/* Header with reset button */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">Resources</h3>
+        <h3 className="text-lg font-semibold text-[var(--foreground)]">
+          Resources
+        </h3>
         <Button variant="ghost" size="sm" onClick={handleReset}>
           <RotateCcw className="w-4 h-4 mr-1" />
           Reset
@@ -274,8 +276,8 @@ export default function ResourceInput({
       </div>
 
       {/* Crest Counts Section */}
-      <div className="border-t border-gray-200 pt-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">
+      <div className="border-t border-[var(--border)] pt-4">
+        <h4 className="text-sm font-medium text-[var(--foreground)] mb-3">
           Crest Inventory
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -304,38 +306,38 @@ export default function ResourceInput({
             debounceMs={debounceMs}
           />
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-[var(--muted-foreground)] mt-2">
           Total Crests: {formatNumber(totalCrests)}
         </p>
       </div>
 
       {/* Resource Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">
+      <div className="bg-[var(--muted)] rounded-lg p-4">
+        <h4 className="text-sm font-medium text-[var(--foreground)] mb-2">
           Resource Summary
         </h4>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-gray-500">Gem Power</span>
-            <p className="font-semibold text-gray-900">
+            <span className="text-[var(--muted-foreground)]">Gem Power</span>
+            <p className="font-semibold text-[var(--foreground)]">
               {formatNumber(localResources.gemPower)}
             </p>
           </div>
           <div>
-            <span className="text-gray-500">Platinum</span>
-            <p className="font-semibold text-gray-900">
+            <span className="text-[var(--muted-foreground)]">Platinum</span>
+            <p className="font-semibold text-[var(--foreground)]">
               {formatNumber(localResources.platinum)}
             </p>
           </div>
           <div>
-            <span className="text-gray-500">Pearls</span>
-            <p className="font-semibold text-gray-900">
+            <span className="text-[var(--muted-foreground)]">Pearls</span>
+            <p className="font-semibold text-[var(--foreground)]">
               {formatNumber(localResources.telluricPearls)}
             </p>
           </div>
           <div>
-            <span className="text-gray-500">Total Crests</span>
-            <p className="font-semibold text-gray-900">
+            <span className="text-[var(--muted-foreground)]">Total Crests</span>
+            <p className="font-semibold text-[var(--foreground)]">
               {formatNumber(totalCrests)}
             </p>
           </div>
@@ -344,9 +346,9 @@ export default function ResourceInput({
 
       {/* Advanced Options - Budget Constraint (T099) */}
       {showAdvancedOptions && (
-        <div className="border-t border-gray-200 pt-4">
+        <div className="border-t border-[var(--border)] pt-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-medium text-gray-700">
+            <h4 className="text-sm font-medium text-[var(--foreground)]">
               Budget Constraint
             </h4>
             <label className="flex items-center gap-2">
@@ -360,9 +362,11 @@ export default function ResourceInput({
                     onMaxBudgetChange(undefined);
                   }
                 }}
-                className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                className="rounded border-[var(--border)] text-[var(--primary)] focus:ring-[var(--primary)]"
               />
-              <span className="text-sm text-gray-600">Enable</span>
+              <span className="text-sm text-[var(--muted-foreground)]">
+                Enable
+              </span>
             </label>
           </div>
           {budgetEnabled && (
@@ -457,7 +461,11 @@ function ResourceField({
         placeholder={placeholder}
         fullWidth
       />
-      {helperText && <p className="mt-1 text-xs text-gray-500">{helperText}</p>}
+      {helperText && (
+        <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+          {helperText}
+        </p>
+      )}
     </div>
   );
 }

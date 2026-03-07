@@ -67,8 +67,10 @@ export function OptimizeButton({
 
       {/* Processing time indicator */}
       {isLoading && elapsedSeconds !== undefined && (
-        <div className="text-sm text-gray-500">
-          <span className={cn(showWarning && "text-amber-600 font-medium")}>
+        <div className="text-sm text-[var(--muted-foreground)]">
+          <span
+            className={cn(showWarning && "text-[var(--warning)] font-medium")}
+          >
             {elapsedSeconds}s elapsed
           </span>
         </div>
@@ -76,7 +78,7 @@ export function OptimizeButton({
 
       {/* 20-second warning */}
       {showWarning && (
-        <p className="text-sm text-amber-600 animate-pulse">
+        <p className="text-sm text-[var(--warning)] animate-pulse">
           Still processing... This is taking longer than expected.
         </p>
       )}

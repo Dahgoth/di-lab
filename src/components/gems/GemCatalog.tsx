@@ -115,7 +115,7 @@ export default function GemCatalog({
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 px-1">
         {/* Star rating tabs */}
-        <div className="flex border border-zinc-800 divide-x divide-zinc-800">
+        <div className="flex border border-[var(--border)] divide-x divide-[var(--border)]">
           {STAR_RATING_TABS.map((tab) => (
             <button
               key={tab.value}
@@ -124,8 +124,8 @@ export default function GemCatalog({
               className={[
                 "px-4 py-1.5 font-mono text-xs tracking-widest transition-colors",
                 selectedStarRating === tab.value
-                  ? "bg-zinc-900 text-zinc-100"
-                  : "bg-black text-zinc-600 hover:text-zinc-300",
+                  ? "bg-[var(--muted)] text-[var(--foreground)]"
+                  : "bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]",
               ].join(" ")}
             >
               {tab.label}
@@ -136,7 +136,7 @@ export default function GemCatalog({
         {/* Search */}
         <div className="flex-1 relative">
           <Search
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none"
             size={14}
           />
           <input
@@ -146,18 +146,18 @@ export default function GemCatalog({
             onChange={handleSearchChange}
             className="
               w-full pl-8 pr-3 py-1.5
-              bg-black border border-zinc-800
-              font-mono text-xs text-zinc-300 placeholder:text-zinc-700
-              focus:outline-none focus:border-zinc-600
+              bg-[var(--background)] border border-[var(--border)]
+              font-mono text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]/50
+              focus:outline-none focus:border-[var(--primary)]
               tracking-wider uppercase
             "
           />
         </div>
 
         {/* Tier filter */}
-        <div className="relative flex items-center border border-zinc-800">
+        <div className="relative flex items-center border border-[var(--border)]">
           <SlidersHorizontal
-            className="absolute left-2 text-zinc-600 pointer-events-none"
+            className="absolute left-2 text-[var(--muted-foreground)] pointer-events-none"
             size={12}
           />
           <select
@@ -167,9 +167,9 @@ export default function GemCatalog({
             }
             className="
               pl-7 pr-6 py-1.5
-              bg-black
-              font-mono text-xs text-zinc-400 uppercase tracking-widest
-              focus:outline-none focus:border-zinc-600
+              bg-[var(--background)]
+              font-mono text-xs text-[var(--muted-foreground)] uppercase tracking-widest
+              focus:outline-none focus:border-[var(--primary)]
               appearance-none cursor-pointer
             "
           >
@@ -184,7 +184,7 @@ export default function GemCatalog({
 
       {/* ── Count readout ───────────────────────────────────────────────── */}
       <div className="px-1 mb-2">
-        <span className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+        <span className="font-mono text-[10px] text-[var(--muted-foreground)] uppercase tracking-widest">
           {filteredGems.length} GEMS
         </span>
       </div>
@@ -202,8 +202,8 @@ export default function GemCatalog({
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-          <Search size={32} className="text-zinc-800 mb-3" />
-          <p className="font-mono text-xs text-zinc-600 uppercase tracking-widest">
+          <Search size={32} className="text-[var(--muted-foreground)] mb-3" />
+          <p className="font-mono text-xs text-[var(--muted-foreground)] uppercase tracking-widest">
             NO GEMS FOUND
           </p>
           <button
@@ -212,7 +212,7 @@ export default function GemCatalog({
               else setInternalSearchQuery("");
               setInternalTierFilter("all");
             }}
-            className="mt-4 font-mono text-[10px] text-zinc-600 hover:text-zinc-300 uppercase tracking-widest transition-colors"
+            className="mt-4 font-mono text-[10px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] uppercase tracking-widest transition-colors"
           >
             CLEAR FILTERS
           </button>

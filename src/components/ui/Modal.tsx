@@ -217,11 +217,11 @@ export function Modal({
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
             {title && (
               <h2
                 id="modal-title"
-                className="text-lg font-semibold text-gray-900"
+                className="text-lg font-semibold text-[var(--foreground)]"
               >
                 {title}
               </h2>
@@ -245,7 +245,7 @@ export function Modal({
 
         {/* Footer */}
         {footer && (
-          <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <div className="flex justify-end gap-3 px-6 py-4 border-t border-[var(--border)] bg-[var(--muted)]">
             {footer}
           </div>
         )}
@@ -329,7 +329,7 @@ export function ConfirmModal({
         </>
       }
     >
-      <p className="text-gray-600">{message}</p>
+      <p className="text-[var(--muted-foreground)]">{message}</p>
     </Modal>
   );
 }

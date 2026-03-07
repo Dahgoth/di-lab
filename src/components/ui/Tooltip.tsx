@@ -207,7 +207,8 @@ function GemSummaryTooltipFn({
       content={
         <div className="space-y-1.5">
           <div className="font-medium">
-            <span className="text-yellow-400">{starDisplay}</span> {name}
+            <span className="text-[var(--color-gem-5star)]">{starDisplay}</span>{" "}
+            {name}
           </div>
           <div className="flex gap-2 text-xs">
             <span className="text-[var(--muted-foreground)]">

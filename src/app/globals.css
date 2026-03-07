@@ -24,6 +24,16 @@
   --input: #262626;
   --ring: #3b82f6;
 
+  /* Additional toast colors for TweakCN */
+  --warning: #CA8A04;
+  --warning-foreground: #fafafa;
+  --info: #3b82f6;
+  --info-foreground: #fafafa;
+
+  /* Success color */
+  --success: #15803D;
+  --success-foreground: #fafafa;
+
   /* Star rating colors */
   --color-gem-1star: #9ca3af; /* gray-400 - 1-star gems */
   --color-gem-2star: #60a5fa; /* blue-400 - 2-star gems */
@@ -61,23 +71,23 @@
 
 /* Base styles */
 body {
-  @apply bg-gray-900 text-gray-100 antialiased;
+  @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
 }
 
 /* Focus styles for accessibility (per FR-016b) */
 *:focus-visible {
-  @apply outline-none ring-2 ring-[var(--color-focus-ring)] ring-offset-2 ring-offset-gray-900;
+  @apply outline-none ring-2 ring-[var(--color-focus-ring)] ring-offset-2 ring-offset-[var(--background)];
 }
 
 /* Gem card base styles */
 .gem-card {
-  @apply relative flex flex-col items-center justify-center rounded-lg bg-gray-800 p-3 transition-all duration-150;
+  @apply relative flex flex-col items-center justify-center rounded-lg bg-[var(--card)] p-3 transition-all duration-150;
   width: var(--gem-card-width);
   height: var(--gem-card-height);
 }
 
 .gem-card:hover {
-  background-color: rgba(31, 41, 55, 0.9); /* gray-800 with increased opacity */
+  background-color: var(--muted); /* gray-800 with increased opacity */
   transform: scale(1.02);
 }
 
@@ -159,22 +169,22 @@ body {
 
 /* Primary button */
 .btn-primary {
-  @apply bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
+  @apply bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 active:opacity-80;
 }
 
 /* Secondary button */
 .btn-secondary {
-  @apply bg-gray-700 text-gray-100 hover:bg-gray-600 active:bg-gray-500;
+  @apply bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:opacity-90 active:opacity-80;
 }
 
 /* Ghost button */
 .btn-ghost {
-  @apply bg-transparent text-gray-300 hover:bg-gray-800 hover:text-gray-100;
+  @apply bg-transparent text-[var(--foreground)] hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)];
 }
 
 /* Danger button */
 .btn-danger {
-  @apply bg-red-600 text-white hover:bg-red-700 active:bg-red-800;
+  @apply bg-[var(--destructive)] text-[var(--destructive-foreground)] hover:opacity-90 active:opacity-80;
 }
 
 /* Button sizes */
@@ -239,12 +249,12 @@ body {
 }
 
 .modal-content {
-  @apply fixed z-[var(--z-modal)] rounded-lg bg-gray-800 shadow-xl;
+  @apply fixed z-[var(--modal)] rounded-lg bg-[var(--card)] shadow-xl;
 }
 
 /* Skeleton loading (per FR-016a) */
 .skeleton {
-  @apply animate-pulse rounded bg-gray-700;
+  @apply animate-pulse rounded bg-[var(--muted)];
 }
 
 /* Reduced motion support (per FR-041b) */
@@ -264,14 +274,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  @apply bg-[var(--card)];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply rounded bg-gray-600 hover:bg-gray-500;
+  @apply rounded bg-[var(--muted-foreground)]/30 hover:bg-[var(--muted-foreground)]/50;
 }
 
 /* Selection styling */
 ::selection {
-  @apply bg-blue-600/50;
+  @apply bg-[var(--primary)]/50;
 }

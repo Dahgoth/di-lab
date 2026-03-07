@@ -41,9 +41,9 @@ export function RecommendationCard({
   // Priority badge styling
   const getPriorityBadgeClass = (rank: number): string => {
     if (rank === 1)
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      return "bg-[var(--warning)]/10 text-[var(--warning)] dark:bg-[var(--warning)]/20 dark:text-[var(--warning)]";
     if (rank === 2)
-      return "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300";
+      return "bg-[var(--muted)] text-[var(--foreground)] dark:bg-[var(--muted)] dark:text-[var(--foreground)]";
     if (rank === 3)
       return "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]/80";
     return "bg-[var(--muted)] text-[var(--muted-foreground)] dark:bg-[var(--muted)] dark:text-[var(--muted-foreground)]";
@@ -58,8 +58,8 @@ export function RecommendationCard({
   // Tier badge styling
   const getTierBadgeClass = (tier: TierRanking): string => {
     const classes: Record<TierRanking, string> = {
-      S: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-      A: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+      S: "bg-[var(--success)]/10 text-[var(--success)] dark:bg-[var(--success)]/20 dark:text-[var(--success)]",
+      A: "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]",
       B: "bg-[var(--muted)] text-[var(--foreground)] dark:bg-[var(--muted)] dark:text-[var(--foreground)]",
       C: "bg-[var(--primary)]/10 text-[var(--primary)] dark:bg-[var(--primary)]/20 dark:text-[var(--primary)]",
       D: "bg-[var(--destructive)]/10 text-[var(--destructive)] dark:bg-[var(--destructive)]/20 dark:text-[var(--destructive)]",
@@ -94,10 +94,10 @@ export function RecommendationCard({
   const tier: TierRanking = "A";
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="border border-[var(--border)] rounded-lg overflow-hidden">
       {/* Main Card Content */}
       <div
-        className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+        className="p-4 cursor-pointer hover:bg-[var(--muted)]/50 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => e.key === "Enter" && setIsExpanded(!isExpanded)}
         role="button"
@@ -133,7 +133,7 @@ export function RecommendationCard({
             </div>
 
             {/* Upgrade Path */}
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
               <span>Rank {currentRank}</span>
               <ArrowRight className="w-4 h-4" />
               <span className="font-medium text-[var(--foreground)]">
@@ -143,8 +143,8 @@ export function RecommendationCard({
 
             {/* Power Gain */}
             <div className="flex items-center gap-1 mt-2 text-sm">
-              <TrendingUp className="w-4 h-4 text-green-500" />
-              <span className="font-medium text-green-600 dark:text-green-400">
+              <TrendingUp className="w-4 h-4 text-[var(--success)]" />
+              <span className="font-medium text-[var(--success)]">
                 +{powerGain.toLocaleString()} Power
               </span>
             </div>
@@ -152,7 +152,7 @@ export function RecommendationCard({
 
           {/* Expand Toggle */}
           <button
-            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             aria-label={isExpanded ? "Collapse details" : "Expand details"}
           >
             {isExpanded ? (
@@ -166,20 +166,18 @@ export function RecommendationCard({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div className="px-4 pb-4 border-t border-[var(--border)] pt-4">
           {/* Reasoning */}
           <div className="mb-4">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+            <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-1">
               Reasoning
             </h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              {reasoning}
-            </p>
+            <p className="text-sm text-[var(--foreground)]">{reasoning}</p>
           </div>
 
           {/* Resource Cost Breakdown */}
           <div className="mb-4">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+            <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-2">
               Resource Cost
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -188,7 +186,7 @@ export function RecommendationCard({
               ).map((item, idx) => (
                 <span
                   key={idx}
-                  className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-700 dark:text-gray-300"
+                  className="px-2 py-1 bg-[var(--muted)] rounded text-sm text-[var(--foreground)]"
                 >
                   {item}
                 </span>
@@ -199,20 +197,20 @@ export function RecommendationCard({
           {/* Alternatives */}
           {alternatives && alternatives.length > 0 && (
             <div>
-              <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              <h4 className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-2">
                 Alternatives
               </h4>
               <div className="space-y-2">
                 {alternatives.map((alt, idx) => (
                   <div
                     key={idx}
-                    className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm"
+                    className="p-2 bg-[var(--muted)]/50 rounded text-sm"
                   >
-                    <p className="text-gray-700 dark:text-gray-300 mb-1">
+                    <p className="text-[var(--foreground)] mb-1">
                       {alt.description}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                      <span className="text-green-600 dark:text-green-400">
+                    <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+                      <span className="text-[var(--success)]">
                         +{alt.powerGain.toLocaleString()} Power
                       </span>
                       <span>•</span>

@@ -145,15 +145,16 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       "bg-[var(--primary)]/10 border-[var(--primary)]/30 text-[var(--primary)]",
     error:
       "bg-[var(--destructive)]/10 border-[var(--destructive)]/30 text-[var(--destructive)]",
-    warning: "bg-yellow-500/10 border-yellow-500/30 text-yellow-600",
-    info: "bg-blue-50 border-blue-200 text-blue-800",
+    warning:
+      "bg-[var(--warning)]/10 border-[var(--warning)]/30 text-[var(--warning)]",
+    info: "bg-[var(--info)]/10 border-[var(--info)]/30 text-[var(--info)]",
   };
 
   const progressColors = {
     success: "bg-[var(--primary)]",
     error: "bg-[var(--destructive)]",
-    warning: "bg-yellow-500",
-    info: "bg-blue-400",
+    warning: "bg-[var(--warning)]",
+    info: "bg-[var(--info)]",
   };
 
   const Icon = icons[toast.type];

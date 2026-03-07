@@ -64,7 +64,7 @@ export function AwakenedSlotsPanel({
             Awakened Slots
           </h3>
         </div>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-[var(--muted-foreground)]">
           {enabledSlots}/{maxSlots} enabled
         </span>
       </div>
@@ -84,20 +84,20 @@ export function AwakenedSlotsPanel({
               className={cn(
                 "aspect-square rounded-lg border-2 transition-all flex items-center justify-center",
                 isEnabled
-                  ? "bg-purple-100 dark:bg-purple-900/30 border-purple-500 dark:border-purple-400"
+                  ? "bg-[var(--primary)]/20 border-[var(--primary)]"
                   : canToggle
-                    ? "bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-500"
-                    : "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50",
+                    ? "bg-[var(--muted)] border-[var(--border)] hover:border-[var(--primary)]"
+                    : "bg-[var(--muted)]/50 border-[var(--border)] cursor-not-allowed opacity-50",
               )}
               aria-label={`Awakened slot ${index + 1} ${isEnabled ? "enabled" : "disabled"}`}
               aria-pressed={isEnabled}
             >
               {isEnabled ? (
-                <Unlock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <Unlock className="w-4 h-4 text-[var(--primary)]" />
               ) : canToggle ? (
-                <Lock className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                <Lock className="w-4 h-4 text-[var(--muted-foreground)]" />
               ) : (
-                <Lock className="w-4 h-4 text-gray-300 dark:text-gray-600" />
+                <Lock className="w-4 h-4 text-[var(--muted-foreground)]/50" />
               )}
             </button>
           );
@@ -105,40 +105,40 @@ export function AwakenedSlotsPanel({
       </div>
 
       {/* Cost Information */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+      <div className="border-t border-[var(--border)] pt-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600 dark:text-gray-400">
+          <span className="text-[var(--muted-foreground)]">
             Dawning Echoes used:
           </span>
-          <span className="font-medium text-gray-900 dark:text-white">
+          <span className="font-medium text-[var(--foreground)]">
             {enabledSlots}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm mt-1">
-          <span className="text-gray-600 dark:text-gray-400">
+          <span className="text-[var(--muted-foreground)]">
             Platinum equivalent:
           </span>
-          <span className="font-medium text-gray-900 dark:text-white">
+          <span className="font-medium text-[var(--foreground)]">
             {platinumEquivalent.toLocaleString()}
           </span>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        <p className="text-xs text-[var(--muted-foreground)] mt-2">
           Each awakened slot requires 1 Dawning Echo (10,000 Platinum or 1,000
           Orbs)
         </p>
       </div>
 
       {/* Available Resources */}
-      <div className="mt-4 bg-gray-50 dark:bg-gray-700/50 rounded-md p-3">
-        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase mb-2">
+      <div className="mt-4 bg-[var(--muted)] rounded-md p-3">
+        <p className="text-xs font-medium text-[var(--muted-foreground)] uppercase mb-2">
           Available Resources
         </p>
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div>
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-[var(--muted-foreground)]">
               Dawning Echoes:{" "}
             </span>
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="font-medium text-[var(--foreground)]">
               {dawningEchoes}
             </span>
           </div>
