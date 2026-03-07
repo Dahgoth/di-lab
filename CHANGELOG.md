@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.4.0...di-lab-v0.5.0) (2026-03-07)
+
+
+### Features
+
+* add gem icon support to UI components ([2f64fa0](https://github.com/Dahgoth/di-lab/commit/2f64fa0bff52291f6b05d421e434988da9ef52e0))
+* add shadcn/ui CSS variables for TweakCN compatibility ([df804ec](https://github.com/Dahgoth/di-lab/commit/df804ecc4b15ed198676e7313f650567271c730e))
+* add TweakCN dark mode and rounded corners to gems UI ([69e9ca3](https://github.com/Dahgoth/di-lab/commit/69e9ca378420b7f4f39f139e1133f825d235743f))
+* add TweakCN live preview script ([d41584b](https://github.com/Dahgoth/di-lab/commit/d41584b24e52d9ac04b654f1be19c1bb5078926a))
+* complete CSS variable migration for full TweakCN compatibility ([825b783](https://github.com/Dahgoth/di-lab/commit/825b783b204ae17a0f2885da685e5411382cf61e))
+* extract and map gem icons from crafting UI screenshots ([24f27c0](https://github.com/Dahgoth/di-lab/commit/24f27c0f110bf0bdd60d5c71ea80354789a14e22))
+* **gems:** extract gem icons from screenshots and add to gems.json ([baba2f8](https://github.com/Dahgoth/di-lab/commit/baba2f8dfc3d632aab42a59aca2ac0c260420ea3))
+* **gems:** extract named gem icons from crafting UI screenshots ([2e92841](https://github.com/Dahgoth/di-lab/commit/2e928416734a8a42806e4eeccb56d2cdf077e47f))
+* migrate to TweakCN theme with full CSS variable support ([e425b01](https://github.com/Dahgoth/di-lab/commit/e425b010714d3f68b513d6b2ad961ca172ef3431))
+* migrate UI components to CSS variables for TweakCN compatibility ([8862892](https://github.com/Dahgoth/di-lab/commit/8862892269ed2fcb2464fc2ed6ff16cb20de8a09))
+* migrate UI components to shadcn/ui patterns ([e9b031b](https://github.com/Dahgoth/di-lab/commit/e9b031b9eaf52e41777aef78781a0fb65c023834))
+* migrate UI components to use CSS variables for TweakCN compatibility ([62c80f1](https://github.com/Dahgoth/di-lab/commit/62c80f179f10b0ba89fd11ec061a7b2f21dd608c))
+* **ui:** apply tactical minimalism design to optimize page ([628e57f](https://github.com/Dahgoth/di-lab/commit/628e57f43d56d0283b41a72a0530b50d69156e22))
+
+
+### Bug Fixes
+
+* add remaining CSS variables for TweakCN theme compatibility ([22123e9](https://github.com/Dahgoth/di-lab/commit/22123e9cc0cebaba3b2eac01e25b64cab68755d4))
+* add tweakcn.com to CSP frame-ancestors ([7880a0a](https://github.com/Dahgoth/di-lab/commit/7880a0a69281d20cf45b18ccc25d13870fca3c20))
+* connect star rating tabs to state in optimize page ([8a553bd](https://github.com/Dahgoth/di-lab/commit/8a553bd22e227f3a8211be477d0cc2c9099a7d35))
+* convert hardcoded colors to CSS vars for TweakCN ([8c8a27f](https://github.com/Dahgoth/di-lab/commit/8c8a27f52e34857d8ea049eb9b6525e380e56665))
+* remove hardcoded tactical minimalism design values from optimize page ([c80a684](https://github.com/Dahgoth/di-lab/commit/c80a68419b141cf9807199a73aa25624c1705227))
+* remove TweakCN script (incompatible with non-shadcn/ui project) ([1241501](https://github.com/Dahgoth/di-lab/commit/12415011f5ff650f464c97569a228b3224e2769c))
+* replace [@apply](https://github.com/apply) with raw CSS vars for Tailwind 4 compatibility ([d405902](https://github.com/Dahgoth/di-lab/commit/d405902986d1a28d307658af7888ddfcbb7e231d))
+* resolve CSS syntax error and add official TweakCN Vercel theme ([6c0b893](https://github.com/Dahgoth/di-lab/commit/6c0b89355d0f52c4cb492dbcc6f32239e95e5351))
+
 ## [0.4.0](https://github.com/Dahgoth/di-lab/compare/di-lab-v0.3.0...di-lab-v0.4.0) (2026-03-06)
 
 
