@@ -2,6 +2,28 @@
 
 /* Custom properties for gem colors and visual indicators */
 :root {
+  /* shadcn/ui required variables for TweakCN compatibility */
+  --radius: 0.5rem;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #171717;
+  --popover-foreground: #fafafa;
+  --primary: #3b82f6;
+  --primary-foreground: #fafafa;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #262626;
+  --input: #262626;
+  --ring: #3b82f6;
+
   /* Star rating colors */
   --color-gem-1star: #9ca3af; /* gray-400 - 1-star gems */
   --color-gem-2star: #60a5fa; /* blue-400 - 2-star gems */
